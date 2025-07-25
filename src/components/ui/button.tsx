@@ -18,6 +18,10 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        earth: "bg-gradient-earth text-white hover:opacity-90 shadow-soft",
+        activism: "bg-gradient-activism text-white hover:opacity-90 shadow-soft",
+        boycott: "bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold",
+        follow: "bg-earth-blue text-white hover:bg-earth-blue/90",
       },
       size: {
         default: "h-10 px-4 py-2",
