@@ -97,7 +97,7 @@ const Companies = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Company Directory</h1>
           <p className="text-muted-foreground">
-            Discover and evaluate companies based on their ethics, environmental impact, and political stance.
+            Browse all companies in our database. View ratings, read reviews, and discover what the community thinks about corporate practices.
           </p>
         </div>
 

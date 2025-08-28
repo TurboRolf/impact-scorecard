@@ -8,41 +8,41 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 248 100% 99%;
-    --foreground: 155 30% 15%;
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 155 30% 15%;
+    --card-foreground: 240 10% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 155 30% 15%;
+    --popover-foreground: 240 10% 3.9%;
 
-    --primary: 155 85% 25%;
+    --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
 
-    --secondary: 155 25% 95%;
-    --secondary-foreground: 155 30% 15%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
 
-    --muted: 155 15% 96%;
-    --muted-foreground: 155 10% 45%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 200 85% 45%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 155 20% 90%;
-    --input: 155 20% 92%;
-    --ring: 155 85% 25%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
 
-    --earth-green: 155 85% 25%;
-    --ocean-blue: 200 85% 45%;
-    --activism-orange: 25 95% 55%;
-    --trust-blue: 210 85% 35%;
+    --brand-primary: 250 84% 54%;
+    --brand-secondary: 210 100% 56%;
+    --brand-accent: 295 84% 69%;
+    --brand-success: 142 71% 45%;
     
-    --gradient-earth: linear-gradient(135deg, hsl(var(--earth-green)), hsl(var(--ocean-blue)));
-    --gradient-activism: linear-gradient(135deg, hsl(var(--activism-orange)), hsl(var(--earth-green)));
+    --gradient-brand: linear-gradient(135deg, hsl(var(--brand-primary)), hsl(var(--brand-secondary)));
+    --gradient-accent: linear-gradient(135deg, hsl(var(--brand-accent)), hsl(var(--brand-primary)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
 
     --shadow-soft: 0 4px 12px -2px hsl(var(--earth-green) / 0.1);

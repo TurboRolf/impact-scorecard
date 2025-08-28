@@ -62,17 +62,17 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				earth: {
-					DEFAULT: 'hsl(var(--earth-green))',
-					green: 'hsl(var(--earth-green))',
-					blue: 'hsl(var(--ocean-blue))',
-					orange: 'hsl(var(--activism-orange))',
-					trust: 'hsl(var(--trust-blue))'
+				brand: {
+					DEFAULT: 'hsl(var(--brand-primary))',
+					primary: 'hsl(var(--brand-primary))',
+					secondary: 'hsl(var(--brand-secondary))',
+					accent: 'hsl(var(--brand-accent))',
+					success: 'hsl(var(--brand-success))'
 				}
 			},
 			backgroundImage: {
-				'gradient-earth': 'var(--gradient-earth)',
-				'gradient-activism': 'var(--gradient-activism)',
+				'gradient-brand': 'var(--gradient-brand)',
+				'gradient-accent': 'var(--gradient-accent)',
 				'gradient-subtle': 'var(--gradient-subtle)'
 			},
 			boxShadow: {
