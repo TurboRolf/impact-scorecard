@@ -17,7 +17,7 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="max-w-6xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold bg-gradient-earth bg-clip-text text-transparent">
+          <Link to="/" className="text-2xl font-bold bg-gradient-brand bg-clip-text text-transparent">
             EthiCheck
           </Link>
           
@@ -27,7 +27,7 @@ const Navigation = () => {
               return (
                 <Link key={item.path} to={item.path}>
                   <Button 
-                    variant={isActive ? "earth" : "ghost"} 
+                    variant={isActive ? "default" : "ghost"} 
                     size="sm"
                     className="gap-2"
                   >
@@ -43,7 +43,7 @@ const Navigation = () => {
             <Button variant="outline" size="sm">
               <Search className="h-4 w-4" />
             </Button>
-            <Button variant="earth" size="sm">
+            <Button variant="default" size="sm">
               Join EthiCheck
             </Button>
           </div>
