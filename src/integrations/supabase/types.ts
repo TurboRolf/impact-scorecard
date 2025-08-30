@@ -14,7 +14,121 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      boycott_participants: {
+        Row: {
+          boycott_id: string
+          id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          boycott_id: string
+          id?: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          boycott_id?: string
+          id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boycott_participants_boycott_id_fkey"
+            columns: ["boycott_id"]
+            isOneToOne: false
+            referencedRelation: "boycotts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      boycotts: {
+        Row: {
+          category_id: string
+          company: string
+          created_at: string
+          description: string
+          end_date: string | null
+          id: string
+          impact: string | null
+          organizer_id: string
+          participants_count: number | null
+          start_date: string
+          status: string | null
+          subject: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          company: string
+          created_at?: string
+          description: string
+          end_date?: string | null
+          id?: string
+          impact?: string | null
+          organizer_id: string
+          participants_count?: number | null
+          start_date?: string
+          status?: string | null
+          subject: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          company?: string
+          created_at?: string
+          description?: string
+          end_date?: string | null
+          id?: string
+          impact?: string | null
+          organizer_id?: string
+          participants_count?: number | null
+          start_date?: string
+          status?: string | null
+          subject?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boycotts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      categories: {
+        Row: {
+          color: string | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
