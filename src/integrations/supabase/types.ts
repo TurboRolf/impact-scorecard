@@ -129,6 +129,39 @@ export type Database = {
         }
         Relationships: []
       }
+      companies: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
@@ -159,9 +192,85 @@ export type Database = {
         }
         Relationships: []
       }
+      user_company_stances: {
+        Row: {
+          company_id: string
+          created_at: string
+          environment_rating: number | null
+          ethics_rating: number | null
+          id: string
+          notes: string | null
+          overall_rating: number | null
+          politics_rating: number | null
+          stance: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          environment_rating?: number | null
+          ethics_rating?: number | null
+          id?: string
+          notes?: string | null
+          overall_rating?: number | null
+          politics_rating?: number | null
+          stance: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          environment_rating?: number | null
+          ethics_rating?: number | null
+          id?: string
+          notes?: string | null
+          overall_rating?: number | null
+          politics_rating?: number | null
+          stance?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_company_stances_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_company_stances_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "company_ratings_view"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      company_ratings_view: {
+        Row: {
+          active_boycotts_count: number | null
+          avg_environment_rating: number | null
+          avg_ethics_rating: number | null
+          avg_overall_rating: number | null
+          avg_politics_rating: number | null
+          category: string | null
+          description: string | null
+          discourage_count: number | null
+          id: string | null
+          logo_url: string | null
+          name: string | null
+          neutral_count: number | null
+          recommend_count: number | null
+          total_ratings: number | null
+          website_url: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
