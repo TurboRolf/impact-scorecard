@@ -177,30 +177,6 @@ const UserStancesList = ({ userId }: UserStancesListProps) => {
             </CardHeader>
             
             <CardContent>
-              {/* Ratings */}
-              <div className="grid grid-cols-4 gap-4 mb-4">
-                {[
-                  { label: "Overall", value: stance.overall_rating },
-                  { label: "Ethics", value: stance.ethics_rating },
-                  { label: "Environment", value: stance.environment_rating },
-                  { label: "Politics", value: stance.politics_rating },
-                ].map((rating) => (
-                  <div key={rating.label} className="text-center">
-                    <div className="flex justify-center mb-1">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`h-3 w-3 ${
-                            i < (rating.value || 0) ? "text-brand-accent fill-current" : "text-muted-foreground"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                    <div className="text-xs text-muted-foreground">{rating.label}</div>
-                  </div>
-                ))}
-              </div>
-              
               {/* Notes */}
               {stance.notes && (
                 <div className="bg-muted rounded-lg p-3">
@@ -233,10 +209,6 @@ const UserStancesList = ({ userId }: UserStancesListProps) => {
         companyCategory={editingStance?.company_category || ""}
         existingStance={editingStance ? {
           stance: editingStance.stance,
-          ethics_rating: editingStance.ethics_rating || undefined,
-          environment_rating: editingStance.environment_rating || undefined,
-          politics_rating: editingStance.politics_rating || undefined,
-          overall_rating: editingStance.overall_rating || undefined,
           notes: editingStance.notes || undefined,
         } : undefined}
       />

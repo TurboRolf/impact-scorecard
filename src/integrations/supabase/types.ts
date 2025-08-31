@@ -162,6 +162,42 @@ export type Database = {
         }
         Relationships: []
       }
+      company_reviews: {
+        Row: {
+          category: string
+          company_id: string
+          company_name: string
+          created_at: string
+          id: string
+          rating: number
+          review_text: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          company_id: string
+          company_name: string
+          created_at?: string
+          id?: string
+          rating: number
+          review_text?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          company_id?: string
+          company_name?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          review_text?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           bio: string | null
@@ -195,39 +231,30 @@ export type Database = {
       user_company_stances: {
         Row: {
           company_id: string
+          company_name: string | null
           created_at: string
-          environment_rating: number | null
-          ethics_rating: number | null
           id: string
           notes: string | null
-          overall_rating: number | null
-          politics_rating: number | null
           stance: string
           updated_at: string
           user_id: string
         }
         Insert: {
           company_id: string
+          company_name?: string | null
           created_at?: string
-          environment_rating?: number | null
-          ethics_rating?: number | null
           id?: string
           notes?: string | null
-          overall_rating?: number | null
-          politics_rating?: number | null
           stance: string
           updated_at?: string
           user_id: string
         }
         Update: {
           company_id?: string
+          company_name?: string | null
           created_at?: string
-          environment_rating?: number | null
-          ethics_rating?: number | null
           id?: string
           notes?: string | null
-          overall_rating?: number | null
-          politics_rating?: number | null
           stance?: string
           updated_at?: string
           user_id?: string

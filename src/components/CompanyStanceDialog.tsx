@@ -15,10 +15,6 @@ interface CompanyStanceDialogProps {
   companyCategory?: string;
   existingStance?: {
     stance: CompanyStance;
-    ethics_rating?: number;
-    environment_rating?: number;
-    politics_rating?: number;
-    overall_rating?: number;
     notes?: string;
   };
 }
@@ -34,10 +30,6 @@ const CompanyStanceDialog = ({
     company_name: companyName,
     company_category: companyCategory,
     stance: existingStance?.stance || 'neutral' as CompanyStance,
-    ethics_rating: existingStance?.ethics_rating || 3,
-    environment_rating: existingStance?.environment_rating || 3,
-    politics_rating: existingStance?.politics_rating || 3,
-    overall_rating: existingStance?.overall_rating || 3,
     notes: existingStance?.notes || ""
   });
 
@@ -53,10 +45,6 @@ const CompanyStanceDialog = ({
       company_name: "",
       company_category: "",
       stance: 'neutral',
-      ethics_rating: 3,
-      environment_rating: 3,
-      politics_rating: 3,
-      overall_rating: 3,
       notes: ""
     });
   };
@@ -72,24 +60,6 @@ const CompanyStanceDialog = ({
     "Energy", "Financial", "Retail", "Healthcare", "Entertainment"
   ];
 
-  const renderStarRating = (rating: number, onChange: (rating: number) => void) => (
-    <div className="flex gap-1">
-      {[1, 2, 3, 4, 5].map((star) => (
-        <button
-          key={star}
-          type="button"
-          onClick={() => onChange(star)}
-          className="p-0 h-auto"
-        >
-          <Star
-            className={`h-5 w-5 transition-colors ${
-              star <= rating ? "text-brand-accent fill-current" : "text-muted-foreground"
-            }`}
-          />
-        </button>
-      ))}
-    </div>
-  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -98,6 +68,9 @@ const CompanyStanceDialog = ({
           <DialogTitle>
             {existingStance ? "Update Company Stance" : "Add Company Stance"}
           </DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            Set your general stance on this company. For detailed category-specific reviews, use the Review feature.
+          </p>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -152,36 +125,6 @@ const CompanyStanceDialog = ({
             </div>
           </div>
 
-          <div className="space-y-4">
-            <h4 className="font-medium">Ratings</h4>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label>Ethics ({formData.ethics_rating}/5)</Label>
-                {renderStarRating(formData.ethics_rating, (rating) => 
-                  setFormData({ ...formData, ethics_rating: rating })
-                )}
-              </div>
-              <div>
-                <Label>Environment ({formData.environment_rating}/5)</Label>
-                {renderStarRating(formData.environment_rating, (rating) => 
-                  setFormData({ ...formData, environment_rating: rating })
-                )}
-              </div>
-              <div>
-                <Label>Politics ({formData.politics_rating}/5)</Label>
-                {renderStarRating(formData.politics_rating, (rating) => 
-                  setFormData({ ...formData, politics_rating: rating })
-                )}
-              </div>
-              <div>
-                <Label>Overall ({formData.overall_rating}/5)</Label>
-                {renderStarRating(formData.overall_rating, (rating) => 
-                  setFormData({ ...formData, overall_rating: rating })
-                )}
-              </div>
-            </div>
-          </div>
 
           <div>
             <Label htmlFor="notes">Notes (Optional)</Label>

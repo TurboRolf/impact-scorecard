@@ -2,10 +2,11 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import CompanyCard from "@/components/CompanyCard";
 import CompanyStanceDialog from "@/components/CompanyStanceDialog";
+import CompanyReviewDialog from "@/components/CompanyReviewDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, Globe, Users, Plus } from "lucide-react";
+import { Search, Filter, Globe, Users, Plus, Star } from "lucide-react";
 import { useCompanies } from "@/hooks/useCompanyStances";
 
 const Companies = () => {
@@ -13,6 +14,7 @@ const Companies = () => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewType, setViewType] = useState<"global" | "following">("global");
   const [stanceDialogOpen, setStanceDialogOpen] = useState(false);
+  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<{name: string, category: string} | null>(null);
   
   const { data: companies = [], isLoading } = useCompanies();
@@ -30,6 +32,11 @@ const Companies = () => {
   const handleRateCompany = (companyName: string, companyCategory: string) => {
     setSelectedCompany({ name: companyName, category: companyCategory });
     setStanceDialogOpen(true);
+  };
+
+  const handleReviewCompany = (companyName: string, companyCategory: string) => {
+    setSelectedCompany({ name: companyName, category: companyCategory });
+    setReviewDialogOpen(true);
   };
 
   if (isLoading) {
@@ -59,10 +66,16 @@ const Companies = () => {
               </p>
             </div>
             
-            <Button onClick={() => setStanceDialogOpen(true)} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add Company Stance
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => setStanceDialogOpen(true)} className="gap-2" variant="outline">
+                <Plus className="h-4 w-4" />
+                Add Stance
+              </Button>
+              <Button onClick={() => setReviewDialogOpen(true)} className="gap-2">
+                <Star className="h-4 w-4" />
+                Add Review
+              </Button>
+            </div>
           </div>
           
           <div className="flex items-center gap-4 mb-4">
@@ -161,12 +174,18 @@ const Companies = () => {
           </div>
         )}
         
-        <CompanyStanceDialog 
-          open={stanceDialogOpen}
-          onOpenChange={setStanceDialogOpen}
-          companyName={selectedCompany?.name}
-          companyCategory={selectedCompany?.category}
-        />
+      <CompanyStanceDialog
+        open={stanceDialogOpen}
+        onOpenChange={setStanceDialogOpen}
+        companyName={selectedCompany?.name}
+        companyCategory={selectedCompany?.category}
+      />
+      
+      <CompanyReviewDialog
+        open={reviewDialogOpen}
+        onOpenChange={setReviewDialogOpen}
+        companyName={selectedCompany?.name}
+      />
       </div>
     </div>
   );

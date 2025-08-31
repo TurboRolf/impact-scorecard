@@ -11,10 +11,6 @@ export interface CompanyStanceData {
   company_name: string;
   company_category: string | null;
   stance: CompanyStance;
-  ethics_rating: number | null;
-  environment_rating: number | null;
-  politics_rating: number | null;
-  overall_rating: number | null;
   notes: string | null;
   created_at: string;
   updated_at: string;
@@ -81,10 +77,6 @@ export const useCreateOrUpdateStance = () => {
       company_name: string;
       company_category?: string;
       stance: CompanyStance;
-      ethics_rating?: number;
-      environment_rating?: number;
-      politics_rating?: number;
-      overall_rating?: number;
       notes?: string;
     }) => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -98,10 +90,6 @@ export const useCreateOrUpdateStance = () => {
           company_name: stanceData.company_name,
           company_category: stanceData.company_category,
           stance: stanceData.stance,
-          ethics_rating: stanceData.ethics_rating,
-          environment_rating: stanceData.environment_rating,
-          politics_rating: stanceData.politics_rating,
-          overall_rating: stanceData.overall_rating,
           notes: stanceData.notes,
         })
         .select()
