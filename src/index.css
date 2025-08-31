@@ -41,11 +41,16 @@ All colors MUST be HSL.
     --brand-accent: 295 84% 69%;
     --brand-success: 142 71% 45%;
     
+    --earth-green: 142 71% 45%;
+    --earth-blue: 197 71% 52%;
+    
     --recommend: 142 71% 45%;
     --neutral: 47 85% 60%;
     --discourage: 0 84% 60%;
     
     --gradient-brand: linear-gradient(135deg, hsl(var(--brand-primary)), hsl(var(--brand-secondary)));
+    --gradient-earth: linear-gradient(135deg, hsl(var(--earth-green)), hsl(var(--earth-blue)));
+    --gradient-activism: linear-gradient(135deg, hsl(var(--brand-accent)), hsl(var(--discourage)));
     --gradient-accent: linear-gradient(135deg, hsl(var(--brand-accent)), hsl(var(--brand-primary)));
     --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
 

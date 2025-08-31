@@ -69,12 +69,18 @@ export default {
 					accent: 'hsl(var(--brand-accent))',
 					success: 'hsl(var(--brand-success))'
 				},
+				earth: {
+					green: 'hsl(var(--earth-green))',
+					blue: 'hsl(var(--earth-blue))'
+				},
 				recommend: 'hsl(var(--recommend))',
 				neutral: 'hsl(var(--neutral))',
 				discourage: 'hsl(var(--discourage))'
 			},
 			backgroundImage: {
 				'gradient-brand': 'var(--gradient-brand)',
+				'gradient-earth': 'var(--gradient-earth)',
+				'gradient-activism': 'var(--gradient-activism)',
 				'gradient-accent': 'var(--gradient-accent)',
 				'gradient-subtle': 'var(--gradient-subtle)'
 			},
