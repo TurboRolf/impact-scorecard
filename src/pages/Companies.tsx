@@ -93,6 +93,25 @@ const Companies = () => {
                 className="pl-10"
               />
             </div>
+            
+            <div className="flex gap-2">
+              <Button
+                variant={viewType === "global" ? "default" : "outline"}
+                onClick={() => setViewType("global")}
+                className="gap-2"
+              >
+                <Globe className="h-4 w-4" />
+                Global
+              </Button>
+              <Button
+                variant={viewType === "following" ? "default" : "outline"}
+                onClick={() => setViewType("following")}
+                className="gap-2"
+              >
+                <Users className="h-4 w-4" />
+                Following
+              </Button>
+            </div>
           </div>
           
           <div className="flex gap-2 flex-wrap">
