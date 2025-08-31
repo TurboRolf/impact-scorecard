@@ -36,17 +36,24 @@ const Auth = () => {
     });
 
     if (error) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive"
-      });
+      if (error.message.includes("User already registered")) {
+        toast({
+          title: "Account exists",
+          description: "This email is already registered. Please use the Sign In tab.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error.message,
+          variant: "destructive"
+        });
+      }
     } else {
       toast({
         title: "Account created!",
         description: "You can now sign in with your credentials"
       });
-      // Auto-switch to sign in tab after successful signup
     }
     setLoading(false);
   };
