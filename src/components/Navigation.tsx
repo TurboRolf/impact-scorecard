@@ -1,9 +1,31 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, User, Building2, AlertTriangle, Users, Search } from "lucide-react";
+import { Home, User, Building2, AlertTriangle, Users, Search, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const Navigation = () => {
   const location = useLocation();
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
   
   const navItems = [
     { path: "/", icon: Home, label: "Feed" },
@@ -43,11 +65,18 @@ const Navigation = () => {
             <Button variant="outline" size="sm">
               <Search className="h-4 w-4" />
             </Button>
-            <Link to="/auth">
-              <Button variant="default" size="sm">
-                Join EthiCheck
+            {user ? (
+              <Button variant="outline" size="sm" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4" />
+                Sign Out
               </Button>
-            </Link>
+            ) : (
+              <Link to="/auth">
+                <Button variant="default" size="sm">
+                  Join EthiCheck
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
       </div>
