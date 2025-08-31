@@ -43,9 +43,11 @@ const Navigation = () => {
             <Button variant="outline" size="sm">
               <Search className="h-4 w-4" />
             </Button>
-            <Button variant="default" size="sm">
-              Join EthiCheck
-            </Button>
+            <Link to="/auth">
+              <Button variant="default" size="sm">
+                Join EthiCheck
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
