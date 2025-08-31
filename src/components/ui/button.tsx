@@ -22,6 +22,8 @@ const buttonVariants = cva(
         activism: "bg-gradient-activism text-white hover:opacity-90 shadow-soft",
         boycott: "bg-destructive text-destructive-foreground hover:bg-destructive/90 font-semibold",
         follow: "bg-earth-blue text-white hover:bg-earth-blue/90",
+        recommend: "bg-recommend text-white hover:bg-recommend/90",
+        discourage: "bg-discourage text-white hover:bg-discourage/90",
       },
       size: {
         default: "h-10 px-4 py-2",

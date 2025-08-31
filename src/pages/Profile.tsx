@@ -1,13 +1,36 @@
+import React, { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import PostCard from "@/components/PostCard";
+import UserStancesList from "@/components/UserStancesList";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Edit, Users, Building2, AlertTriangle, Award } from "lucide-react";
+import { Edit, Users, Building2, AlertTriangle, Award, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useUserStances } from "@/hooks/useCompanyStances";
 
 const Profile = () => {
+  const [user, setUser] = useState<any>(null);
+
+  // Get current user
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    getUser();
+  }, []);
+
+  const { data: userStances = [] } = useUserStances(user?.id);
+
+  // Calculate stance stats
+  const stanceStats = {
+    recommend: userStances.filter(s => s.stance === 'recommend').length,
+    neutral: userStances.filter(s => s.stance === 'neutral').length,
+    discourage: userStances.filter(s => s.stance === 'discourage').length,
+  };
   const profileData = {
     name: "Sarah Green",
     username: "sarahgreen",
@@ -116,24 +139,50 @@ const Profile = () => {
         </Card>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-earth-blue" />
-                Company Reviews
+                <ThumbsUp className="h-4 w-4 text-recommend" />
+                Recommended
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{profileData.reviewsCount}</div>
-              <p className="text-xs text-muted-foreground">Detailed evaluations</p>
+              <div className="text-2xl font-bold text-recommend">{stanceStats.recommend}</div>
+              <p className="text-xs text-muted-foreground">Companies</p>
             </CardContent>
           </Card>
           
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-earth-orange" />
+                <Minus className="h-4 w-4 text-neutral" />
+                Neutral
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-neutral">{stanceStats.neutral}</div>
+              <p className="text-xs text-muted-foreground">Companies</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <ThumbsDown className="h-4 w-4 text-discourage" />
+                Discouraged
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-discourage">{stanceStats.discourage}</div>
+              <p className="text-xs text-muted-foreground">Companies</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4 text-brand-accent" />
                 Boycotts Created
               </CardTitle>
             </CardHeader>
@@ -146,7 +195,7 @@ const Profile = () => {
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Users className="h-4 w-4 text-earth-green" />
+                <Users className="h-4 w-4 text-brand-success" />
                 Boycotts Joined
               </CardTitle>
             </CardHeader>
@@ -178,13 +227,18 @@ const Profile = () => {
         </Card>
 
         {/* Content Tabs */}
-        <Tabs defaultValue="posts" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+        <Tabs defaultValue="stances" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="stances">Company Stances</TabsTrigger>
             <TabsTrigger value="posts">Recent Posts</TabsTrigger>
             <TabsTrigger value="reviews">Reviews</TabsTrigger>
             <TabsTrigger value="boycotts">Boycotts</TabsTrigger>
           </TabsList>
           
+          <TabsContent value="stances" className="mt-6">
+            <UserStancesList userId={user?.id} />
+          </TabsContent>
+
           <TabsContent value="posts" className="space-y-4 mt-6">
             {recentPosts.map((post, index) => (
               <PostCard key={index} {...post} />
@@ -194,7 +248,7 @@ const Profile = () => {
           <TabsContent value="reviews" className="mt-6">
             <Card>
               <CardContent className="p-6 text-center text-muted-foreground">
-                Detailed company reviews will appear here
+                Your detailed company reviews and ratings will appear here
               </CardContent>
             </Card>
           </TabsContent>

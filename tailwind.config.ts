@@ -68,7 +68,10 @@ export default {
 					secondary: 'hsl(var(--brand-secondary))',
 					accent: 'hsl(var(--brand-accent))',
 					success: 'hsl(var(--brand-success))'
-				}
+				},
+				recommend: 'hsl(var(--recommend))',
+				neutral: 'hsl(var(--neutral))',
+				discourage: 'hsl(var(--discourage))'
 			},
 			backgroundImage: {
 				'gradient-brand': 'var(--gradient-brand)',

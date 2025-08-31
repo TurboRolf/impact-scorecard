@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, TrendingDown, TrendingUp, AlertTriangle } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
 
 interface CompanyCardProps {
   name: string;
@@ -14,6 +14,10 @@ interface CompanyCardProps {
   activeBoycotts: number;
   trend: "up" | "down" | "stable";
   description: string;
+  recommendCount?: number;
+  neutralCount?: number;
+  discourageCount?: number;
+  onRate?: () => void;
 }
 
 const CompanyCard = ({
@@ -26,7 +30,11 @@ const CompanyCard = ({
   politicsRating,
   activeBoycotts,
   trend,
-  description
+  description,
+  recommendCount = 0,
+  neutralCount = 0,
+  discourageCount = 0,
+  onRate
 }: CompanyCardProps) => {
   const ratings = [
     { label: "Ethics", value: ethicsRating, color: "text-earth-blue" },
@@ -91,8 +99,24 @@ const CompanyCard = ({
           </div>
         )}
         
+        {/* User Stance Distribution */}
+        <div className="flex gap-2 mb-4">
+          <div className="flex items-center gap-1 flex-1">
+            <ThumbsUp className="h-4 w-4 text-recommend" />
+            <span className="text-sm text-recommend font-medium">{recommendCount}</span>
+          </div>
+          <div className="flex items-center gap-1 flex-1">
+            <Minus className="h-4 w-4 text-neutral" />
+            <span className="text-sm text-neutral font-medium">{neutralCount}</span>
+          </div>
+          <div className="flex items-center gap-1 flex-1">
+            <ThumbsDown className="h-4 w-4 text-discourage" />
+            <span className="text-sm text-discourage font-medium">{discourageCount}</span>
+          </div>
+        </div>
+        
         <div className="flex gap-2">
-          <Button variant="earth" size="sm" className="flex-1">
+          <Button variant="default" size="sm" className="flex-1" onClick={onRate}>
             Rate Company
           </Button>
           {activeBoycotts > 0 ? (
