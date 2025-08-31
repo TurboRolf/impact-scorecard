@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navigation from "@/components/Navigation";
 import PostCard from "@/components/PostCard";
 import UserStancesList from "@/components/UserStancesList";
+import ProfileSettingsDialog from "@/components/ProfileSettingsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,9 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Edit, Users, Building2, AlertTriangle, Award, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
+import { useProfile } from "@/hooks/useProfile";
 
 const Profile = () => {
   const [user, setUser] = useState<any>(null);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   // Get current user
   useEffect(() => {
@@ -24,6 +27,7 @@ const Profile = () => {
   }, []);
 
   const { data: userStances = [] } = useUserStances(user?.id);
+  const { data: profile } = useProfile(user?.id);
 
   // Calculate stance stats
   const stanceStats = {
@@ -98,21 +102,29 @@ const Profile = () => {
           <CardContent className="p-6">
             <div className="flex flex-col md:flex-row gap-6">
               <Avatar className="h-24 w-24 mx-auto md:mx-0">
-                <AvatarImage src={profileData.avatar} />
-                <AvatarFallback className="text-2xl">{profileData.name.charAt(0)}</AvatarFallback>
+                <AvatarImage src={profile?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}` : undefined} />
+                <AvatarFallback className="text-2xl">
+                  {profile?.display_name?.charAt(0) || profile?.username?.charAt(0) || 'U'}
+                </AvatarFallback>
               </Avatar>
               
               <div className="flex-1 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-                  <h1 className="text-2xl font-bold">{profileData.name}</h1>
-                  {profileData.isCreator && (
+                  <h1 className="text-2xl font-bold">
+                    {profile?.display_name || profile?.username || 'Anonymous User'}
+                  </h1>
+                  {profile?.profile_type === 'creator' && (
                     <Badge className="bg-gradient-earth text-white w-fit mx-auto md:mx-0">
                       Creator
                     </Badge>
                   )}
                 </div>
-                <p className="text-muted-foreground mb-4">@{profileData.username}</p>
-                <p className="text-foreground mb-4">{profileData.bio}</p>
+                <p className="text-muted-foreground mb-4">
+                  @{profile?.username || 'username'}
+                </p>
+                <p className="text-foreground mb-4">
+                  {profile?.bio || 'No bio provided yet.'}
+                </p>
                 
                 <div className="flex justify-center md:justify-start gap-6 mb-4">
                   <div className="text-center">
@@ -129,7 +141,11 @@ const Profile = () => {
                   </div>
                 </div>
                 
-                <Button variant="earth" className="gap-2">
+                <Button 
+                  variant="earth" 
+                  className="gap-2"
+                  onClick={() => setSettingsOpen(true)}
+                >
                   <Edit className="h-4 w-4" />
                   Edit Profile
                 </Button>
@@ -262,6 +278,12 @@ const Profile = () => {
           </TabsContent>
         </Tabs>
       </div>
+      
+      <ProfileSettingsDialog
+        open={settingsOpen}
+        onOpenChange={setSettingsOpen}
+        userId={user?.id}
+      />
     </div>
   );
 };
