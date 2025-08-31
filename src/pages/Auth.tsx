@@ -30,14 +30,9 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
-    const redirectUrl = `${window.location.origin}/`;
-    
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl
-      }
+      password
     });
 
     if (error) {
@@ -48,9 +43,10 @@ const Auth = () => {
       });
     } else {
       toast({
-        title: "Success!",
-        description: "Check your email for a confirmation link"
+        title: "Account created!",
+        description: "You can now sign in with your credentials"
       });
+      // Auto-switch to sign in tab after successful signup
     }
     setLoading(false);
   };
