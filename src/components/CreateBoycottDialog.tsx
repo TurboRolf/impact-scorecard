@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useCompanies } from "@/hooks/useCompanyStances";
 import { Plus } from "lucide-react";
 
 interface Category {
@@ -24,6 +25,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
   const [open, setOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
+  const { data: companies = [] } = useCompanies();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -171,13 +173,21 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
 
           <div className="space-y-2">
             <Label htmlFor="company">Target Company</Label>
-            <Input
-              id="company"
+            <Select
               value={formData.company}
-              onChange={(e) => setFormData(prev => ({ ...prev, company: e.target.value }))}
-              placeholder="Company name"
-              required
-            />
+              onValueChange={(value) => setFormData(prev => ({ ...prev, company: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a company" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.name}>
+                    {company.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
