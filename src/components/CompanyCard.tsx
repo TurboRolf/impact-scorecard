@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, MessageSquare } from "lucide-react";
 
 interface CompanyCardProps {
   name: string;
@@ -116,8 +116,9 @@ const CompanyCard = ({
         </div>
         
         <div className="flex gap-2">
-          <Button variant="default" size="sm" className="flex-1" onClick={onRate}>
-            Rate Company
+          <Button variant="default" size="sm" className="flex-1 gap-1" onClick={onRate}>
+            <MessageSquare className="h-4 w-4" />
+            Add Stance
           </Button>
           {activeBoycotts > 0 ? (
             <Button variant="boycott" size="sm" className="flex-1">
