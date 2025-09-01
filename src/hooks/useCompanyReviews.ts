@@ -66,11 +66,20 @@ export const useCreateOrUpdateReview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Must be logged in to create reviews");
 
+      // First, find the company by name to get its ID
+      const { data: company, error: companyError } = await supabase
+        .from("companies")
+        .select("id")
+        .eq("name", reviewData.company_name)
+        .single();
+
+      if (companyError) throw new Error(`Company not found: ${reviewData.company_name}`);
+
       const { data, error } = await supabase
         .from("company_reviews")
         .upsert({
           user_id: user.id,
-          company_id: '', // We'll use company_name for now
+          company_id: company.id,
           company_name: reviewData.company_name,
           category: reviewData.category,
           rating: reviewData.rating,

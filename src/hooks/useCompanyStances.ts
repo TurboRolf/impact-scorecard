@@ -82,11 +82,20 @@ export const useCreateOrUpdateStance = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Must be logged in to rate companies");
 
+      // First, find the company by name to get its ID
+      const { data: company, error: companyError } = await supabase
+        .from("companies")
+        .select("id")
+        .eq("name", stanceData.company_name)
+        .single();
+
+      if (companyError) throw new Error(`Company not found: ${stanceData.company_name}`);
+
       const { data, error } = await supabase
         .from("user_company_stances")
         .upsert({
           user_id: user.id,
-          company_id: '', // We'll use company_name for now
+          company_id: company.id,
           company_name: stanceData.company_name,
           company_category: stanceData.company_category,
           stance: stanceData.stance,
