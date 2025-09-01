@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star } from "lucide-react";
 import { useCreateOrUpdateReview, ReviewCategory } from "@/hooks/useCompanyReviews";
+import { useCompanies } from "@/hooks/useCompanyStances";
 
 interface CompanyReviewDialogProps {
   open: boolean;
@@ -26,6 +26,7 @@ const CompanyReviewDialog = ({
     review_text: ""
   });
 
+  const { data: companies = [] } = useCompanies();
   const createOrUpdateReview = useCreateOrUpdateReview();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -78,13 +79,21 @@ const CompanyReviewDialog = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <Label htmlFor="company_name">Company Name *</Label>
-            <Input
-              id="company_name"
-              value={formData.company_name}
-              onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
-              placeholder="Enter company name"
-              required
-            />
+            <Select 
+              value={formData.company_name} 
+              onValueChange={(value) => setFormData({ ...formData, company_name: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a company" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.name}>
+                    {company.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div>

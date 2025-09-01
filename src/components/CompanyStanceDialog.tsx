@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Star, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
-import { useCreateOrUpdateStance, CompanyStance } from "@/hooks/useCompanyStances";
+import { useCreateOrUpdateStance, CompanyStance, useCompanies } from "@/hooks/useCompanyStances";
 
 interface CompanyStanceDialogProps {
   open: boolean;
@@ -33,6 +32,7 @@ const CompanyStanceDialog = ({
     notes: existingStance?.notes || ""
   });
 
+  const { data: companies = [] } = useCompanies();
   const createOrUpdateStance = useCreateOrUpdateStance();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,13 +77,28 @@ const CompanyStanceDialog = ({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="company_name">Company Name *</Label>
-              <Input
-                id="company_name"
-                value={formData.company_name}
-                onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
-                placeholder="Enter company name"
-                required
-              />
+              <Select 
+                value={formData.company_name} 
+                onValueChange={(value) => {
+                  const selectedCompany = companies.find(c => c.name === value);
+                  setFormData({ 
+                    ...formData, 
+                    company_name: value,
+                    company_category: selectedCompany?.category || ""
+                  });
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a company" />
+                </SelectTrigger>
+                <SelectContent>
+                  {companies.map((company) => (
+                    <SelectItem key={company.id} value={company.name}>
+                      {company.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
               <Label htmlFor="company_category">Category</Label>
