@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import PostCard from "@/components/PostCard";
 import UserStancesList from "@/components/UserStancesList";
@@ -12,19 +13,42 @@ import { Edit, Users, Building2, AlertTriangle, Award, ThumbsUp, Minus, ThumbsDo
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
 import { useProfile } from "@/hooks/useProfile";
+import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 
 const Profile = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // Get current user
+  // Get current user and listen for auth changes
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    getUser();
-  }, []);
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        // Redirect to auth if not logged in
+        if (!session?.user) {
+          navigate('/auth');
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      
+      // Redirect to auth if not logged in
+      if (!session?.user) {
+        navigate('/auth');
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const { data: userStances = [] } = useUserStances(user?.id);
   const { data: profile } = useProfile(user?.id);
@@ -110,9 +134,9 @@ const Profile = () => {
               
               <div className="flex-1 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-                  <h1 className="text-2xl font-bold">
-                    {profile?.display_name || profile?.username || 'Anonymous User'}
-                  </h1>
+                 <h1 className="text-2xl font-bold">
+                   {profile?.display_name || profile?.username || user?.email || 'Loading...'}
+                 </h1>
                   {profile?.profile_type === 'creator' && (
                     <Badge className="bg-gradient-earth text-white w-fit mx-auto md:mx-0">
                       Creator
