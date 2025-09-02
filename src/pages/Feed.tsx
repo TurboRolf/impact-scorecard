@@ -47,24 +47,34 @@ const Feed = () => {
   };
 
   // Transform posts data for PostCard component
-  const transformedPosts = posts.map((post: PostData) => ({
-    user: {
-      name: post.profiles?.display_name || post.profiles?.username || "Anonymous User",
-      username: post.profiles?.username || "unknown",
-      avatar: post.profiles?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.profiles.username}` : undefined,
-      isCreator: post.profiles?.profile_type === 'creator'
-    },
-    content: post.content,
-    company: post.company_name && post.company_rating ? {
-      name: post.company_name,
-      rating: post.company_rating,
-      category: post.company_category || ""
-    } : undefined,
-    isBoycott: post.is_boycott,
-    timestamp: formatTimestamp(post.created_at),
-    likes: post.likes_count,
-    comments: post.comments_count
-  }));
+  const transformedPosts = posts.map((post: PostData) => {
+    // Remove duplicate company info from content if it exists
+    let cleanContent = post.content;
+    if (post.company_name && post.company_rating) {
+      // Remove patterns like "★★★★★ 5/5 - CompanyName (category)" from the beginning
+      const starPattern = /^[★☆]+\s+\d+\/5\s+-\s+[^()+]+(\([^)]+\))?\s*[\n\r]*/;
+      cleanContent = cleanContent.replace(starPattern, '').trim();
+    }
+    
+    return {
+      user: {
+        name: post.profiles?.display_name || post.profiles?.username || "Anonymous User",
+        username: post.profiles?.username || "unknown",
+        avatar: post.profiles?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.profiles.username}` : undefined,
+        isCreator: post.profiles?.profile_type === 'creator'
+      },
+      content: cleanContent,
+      company: post.company_name && post.company_rating ? {
+        name: post.company_name,
+        rating: post.company_rating,
+        category: post.company_category || ""
+      } : undefined,
+      isBoycott: post.is_boycott,
+      timestamp: formatTimestamp(post.created_at),
+      likes: post.likes_count,
+      comments: post.comments_count
+    };
+  });
 
   function formatTimestamp(timestamp: string): string {
     const now = new Date();
