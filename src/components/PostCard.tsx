@@ -55,7 +55,7 @@ const PostCard = ({ user, content, company, isBoycott, timestamp, likes, comment
       </CardHeader>
       
       <CardContent className="pt-0">
-        <p className="text-foreground mb-4">{content}</p>
+        {!company && <p className="text-foreground mb-4">{content}</p>}
         
         {company && (
           <Card className="bg-muted/50 border-0 mb-4">
@@ -77,6 +77,9 @@ const PostCard = ({ user, content, company, isBoycott, timestamp, likes, comment
                   <span className="ml-1 text-sm font-medium">{company.rating}/5</span>
                 </div>
               </div>
+              {content && (
+                <p className="text-foreground mt-3 pt-3 border-t">{content}</p>
+              )}
             </CardContent>
           </Card>
         )}

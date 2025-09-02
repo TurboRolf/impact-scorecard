@@ -45,7 +45,7 @@ const CompanyReviewDialog = ({
         const categoryText = formData.category === 'overall' ? '' : ` (${formData.category})`;
         const starRating = '★'.repeat(formData.rating) + '☆'.repeat(5 - formData.rating);
         
-        const postContent = `${starRating} ${formData.rating}/5 - ${formData.company_name}${categoryText}\n\n${formData.review_text}`;
+        const postContent = formData.review_text;
         
         await createPost.mutateAsync({
           content: postContent,
