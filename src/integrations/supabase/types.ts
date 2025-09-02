@@ -203,6 +203,7 @@ export type Database = {
           comments_count: number | null
           company_category: string | null
           company_name: string | null
+          company_rating: number | null
           content: string
           created_at: string
           id: string
@@ -215,6 +216,7 @@ export type Database = {
           comments_count?: number | null
           company_category?: string | null
           company_name?: string | null
+          company_rating?: number | null
           content: string
           created_at?: string
           id?: string
@@ -227,6 +229,7 @@ export type Database = {
           comments_count?: number | null
           company_category?: string | null
           company_name?: string | null
+          company_rating?: number | null
           content?: string
           created_at?: string
           id?: string

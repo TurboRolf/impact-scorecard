@@ -57,7 +57,7 @@ const Feed = () => {
     content: post.content,
     company: post.company_name ? {
       name: post.company_name,
-      rating: 0, // We don't have ratings in posts yet
+      rating: post.company_rating || 0, // Use the specific review rating
       category: post.company_category || ""
     } : undefined,
     isBoycott: post.is_boycott,

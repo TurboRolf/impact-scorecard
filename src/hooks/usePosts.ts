@@ -8,6 +8,7 @@ export interface PostData {
   content: string;
   company_name?: string;
   company_category?: string;
+  company_rating?: number;
   is_boycott: boolean;
   likes_count: number;
   comments_count: number;
