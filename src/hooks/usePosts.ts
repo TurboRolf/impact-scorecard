@@ -24,6 +24,7 @@ export interface CreatePostData {
   content: string;
   company_name?: string;
   company_category?: string;
+  company_rating?: number;
   is_boycott?: boolean;
 }
 
@@ -65,6 +66,7 @@ export const useCreatePost = () => {
           content: postData.content,
           company_name: postData.company_name,
           company_category: postData.company_category,
+          company_rating: postData.company_rating,
           is_boycott: postData.is_boycott || false,
         })
         .select(`

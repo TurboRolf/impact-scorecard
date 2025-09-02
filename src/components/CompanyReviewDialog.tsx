@@ -50,6 +50,8 @@ const CompanyReviewDialog = ({
         await createPost.mutateAsync({
           content: postContent,
           company_name: formData.company_name,
+          company_rating: formData.rating,
+          company_category: formData.category,
         });
       }
       
