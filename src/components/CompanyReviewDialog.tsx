@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Star } from "lucide-react";
 import { useCreateOrUpdateReview, ReviewCategory } from "@/hooks/useCompanyReviews";
 import { useCompanies } from "@/hooks/useCompanyStances";
+import { useCreatePost } from "@/hooks/usePosts";
 
 interface CompanyReviewDialogProps {
   open: boolean;
@@ -25,22 +27,43 @@ const CompanyReviewDialog = ({
     rating: 3,
     review_text: ""
   });
+  const [postToFeed, setPostToFeed] = useState(false);
 
   const { data: companies = [] } = useCompanies();
   const createOrUpdateReview = useCreateOrUpdateReview();
+  const createPost = useCreatePost();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.company_name.trim()) return;
 
-    await createOrUpdateReview.mutateAsync(formData);
-    onOpenChange(false);
-    setFormData({
-      company_name: "",
-      category: 'environment',
-      rating: 3,
-      review_text: ""
-    });
+    try {
+      await createOrUpdateReview.mutateAsync(formData);
+      
+      // Create post if option is selected
+      if (postToFeed && formData.review_text.trim()) {
+        const categoryText = formData.category === 'overall' ? '' : ` (${formData.category})`;
+        const starRating = '★'.repeat(formData.rating) + '☆'.repeat(5 - formData.rating);
+        
+        const postContent = `${starRating} ${formData.rating}/5 - ${formData.company_name}${categoryText}\n\n${formData.review_text}`;
+        
+        await createPost.mutateAsync({
+          content: postContent,
+          company_name: formData.company_name,
+        });
+      }
+      
+      onOpenChange(false);
+      setFormData({
+        company_name: "",
+        category: 'environment',
+        rating: 3,
+        review_text: ""
+      });
+      setPostToFeed(false);
+    } catch (error) {
+      // Error handling is done in the mutation hooks
+    }
   };
 
   const reviewCategories = [
@@ -139,12 +162,23 @@ const CompanyReviewDialog = ({
             />
           </div>
 
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="post-to-feed" 
+              checked={postToFeed}
+              onCheckedChange={(checked) => setPostToFeed(checked === true)}
+            />
+            <Label htmlFor="post-to-feed" className="text-sm">
+              Post this review to my feed (requires review text)
+            </Label>
+          </div>
+
           <div className="flex gap-2 justify-end">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={createOrUpdateReview.isPending}>
-              {createOrUpdateReview.isPending ? "Saving..." : "Save Review"}
+            <Button type="submit" disabled={createOrUpdateReview.isPending || createPost.isPending}>
+              {createOrUpdateReview.isPending || createPost.isPending ? "Saving..." : "Save Review"}
             </Button>
           </div>
         </form>

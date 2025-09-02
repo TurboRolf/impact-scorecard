@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Star, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
 import { useCreateOrUpdateStance, CompanyStance, useCompanies } from "@/hooks/useCompanyStances";
+import { useCreatePost } from "@/hooks/usePosts";
 
 interface CompanyStanceDialogProps {
   open: boolean;
@@ -31,22 +33,45 @@ const CompanyStanceDialog = ({
     stance: existingStance?.stance || 'neutral' as CompanyStance,
     notes: existingStance?.notes || ""
   });
+  const [postToFeed, setPostToFeed] = useState(false);
 
   const { data: companies = [] } = useCompanies();
   const createOrUpdateStance = useCreateOrUpdateStance();
+  const createPost = useCreatePost();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.company_name.trim()) return;
 
-    await createOrUpdateStance.mutateAsync(formData);
-    onOpenChange(false);
-    setFormData({
-      company_name: "",
-      company_category: "",
-      stance: 'neutral',
-      notes: ""
-    });
+    try {
+      await createOrUpdateStance.mutateAsync(formData);
+      
+      // Create post if option is selected
+      if (postToFeed && formData.notes.trim()) {
+        const stanceText = formData.stance === 'recommend' ? 'recommend' : 
+                          formData.stance === 'discourage' ? 'discourage' : 
+                          'am neutral on';
+        
+        const postContent = `I ${stanceText} ${formData.company_name}. ${formData.notes}`;
+        
+        await createPost.mutateAsync({
+          content: postContent,
+          company_name: formData.company_name,
+          company_category: formData.company_category,
+        });
+      }
+      
+      onOpenChange(false);
+      setFormData({
+        company_name: "",
+        company_category: "",
+        stance: 'neutral',
+        notes: ""
+      });
+      setPostToFeed(false);
+    } catch (error) {
+      // Error handling is done in the mutation hooks
+    }
   };
 
   const stanceOptions = [
@@ -152,12 +177,23 @@ const CompanyStanceDialog = ({
             />
           </div>
 
+          <div className="flex items-center space-x-2">
+            <Checkbox 
+              id="post-to-feed" 
+              checked={postToFeed}
+              onCheckedChange={(checked) => setPostToFeed(checked === true)}
+            />
+            <Label htmlFor="post-to-feed" className="text-sm">
+              Post this stance to my feed (requires notes)
+            </Label>
+          </div>
+
           <div className="flex gap-2 justify-end">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
-            <Button type="submit" disabled={createOrUpdateStance.isPending}>
-              {createOrUpdateStance.isPending ? "Saving..." : "Save Stance"}
+            <Button type="submit" disabled={createOrUpdateStance.isPending || createPost.isPending}>
+              {createOrUpdateStance.isPending || createPost.isPending ? "Saving..." : "Save Stance"}
             </Button>
           </div>
         </form>
