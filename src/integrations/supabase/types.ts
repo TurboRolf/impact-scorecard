@@ -198,6 +198,53 @@ export type Database = {
         }
         Relationships: []
       }
+      posts: {
+        Row: {
+          comments_count: number | null
+          company_category: string | null
+          company_name: string | null
+          content: string
+          created_at: string
+          id: string
+          is_boycott: boolean | null
+          likes_count: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          comments_count?: number | null
+          company_category?: string | null
+          company_name?: string | null
+          content: string
+          created_at?: string
+          id?: string
+          is_boycott?: boolean | null
+          likes_count?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          comments_count?: number | null
+          company_category?: string | null
+          company_name?: string | null
+          content?: string
+          created_at?: string
+          id?: string
+          is_boycott?: boolean | null
+          likes_count?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           bio: string | null
