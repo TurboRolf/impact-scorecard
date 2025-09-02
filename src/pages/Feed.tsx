@@ -55,9 +55,9 @@ const Feed = () => {
       isCreator: post.profiles?.profile_type === 'creator'
     },
     content: post.content,
-    company: post.company_name ? {
+    company: post.company_name && post.company_rating ? {
       name: post.company_name,
-      rating: post.company_rating || 0, // Use the specific review rating
+      rating: post.company_rating,
       category: post.company_category || ""
     } : undefined,
     isBoycott: post.is_boycott,
