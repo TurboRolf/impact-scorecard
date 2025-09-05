@@ -283,6 +283,7 @@ export type Database = {
       }
       user_company_stances: {
         Row: {
+          company_category: string | null
           company_id: string
           company_name: string | null
           created_at: string
@@ -293,6 +294,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          company_category?: string | null
           company_id: string
           company_name?: string | null
           created_at?: string
@@ -303,6 +305,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          company_category?: string | null
           company_id?: string
           company_name?: string | null
           created_at?: string
