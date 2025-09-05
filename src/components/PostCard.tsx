@@ -168,7 +168,7 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
                   size="sm" 
                   onClick={handleJoinBoycott}
                   disabled={joinBoycott.isPending}
-                  className="w-full"
+                  className="px-4"
                 >
                   {joinBoycott.isPending ? "Joining..." : "Join Boycott"}
                 </Button>
