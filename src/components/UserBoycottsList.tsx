@@ -15,7 +15,7 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
 
   // Filter boycotts created by the user
   const userBoycotts = boycotts.filter(boycott => 
-    boycott.profiles?.username // For now, show all boycotts since organizer_id isn't in the Boycott type
+    boycott.organizer_id === userId
   );
 
   const getStatusColor = (status: string) => {

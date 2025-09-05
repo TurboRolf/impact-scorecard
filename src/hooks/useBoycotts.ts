@@ -12,6 +12,7 @@ export interface Boycott {
   impact: 'low' | 'medium' | 'high' | 'very-high';
   start_date: string;
   created_at: string;
+  organizer_id: string;
   categories: {
     name: string;
     color: string;
