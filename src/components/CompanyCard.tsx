@@ -129,15 +129,9 @@ const CompanyCard = ({
             <MessageSquare className="h-4 w-4" />
             Add Stance
           </Button>
-          {activeBoycotts > 0 ? (
-            <Button variant="boycott" size="sm" className="flex-1">
-              Join Boycott
-            </Button>
-          ) : (
-            <Button variant="outline" size="sm" className="flex-1">
-              Start Boycott
-            </Button>
-          )}
+          <Button variant="outline" size="sm" className="flex-1">
+            Start Boycott
+          </Button>
         </div>
       </CardContent>
     </Card>
