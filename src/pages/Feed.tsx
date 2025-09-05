@@ -56,8 +56,30 @@ const Feed = () => {
       cleanContent = cleanContent.replace(starPattern, '').trim();
     }
     
-    // For boycott posts, just show them as regular posts with boycott badge
-    // No special boycott card structure since posts table doesn't contain boycott details
+    // Extract boycott info from content if it's a boycott post
+    let boycottData = undefined;
+    if (post.is_boycott) {
+      // Try to extract boycott details from content
+      const lines = post.content.split('\n');
+      const titleMatch = lines.find(line => line.startsWith('Title:'))?.replace('Title:', '').trim();
+      const companyMatch = lines.find(line => line.startsWith('Target:'))?.replace('Target:', '').trim();
+      const subjectMatch = lines.find(line => line.startsWith('Reason:'))?.replace('Reason:', '').trim();
+      
+      boycottData = {
+        title: titleMatch || "Boycott Campaign",
+        company: companyMatch || post.company_name || "Unknown Company",
+        subject: subjectMatch || "Corporate accountability",
+        impact: 'medium' as const,
+        participants_count: Math.floor(Math.random() * 1000) + 100, // Mock data
+        category: post.company_category || 'General'
+      };
+      
+      // Clean the content to remove structured data
+      cleanContent = lines
+        .filter(line => !line.startsWith('Title:') && !line.startsWith('Target:') && !line.startsWith('Reason:'))
+        .join('\n')
+        .trim();
+    }
     
     return {
       user: {
@@ -72,7 +94,7 @@ const Feed = () => {
         rating: post.company_rating,
         category: post.company_category || ""
       } : undefined,
-      boycott: undefined, // No boycott details in posts table
+      boycott: boycottData,
       isBoycott: post.is_boycott,
       timestamp: formatTimestamp(post.created_at),
       likes: post.likes_count,
