@@ -122,27 +122,31 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
         {boycott && (
           <Card className="bg-muted/50 border-0 mb-4">
             <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
                     <AlertTriangle className="h-4 w-4 text-destructive" />
                     <h4 className="font-semibold">{boycott.title}</h4>
                   </div>
                   <p className="text-sm text-muted-foreground mb-1">Target: {boycott.company}</p>
-                  <p className="text-sm text-muted-foreground">{boycott.category}</p>
+                  {boycott.category && (
+                    <p className="text-sm text-muted-foreground">{boycott.category}</p>
+                  )}
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="text-right">
                   <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white ${getImpactColor(boycott.impact)}`}>
                     {getImpactText(boycott.impact)} Impact
                   </div>
                 </div>
               </div>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground mt-3">
+              
+              <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
                   <span>{boycott.participants_count} participants</span>
                 </div>
               </div>
+              
               {content && (
                 <p className="text-foreground mt-3 pt-3 border-t">{content}</p>
               )}

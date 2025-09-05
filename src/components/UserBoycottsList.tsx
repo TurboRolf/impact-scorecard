@@ -13,10 +13,14 @@ interface UserBoycottsListProps {
 const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
   const { data: boycotts = [], isLoading } = useBoycotts();
 
+  console.log('UserBoycottsList - userId:', userId);
+  console.log('UserBoycottsList - boycotts:', boycotts);
+
   // Filter boycotts created by the user
-  const userBoycotts = boycotts.filter(boycott => 
-    boycott.organizer_id === userId || boycott.profiles?.username === userId
-  );
+  const userBoycotts = boycotts.filter(boycott => {
+    console.log('Checking boycott:', boycott.id, 'organizer_id:', boycott.organizer_id, 'userId:', userId);
+    return boycott.organizer_id === userId;
+  });
 
   const getStatusColor = (status: string) => {
     switch (status) {
