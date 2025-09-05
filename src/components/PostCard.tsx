@@ -120,49 +120,31 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
 
         {/* Boycott card */}
         {boycott && (
-          <Card className="bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-950/20 dark:to-orange-950/20 border border-red-200 dark:border-red-800 mb-4">
+          <Card className="bg-muted/50 border-0 mb-4">
             <CardContent className="p-4">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
-                    <h4 className="font-bold text-red-900 dark:text-red-100">{boycott.title}</h4>
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
+                    <h4 className="font-semibold">{boycott.title}</h4>
                   </div>
-                  <div className="flex items-center gap-4 text-sm text-red-700 dark:text-red-300 mb-3">
-                    <div className="flex items-center gap-1">
-                      <Target className="h-4 w-4" />
-                      <span className="font-medium">{boycott.company}</span>
-                    </div>
-                    {boycott.category && (
-                      <Badge variant="outline" className="border-red-300 text-red-700 dark:border-red-700 dark:text-red-300">
-                        {boycott.category}
-                      </Badge>
-                    )}
-                  </div>
+                  <p className="text-sm text-muted-foreground mb-1">Target: {boycott.company}</p>
+                  <p className="text-sm text-muted-foreground">{boycott.category}</p>
                 </div>
-                <div className="text-right">
+                <div className="flex items-center gap-1">
                   <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white ${getImpactColor(boycott.impact)}`}>
                     {getImpactText(boycott.impact)} Impact
                   </div>
                 </div>
               </div>
-              
-              <div className="bg-red-100 dark:bg-red-900/30 p-3 rounded-lg mb-3">
-                <p className="text-sm font-medium text-red-900 dark:text-red-100 mb-1">Subject:</p>
-                <p className="text-sm text-red-800 dark:text-red-200">{boycott.subject}</p>
-              </div>
-
-              <div className="flex items-center gap-4 text-sm text-red-700 dark:text-red-300 mb-3">
+              <div className="flex items-center gap-4 text-sm text-muted-foreground mt-3">
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
-                  <span className="font-medium">{boycott.participants_count} participants</span>
+                  <span>{boycott.participants_count} participants</span>
                 </div>
               </div>
-              
               {content && (
-                <div className="pt-3 border-t border-red-200 dark:border-red-800">
-                  <p className="text-red-900 dark:text-red-100">{content}</p>
-                </div>
+                <p className="text-foreground mt-3 pt-3 border-t">{content}</p>
               )}
             </CardContent>
           </Card>
