@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import PostCard from "@/components/PostCard";
 import UserStancesList from "@/components/UserStancesList";
+import UserReviewsList from "@/components/UserReviewsList";
 import ProfileSettingsDialog from "@/components/ProfileSettingsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -286,11 +287,7 @@ const Profile = () => {
           </TabsContent>
           
           <TabsContent value="reviews" className="mt-6">
-            <Card>
-              <CardContent className="p-6 text-center text-muted-foreground">
-                Your detailed company reviews and ratings will appear here
-              </CardContent>
-            </Card>
+            <UserReviewsList userId={user?.id} />
           </TabsContent>
           
           <TabsContent value="boycotts" className="mt-6">
