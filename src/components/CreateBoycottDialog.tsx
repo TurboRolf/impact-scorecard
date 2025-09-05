@@ -125,7 +125,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
 
       // Create a post if requested
       if (createPost && boycottData) {
-        const postContent = `🚨 NEW BOYCOTT: ${formData.title}
+        const postContent = `${formData.title}
 
 Target: ${formData.company}
 Subject: ${formData.subject}
