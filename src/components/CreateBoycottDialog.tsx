@@ -137,6 +137,9 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
 
       // Create a post if requested
       if (createPost && boycottData) {
+        // Get the selected category name
+        const selectedCategory = categories.find(c => c.id === formData.category_id);
+        
         const postContent = `${formData.title}
 
 Target: ${formData.company}
@@ -151,7 +154,7 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
           .insert({
             content: postContent,
             company_name: formData.company,
-            company_category: companies.find(c => c.name === formData.company)?.category || 'Other',
+            company_category: selectedCategory?.name || 'Other',
             is_boycott: true,
             user_id: user.id
           });
