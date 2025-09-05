@@ -57,15 +57,15 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
   };
   return (
     <Card className="hover:shadow-card transition-all duration-300">
-      <CardHeader className="pb-3">
+      <CardHeader>
         <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3">
+          <div className="flex items-start gap-3 flex-1">
             <Avatar className="h-10 w-10">
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
                 <span className="font-semibold">{user.name}</span>
                 {user.isCreator && (
                   <Badge variant="secondary" className="text-xs">
@@ -85,74 +85,32 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
         </div>
       </CardHeader>
       
-      
-      <CardContent className="pt-0">
-        {/* Regular post content */}
-        {!company && !boycott && <p className="text-foreground mb-4">{content}</p>}
-        
+      <CardContent>
         {/* Company review card */}
         {company && (
-          <Card className="bg-muted/50 border-0 mb-4">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-semibold">{company.name}</h4>
-                  <p className="text-sm text-muted-foreground">{company.category}</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`h-4 w-4 ${
-                        i < company.rating ? "text-earth-orange fill-current" : "text-muted-foreground"
-                      }`}
-                    />
-                  ))}
-                  <span className="ml-1 text-sm font-medium">{company.rating}/5</span>
-                </div>
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <div>
+                <h4 className="font-semibold text-lg">{company.name}</h4>
+                <p className="text-sm text-muted-foreground">Category: <span className="font-medium">{company.category}</span></p>
               </div>
-              {content && (
-                <p className="text-foreground mt-3 pt-3 border-t">{content}</p>
-              )}
-            </CardContent>
-          </Card>
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className={`h-4 w-4 ${
+                      i < company.rating ? "text-earth-orange fill-current" : "text-muted-foreground"
+                    }`}
+                  />
+                ))}
+                <span className="ml-1 text-sm font-medium">{company.rating}/5</span>
+              </div>
+            </div>
+          </div>
         )}
 
-        {/* Boycott card */}
-        {boycott && (
-          <Card className="bg-muted/50 border-0 mb-4">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <AlertTriangle className="h-4 w-4 text-destructive" />
-                    <h4 className="font-semibold">{boycott.title}</h4>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-1">Target: {boycott.company}</p>
-                  {boycott.category && (
-                    <p className="text-sm text-muted-foreground">{boycott.category}</p>
-                  )}
-                </div>
-                <div className="text-right">
-                  <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium text-white ${getImpactColor(boycott.impact)}`}>
-                    {getImpactText(boycott.impact)} Impact
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  <span>{boycott.participants_count} participants</span>
-                </div>
-              </div>
-              
-              {content && (
-                <p className="text-foreground mt-3 pt-3 border-t">{content}</p>
-              )}
-            </CardContent>
-          </Card>
-        )}
+        {/* Regular post content */}
+        <p className="text-foreground mb-4">{content}</p>
         
         <div className="flex items-center gap-4 text-muted-foreground">
           <Button variant="ghost" size="sm" className="gap-2 hover:text-red-500">
