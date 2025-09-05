@@ -19,6 +19,7 @@ interface CompanyCardProps {
   discourageCount?: number;
   onRate?: () => void;
   onReview?: () => void;
+  onStartBoycott?: () => void;
 }
 
 const CompanyCard = ({
@@ -36,7 +37,8 @@ const CompanyCard = ({
   neutralCount = 0,
   discourageCount = 0,
   onRate,
-  onReview
+  onReview,
+  onStartBoycott
 }: CompanyCardProps) => {
   const ratings = [
     { label: "Ethics", value: ethicsRating, color: "text-earth-blue" },
@@ -129,7 +131,7 @@ const CompanyCard = ({
             <MessageSquare className="h-4 w-4" />
             Add Stance
           </Button>
-          <Button variant="outline" size="sm" className="flex-1">
+          <Button variant="outline" size="sm" className="flex-1" onClick={onStartBoycott}>
             Start Boycott
           </Button>
         </div>

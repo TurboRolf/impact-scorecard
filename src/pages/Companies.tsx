@@ -3,6 +3,7 @@ import Navigation from "@/components/Navigation";
 import CompanyCard from "@/components/CompanyCard";
 import CompanyStanceDialog from "@/components/CompanyStanceDialog";
 import CompanyReviewDialog from "@/components/CompanyReviewDialog";
+import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ const Companies = () => {
   const [viewType, setViewType] = useState<"global" | "following">("global");
   const [stanceDialogOpen, setStanceDialogOpen] = useState(false);
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
+  const [boycottDialogOpen, setBoycottDialogOpen] = useState(false);
   const [selectedCompany, setSelectedCompany] = useState<{name: string, category: string} | null>(null);
   
   const { data: companies = [], isLoading } = useCompanies();
@@ -37,6 +39,11 @@ const Companies = () => {
   const handleReviewCompany = (companyName: string, companyCategory: string) => {
     setSelectedCompany({ name: companyName, category: companyCategory });
     setReviewDialogOpen(true);
+  };
+
+  const handleStartBoycott = (companyName: string, companyCategory: string) => {
+    setSelectedCompany({ name: companyName, category: companyCategory });
+    setBoycottDialogOpen(true);
   };
 
   if (isLoading) {
@@ -161,6 +168,7 @@ const Companies = () => {
               discourageCount={company.discourage_count}
               onRate={() => handleRateCompany(company.name, company.category)}
               onReview={() => handleReviewCompany(company.name, company.category)}
+              onStartBoycott={() => handleStartBoycott(company.name, company.category)}
             />
           ))}
         </div>
@@ -187,6 +195,12 @@ const Companies = () => {
         onOpenChange={setReviewDialogOpen}
         companyName={selectedCompany?.name}
       />
+      
+      {boycottDialogOpen && (
+        <CreateBoycottDialog
+          onBoycottCreated={() => setBoycottDialogOpen(false)}
+        />
+      )}
       </div>
     </div>
   );
