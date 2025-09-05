@@ -18,6 +18,7 @@ interface CompanyCardProps {
   neutralCount?: number;
   discourageCount?: number;
   onRate?: () => void;
+  onReview?: () => void;
 }
 
 const CompanyCard = ({
@@ -34,7 +35,8 @@ const CompanyCard = ({
   recommendCount = 0,
   neutralCount = 0,
   discourageCount = 0,
-  onRate
+  onRate,
+  onReview
 }: CompanyCardProps) => {
   const ratings = [
     { label: "Ethics", value: ethicsRating, color: "text-earth-blue" },
@@ -61,7 +63,10 @@ const CompanyCard = ({
           </div>
           
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
+            <div 
+              className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={onReview}
+            >
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
@@ -83,7 +88,11 @@ const CompanyCard = ({
         
         <div className="grid grid-cols-3 gap-4 mb-4">
           {ratings.map((rating) => (
-            <div key={rating.label} className="text-center">
+            <div 
+              key={rating.label} 
+              className="text-center cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={onReview}
+            >
               <div className={`text-lg font-bold ${rating.color}`}>{rating.value}/5</div>
               <div className="text-xs text-muted-foreground">{rating.label}</div>
             </div>

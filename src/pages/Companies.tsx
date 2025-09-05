@@ -160,6 +160,7 @@ const Companies = () => {
               neutralCount={company.neutral_count}
               discourageCount={company.discourage_count}
               onRate={() => handleRateCompany(company.name, company.category)}
+              onReview={() => handleReviewCompany(company.name, company.category)}
             />
           ))}
         </div>
