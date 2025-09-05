@@ -196,11 +196,12 @@ const Companies = () => {
         companyName={selectedCompany?.name}
       />
       
-      {boycottDialogOpen && (
-        <CreateBoycottDialog
-          onBoycottCreated={() => setBoycottDialogOpen(false)}
-        />
-      )}
+      <CreateBoycottDialog
+        open={boycottDialogOpen}
+        onOpenChange={setBoycottDialogOpen}
+        preselectedCompany={selectedCompany?.name}
+        onBoycottCreated={() => setBoycottDialogOpen(false)}
+      />
       </div>
     </div>
   );

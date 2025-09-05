@@ -20,17 +20,20 @@ interface Category {
 
 interface CreateBoycottDialogProps {
   onBoycottCreated: () => void;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  preselectedCompany?: string;
 }
 
-export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogProps) => {
-  const [open, setOpen] = useState(false);
+export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOpenChange: externalOnOpenChange, preselectedCompany }: CreateBoycottDialogProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const { data: companies = [] } = useCompanies();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    company: "",
+    company: preselectedCompany || "",
     subject: "",
     category_id: "",
     impact: "medium"
@@ -38,11 +41,20 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
   const [createPost, setCreatePost] = useState(true);
   const { toast } = useToast();
 
+  const open = externalOpen !== undefined ? externalOpen : internalOpen;
+  const setOpen = externalOnOpenChange || setInternalOpen;
+
   useEffect(() => {
     if (open) {
       fetchCategories();
     }
   }, [open]);
+
+  useEffect(() => {
+    if (preselectedCompany) {
+      setFormData(prev => ({ ...prev, company: preselectedCompany }));
+    }
+  }, [preselectedCompany]);
 
   const fetchCategories = async () => {
     const { data, error } = await supabase
@@ -160,7 +172,7 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
       setFormData({
         title: "",
         description: "",
-        company: "",
+        company: preselectedCompany || "",
         subject: "",
         category_id: "",
         impact: "medium"
@@ -181,12 +193,14 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Start Boycott
-        </Button>
-      </DialogTrigger>
+      {externalOpen === undefined && (
+        <DialogTrigger asChild>
+          <Button variant="default" className="gap-2">
+            <Plus className="h-4 w-4" />
+            Start Boycott
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle>Create New Boycott</DialogTitle>
