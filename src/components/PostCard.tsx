@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Heart, MessageCircle, Share, Star, AlertTriangle, Target, Users, Calendar } from "lucide-react";
+import { useJoinBoycott } from "@/hooks/useBoycotts";
 
 interface PostCardProps {
   user: {
@@ -32,6 +33,16 @@ interface PostCardProps {
 }
 
 const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes, comments }: PostCardProps) => {
+  const joinBoycott = useJoinBoycott();
+  
+  const handleJoinBoycott = () => {
+    if (boycott) {
+      // Generate a consistent boycott ID based on the boycott title and company
+      const boycottId = `${boycott.title.toLowerCase().replace(/\s+/g, '-')}-${boycott.company.toLowerCase().replace(/\s+/g, '-')}`;
+      joinBoycott.mutate(boycottId);
+    }
+  };
+
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case 'low':
@@ -150,6 +161,18 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
               {content && (
                 <p className="text-foreground mt-3 pt-3 border-t">{content}</p>
               )}
+              
+              <div className="mt-3 pt-3 border-t">
+                <Button 
+                  variant="boycott" 
+                  size="sm" 
+                  onClick={handleJoinBoycott}
+                  disabled={joinBoycott.isPending}
+                  className="w-full"
+                >
+                  {joinBoycott.isPending ? "Joining..." : "Join Boycott"}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         )}
