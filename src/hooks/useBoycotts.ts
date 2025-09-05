@@ -17,10 +17,6 @@ export interface Boycott {
     name: string;
     color: string;
   };
-  profiles: {
-    display_name?: string;
-    username?: string;
-  } | null;
 }
 
 export const useBoycotts = (searchTerm = '') => {
@@ -31,8 +27,7 @@ export const useBoycotts = (searchTerm = '') => {
         .from('boycotts')
         .select(`
           *,
-          categories (name, color),
-          profiles (display_name, username)
+          categories (name, color)
         `)
         .order('created_at', { ascending: false });
 

@@ -167,16 +167,16 @@ const BoycottsContent = () => {
                   
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarFallback className="text-xs">
-                            {boycott.profiles?.display_name?.[0] || boycott.profiles?.username?.[0] || "A"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm text-muted-foreground">
-                          by {boycott.profiles?.display_name || boycott.profiles?.username || "Anonymous"}
-                        </span>
-                      </div>
+                       <div className="flex items-center gap-2">
+                         <Avatar className="h-6 w-6">
+                           <AvatarFallback className="text-xs">
+                             A
+                           </AvatarFallback>
+                         </Avatar>
+                         <span className="text-sm text-muted-foreground">
+                           by Anonymous
+                         </span>
+                       </div>
                       
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <Users className="h-4 w-4" />
