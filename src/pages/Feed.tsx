@@ -60,10 +60,10 @@ const Feed = () => {
     let boycottData = undefined;
     if (post.is_boycott) {
       // Try to extract boycott details from content
-      const lines = post.content.split('\n');
-      const titleMatch = lines.find(line => line.startsWith('Title:'))?.replace('Title:', '').trim();
+      const lines = post.content.split('\n').filter(line => line.trim());
+      const titleMatch = lines[0]?.trim(); // Title is the first line
       const companyMatch = lines.find(line => line.startsWith('Target:'))?.replace('Target:', '').trim();
-      const subjectMatch = lines.find(line => line.startsWith('Reason:'))?.replace('Reason:', '').trim();
+      const subjectMatch = lines.find(line => line.startsWith('Subject:'))?.replace('Subject:', '').trim();
       
       boycottData = {
         title: titleMatch || "Boycott Campaign",
@@ -74,11 +74,22 @@ const Feed = () => {
         category: post.company_category || 'General'
       };
       
-      // Clean the content to remove structured data
-      cleanContent = lines
-        .filter(line => !line.startsWith('Title:') && !line.startsWith('Target:') && !line.startsWith('Reason:'))
-        .join('\n')
-        .trim();
+      // Clean the content to remove structured data - keep only the description part
+      const targetIndex = lines.findIndex(line => line.startsWith('Target:'));
+      const subjectIndex = lines.findIndex(line => line.startsWith('Subject:'));
+      const hashtagIndex = lines.findIndex(line => line.includes('#Boycott'));
+      
+      // Extract description (lines after Subject line but before hashtags)
+      if (subjectIndex >= 0) {
+        const startIndex = subjectIndex + 1;
+        const endIndex = hashtagIndex >= 0 ? hashtagIndex : lines.length;
+        cleanContent = lines.slice(startIndex, endIndex)
+          .filter(line => line.trim())
+          .join('\n')
+          .trim();
+      } else {
+        cleanContent = lines.slice(1).join('\n').trim();
+      }
     }
     
     return {
