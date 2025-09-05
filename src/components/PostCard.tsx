@@ -59,71 +59,73 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
     <Card className="hover:shadow-card transition-all duration-300">
       <CardHeader>
         <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3 flex-1">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={user.avatar} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <span className="font-semibold">{user.name}</span>
-                {user.isCreator && (
-                  <Badge variant="secondary" className="text-xs">
-                    Creator
-                  </Badge>
-                )}
-                {isBoycott && (
-                  <Badge variant="destructive" className="text-xs gap-1">
-                    <AlertTriangle className="h-3 w-3" />
-                    Boycott
-                  </Badge>
-                )}
-              </div>
-              <span className="text-sm text-muted-foreground">@{user.username} · {timestamp}</span>
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-2">
+              {isBoycott && <AlertTriangle className="h-5 w-5 text-destructive" />}
+              <span className="font-semibold text-lg">{user.name}</span>
+              {user.isCreator && (
+                <Badge variant="secondary" className="text-xs">
+                  Creator
+                </Badge>
+              )}
+              {isBoycott && (
+                <Badge variant="destructive" className="text-xs gap-1">
+                  Boycott
+                </Badge>
+              )}
             </div>
+            {company && (
+              <p className="text-sm text-muted-foreground mb-2">
+                About: <span className="font-medium">{company.name}</span> • 
+                Category: <span className="font-medium">{company.category}</span>
+              </p>
+            )}
           </div>
-        </div>
-      </CardHeader>
-      
-      <CardContent>
-        {/* Company review card */}
-        {company && (
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-3">
-              <div>
-                <h4 className="font-semibold text-lg">{company.name}</h4>
-                <p className="text-sm text-muted-foreground">Category: <span className="font-medium">{company.category}</span></p>
-              </div>
+          {company && (
+            <div className="text-right">
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`h-4 w-4 ${
-                      i < company.rating ? "text-earth-orange fill-current" : "text-muted-foreground"
+                      i < company.rating ? "text-brand-accent fill-current" : "text-muted-foreground"
                     }`}
                   />
                 ))}
-                <span className="ml-1 text-sm font-medium">{company.rating}/5</span>
+                <span className="ml-1 text-sm font-medium text-brand-accent">{company.rating}/5</span>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Regular post content */}
+          )}
+        </div>
+      </CardHeader>
+      
+      <CardContent>
         <p className="text-foreground mb-4">{content}</p>
         
-        <div className="flex items-center gap-4 text-muted-foreground">
-          <Button variant="ghost" size="sm" className="gap-2 hover:text-red-500">
-            <Heart className="h-4 w-4" />
-            {likes}
-          </Button>
-          <Button variant="ghost" size="sm" className="gap-2 hover:text-blue-500">
-            <MessageCircle className="h-4 w-4" />
-            {comments}
-          </Button>
-          <Button variant="ghost" size="sm" className="gap-2 hover:text-green-500">
-            <Share className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Avatar className="h-6 w-6">
+                <AvatarImage src={user.avatar} />
+                <AvatarFallback className="text-xs">{user.name.charAt(0)}</AvatarFallback>
+              </Avatar>
+              <span className="text-sm text-muted-foreground">@{user.username} · {timestamp}</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-4 text-muted-foreground">
+            <Button variant="ghost" size="sm" className="gap-2 hover:text-red-500">
+              <Heart className="h-4 w-4" />
+              {likes}
+            </Button>
+            <Button variant="ghost" size="sm" className="gap-2 hover:text-blue-500">
+              <MessageCircle className="h-4 w-4" />
+              {comments}
+            </Button>
+            <Button variant="ghost" size="sm" className="gap-2 hover:text-green-500">
+              <Share className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
