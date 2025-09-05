@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useCompanies } from "@/hooks/useCompanyStances";
@@ -34,6 +35,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
     category_id: "",
     impact: "medium"
   });
+  const [createPost, setCreatePost] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -103,7 +105,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
         return;
       }
 
-      const { error } = await supabase
+      const { data: boycottData, error } = await supabase
         .from('boycotts')
         .insert({
           title: formData.title,
@@ -113,10 +115,39 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
           category_id: formData.category_id,
           impact: formData.impact,
           organizer_id: user.id
-        });
+        })
+        .select()
+        .single();
 
       if (error) {
         throw error;
+      }
+
+      // Create a post if requested
+      if (createPost && boycottData) {
+        const postContent = `🚨 NEW BOYCOTT: ${formData.title}
+
+Target: ${formData.company}
+Subject: ${formData.subject}
+
+${formData.description}
+
+Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
+
+        const { error: postError } = await supabase
+          .from('posts')
+          .insert({
+            content: postContent,
+            company_name: formData.company,
+            company_category: companies.find(c => c.name === formData.company)?.category || 'Other',
+            is_boycott: true,
+            user_id: user.id
+          });
+
+        if (postError) {
+          console.error('Failed to create post:', postError);
+          // Don't fail the entire operation if post creation fails
+        }
       }
 
       toast({
@@ -134,6 +165,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
         category_id: "",
         impact: "medium"
       });
+      setCreatePost(true);
       setOpen(false);
       onBoycottCreated();
     } catch (error: any) {
@@ -252,6 +284,17 @@ export const CreateBoycottDialog = ({ onBoycottCreated }: CreateBoycottDialogPro
               rows={4}
               required
             />
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="create-post"
+              checked={createPost}
+              onCheckedChange={(checked) => setCreatePost(checked as boolean)}
+            />
+            <Label htmlFor="create-post" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              Create a post to announce this boycott
+            </Label>
           </div>
 
           <div className="flex gap-2 pt-4">

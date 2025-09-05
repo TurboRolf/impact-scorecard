@@ -4,6 +4,7 @@ import Navigation from "@/components/Navigation";
 import PostCard from "@/components/PostCard";
 import UserStancesList from "@/components/UserStancesList";
 import UserReviewsList from "@/components/UserReviewsList";
+import UserBoycottsList from "@/components/UserBoycottsList";
 import ProfileSettingsDialog from "@/components/ProfileSettingsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -291,11 +292,7 @@ const Profile = () => {
           </TabsContent>
           
           <TabsContent value="boycotts" className="mt-6">
-            <Card>
-              <CardContent className="p-6 text-center text-muted-foreground">
-                Created and joined boycotts will appear here
-              </CardContent>
-            </Card>
+            <UserBoycottsList userId={user?.id} />
           </TabsContent>
         </Tabs>
       </div>
