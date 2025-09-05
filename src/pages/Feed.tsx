@@ -65,20 +65,23 @@ const Feed = () => {
       const companyMatch = lines.find(line => line.startsWith('Target:'))?.replace('Target:', '').trim();
       const subjectMatch = lines.find(line => line.startsWith('Reason:'))?.replace('Reason:', '').trim();
       
-      boycottData = {
-        title: titleMatch || "Boycott Campaign",
-        company: companyMatch || post.company_name || "Unknown Company",
-        subject: subjectMatch || "Corporate accountability",
-        impact: 'medium' as const,
-        participants_count: Math.floor(Math.random() * 1000) + 100, // Mock data
-        category: post.company_category || 'General'
-      };
-      
-      // Clean the content to remove structured data
-      cleanContent = lines
-        .filter(line => !line.startsWith('Title:') && !line.startsWith('Target:') && !line.startsWith('Reason:'))
-        .join('\n')
-        .trim();
+      // Only create boycott data if we have actual structured content
+      if (titleMatch && companyMatch && subjectMatch) {
+        boycottData = {
+          title: titleMatch,
+          company: companyMatch,
+          subject: subjectMatch,
+          impact: 'medium' as const,
+          participants_count: Math.floor(Math.random() * 1000) + 100, // Mock data
+          category: post.company_category || 'General'
+        };
+        
+        // Clean the content to remove structured data
+        cleanContent = lines
+          .filter(line => !line.startsWith('Title:') && !line.startsWith('Target:') && !line.startsWith('Reason:'))
+          .join('\n')
+          .trim();
+      }
     }
     
     return {
