@@ -2,8 +2,9 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share, Star, AlertTriangle, Target, Users, Calendar } from "lucide-react";
+import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users } from "lucide-react";
 import { useJoinBoycott } from "@/hooks/useBoycotts";
+import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 
 interface PostCardProps {
   user: {
@@ -11,6 +12,7 @@ interface PostCardProps {
     username: string;
     avatar?: string;
     isCreator?: boolean;
+    id?: string; // Add user ID for following functionality
   };
   content: string;
   company?: {
@@ -30,16 +32,33 @@ interface PostCardProps {
   timestamp: string;
   likes: number;
   comments: number;
+  currentUserId?: string;
 }
 
-const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes, comments }: PostCardProps) => {
+const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId }: PostCardProps) => {
   const joinBoycott = useJoinBoycott();
+  const { data: following = [] } = useFollows(currentUserId);
+  const followUser = useFollowUser();
+  const unfollowUser = useUnfollowUser();
+  
+  const isFollowing = user.id ? following.includes(user.id) : false;
+  const isOwnPost = user.id === currentUserId;
   
   const handleJoinBoycott = () => {
     if (boycott) {
       // Generate a consistent boycott ID based on the boycott title and company
       const boycottId = `${boycott.title.toLowerCase().replace(/\s+/g, '-')}-${boycott.company.toLowerCase().replace(/\s+/g, '-')}`;
       joinBoycott.mutate(boycottId);
+    }
+  };
+
+  const handleFollowToggle = () => {
+    if (!user.id || !currentUserId) return;
+    
+    if (isFollowing) {
+      unfollowUser.mutate(user.id);
+    } else {
+      followUser.mutate(user.id);
     }
   };
 
@@ -75,7 +94,7 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div>
+            <div className="flex-1">
               <div className="flex items-center gap-2">
                 <span className="font-semibold">{user.name}</span>
                 {user.isCreator && (
@@ -93,6 +112,29 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
               <span className="text-sm text-muted-foreground">@{user.username} · {timestamp}</span>
             </div>
           </div>
+          
+          {/* Follow button */}
+          {currentUserId && user.id && !isOwnPost && (
+            <Button
+              variant={isFollowing ? "secondary" : "outline"}
+              size="sm"
+              onClick={handleFollowToggle}
+              disabled={followUser.isPending || unfollowUser.isPending}
+              className="gap-2"
+            >
+              {isFollowing ? (
+                <>
+                  <UserCheck className="h-4 w-4" />
+                  Following
+                </>
+              ) : (
+                <>
+                  <UserPlus className="h-4 w-4" />
+                  Follow
+                </>
+              )}
+            </Button>
+          )}
         </div>
       </CardHeader>
       

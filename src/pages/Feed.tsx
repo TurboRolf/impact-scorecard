@@ -5,6 +5,7 @@ import PostCard from "@/components/PostCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Image, Building2 } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,9 +15,10 @@ const Feed = () => {
   const [newPost, setNewPost] = useState("");
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [feedType, setFeedType] = useState<"trending" | "following">("trending");
   const navigate = useNavigate();
   
-  const { data: posts = [], isLoading } = usePosts();
+  const { data: posts = [], isLoading } = usePosts(feedType);
   const createPost = useCreatePost();
 
   // Authentication state management
@@ -94,6 +96,7 @@ const Feed = () => {
     
     return {
       user: {
+        id: post.user_id, // Add user ID for following functionality
         name: post.profiles?.display_name || post.profiles?.username || "Anonymous User",
         username: post.profiles?.username || "unknown",
         avatar: post.profiles?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.profiles.username}` : undefined,
@@ -187,25 +190,57 @@ const Feed = () => {
           </Card>
         )}
 
-        {/* Feed */}
-        <div className="space-y-4">
-          {transformedPosts.length > 0 ? (
-            transformedPosts.map((post, index) => (
-              <PostCard key={index} {...post} />
-            ))
-          ) : (
-            <Card>
-              <CardContent className="p-8 text-center">
-                <p className="text-muted-foreground mb-4">No posts yet. Be the first to share!</p>
-                {user && (
-                  <Button onClick={() => document.querySelector('textarea')?.focus()} variant="outline">
-                    Create First Post
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          )}
-        </div>
+        {/* Feed Tabs */}
+        <Tabs value={feedType} onValueChange={(value) => setFeedType(value as "trending" | "following")} className="w-full">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="trending">Trending</TabsTrigger>
+            <TabsTrigger value="following">Following</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="trending" className="mt-6">
+            <div className="space-y-4">
+              {transformedPosts.length > 0 ? (
+                transformedPosts.map((post, index) => (
+                  <PostCard key={index} {...post} currentUserId={user?.id} />
+                ))
+              ) : (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <p className="text-muted-foreground mb-4">No posts yet. Be the first to share!</p>
+                    {user && (
+                      <Button onClick={() => document.querySelector('textarea')?.focus()} variant="outline">
+                        Create First Post
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+
+          <TabsContent value="following" className="mt-6">
+            <div className="space-y-4">
+              {transformedPosts.length > 0 ? (
+                transformedPosts.map((post, index) => (
+                  <PostCard key={index} {...post} currentUserId={user?.id} />
+                ))
+              ) : (
+                <Card>
+                  <CardContent className="p-8 text-center">
+                    <p className="text-muted-foreground mb-4">
+                      {user ? "No posts from people you follow yet. Start following users to see their posts here!" : "Sign in to see posts from people you follow."}
+                    </p>
+                    {user && (
+                      <Button onClick={() => setFeedType("trending")} variant="outline">
+                        Browse Trending Posts
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

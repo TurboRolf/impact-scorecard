@@ -29,24 +29,57 @@ export interface CreatePostData {
   is_boycott?: boolean;
 }
 
-export const usePosts = () => {
+export const usePosts = (feedType: "trending" | "following" = "trending") => {
   return useQuery({
-    queryKey: ["posts"],
+    queryKey: ["posts", feedType],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("posts")
-        .select(`
-          *,
-          profiles (
-            display_name,
-            username,
-            profile_type
-          )
-        `)
-        .order("created_at", { ascending: false });
-      
-      if (error) throw error;
-      return data as PostData[];
+      if (feedType === "following") {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return [];
+
+        // First get the list of followed user IDs
+        const { data: follows } = await supabase
+          .from("follows")
+          .select("following_id")
+          .eq("follower_id", user.id);
+
+        if (!follows || follows.length === 0) return [];
+
+        const followingIds = follows.map(f => f.following_id);
+
+        // Then get posts from followed users
+        const { data, error } = await supabase
+          .from("posts")
+          .select(`
+            *,
+            profiles (
+              display_name,
+              username,
+              profile_type
+            )
+          `)
+          .in("user_id", followingIds)
+          .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        return data as PostData[];
+      } else {
+        // Trending feed - all posts
+        const { data, error } = await supabase
+          .from("posts")
+          .select(`
+            *,
+            profiles (
+              display_name,
+              username,
+              profile_type
+            )
+          `)
+          .order("created_at", { ascending: false });
+        
+        if (error) throw error;
+        return data as PostData[];
+      }
     }
   });
 };
