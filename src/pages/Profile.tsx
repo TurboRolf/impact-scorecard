@@ -30,11 +30,6 @@ const Profile = () => {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        // Redirect to auth if not logged in
-        if (!session?.user) {
-          navigate('/auth');
-        }
       }
     );
 
@@ -42,15 +37,10 @@ const Profile = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
-      // Redirect to auth if not logged in
-      if (!session?.user) {
-        navigate('/auth');
-      }
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate]);
+  }, []);
 
   const { data: userStances = [] } = useUserStances(user?.id);
   const { data: profile } = useProfile(user?.id);
@@ -117,6 +107,32 @@ const Profile = () => {
     { icon: Users, label: "Community Builder", description: "1000+ followers" },
     { icon: AlertTriangle, label: "Boycott Leader", description: "5+ successful boycotts" },
   ];
+
+  // Show login prompt if not authenticated
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gradient-subtle">
+        <Navigation />
+        
+        <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">
+          <Card className="text-center">
+            <CardContent className="p-8">
+              <h1 className="text-2xl font-bold mb-4">Profile Access Required</h1>
+              <p className="text-muted-foreground mb-6">
+                Please sign in to view your profile and manage your account settings.
+              </p>
+              <Button onClick={() => navigate('/auth')} variant="earth" className="mr-4">
+                Sign In
+              </Button>
+              <Button onClick={() => navigate(-1)} variant="outline">
+                Go Back
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
