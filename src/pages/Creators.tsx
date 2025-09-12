@@ -1,17 +1,32 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Star, Users, MessageCircle, TrendingUp, Search, Award } from "lucide-react";
+import { Star, Users, MessageCircle, TrendingUp, Search, Award, UserPlus, UserCheck } from "lucide-react";
 import { useCreators } from "@/hooks/useProfile";
+import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect } from "react";
 
 const Creators = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const navigate = useNavigate();
   
   const { data: creators = [], isLoading } = useCreators();
+  const followUser = useFollowUser();
+  const unfollowUser = useUnfollowUser();
+  const { data: followedUsers = [] } = useFollows(currentUserId || undefined);
+  
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentUserId(session?.user?.id || null);
+    });
+  }, []);
   
   const filteredCreators = creators.filter(creator =>
     searchTerm === "" || 
@@ -19,6 +34,29 @@ const Creators = () => {
     creator.username?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     creator.bio?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleFollowToggle = async (creatorUserId: string) => {
+    if (!currentUserId) {
+      navigate("/auth");
+      return;
+    }
+
+    try {
+      const isCurrentlyFollowing = followedUsers.includes(creatorUserId);
+      if (isCurrentlyFollowing) {
+        await unfollowUser.mutateAsync(creatorUserId);
+      } else {
+        await followUser.mutateAsync(creatorUserId);
+      }
+    } catch (error) {
+      console.error("Error toggling follow:", error);
+    }
+  };
+
+  const handleViewProfile = (creatorUserId: string) => {
+    // For now, navigate to profile page - in the future could be creator-specific page
+    navigate("/profile");
+  };
 
   if (isLoading) {
     return (
@@ -101,12 +139,49 @@ const Creators = () => {
                   </p>
                   
                   <div className="flex gap-2">
-                    <Button variant="follow" size="sm" className="flex-1">
-                      <Users className="h-3 w-3 mr-1" />
-                      Follow
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex-1">
-                      <MessageCircle className="h-3 w-3 mr-1" />
+                    {currentUserId && currentUserId !== creator.user_id ? (
+                      <Button 
+                        variant={followedUsers.includes(creator.user_id) ? "secondary" : "default"}
+                        size="sm" 
+                        className="flex-1 gap-1"
+                        onClick={() => handleFollowToggle(creator.user_id)}
+                        disabled={followUser.isPending || unfollowUser.isPending}
+                      >
+                        {followedUsers.includes(creator.user_id) ? (
+                          <>
+                            <UserCheck className="h-3 w-3" />
+                            Following
+                          </>
+                        ) : (
+                          <>
+                            <UserPlus className="h-3 w-3" />
+                            Follow
+                          </>
+                        )}
+                      </Button>
+                    ) : !currentUserId ? (
+                      <Button 
+                        variant="default"
+                        size="sm" 
+                        className="flex-1 gap-1"
+                        onClick={() => navigate("/auth")}
+                      >
+                        <UserPlus className="h-3 w-3" />
+                        Follow
+                      </Button>
+                    ) : (
+                      <Button variant="secondary" size="sm" className="flex-1" disabled>
+                        Your Profile
+                      </Button>
+                    )}
+                    
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex-1 gap-1"
+                      onClick={() => handleViewProfile(creator.user_id)}
+                    >
+                      <MessageCircle className="h-3 w-3" />
                       View
                     </Button>
                   </div>

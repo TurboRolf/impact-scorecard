@@ -4,11 +4,13 @@ import { Home, User, Building2, AlertTriangle, Users, Search, LogOut } from "luc
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
+import SearchDialog from "./SearchDialog";
 
 const Navigation = () => {
   const location = useLocation();
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -31,6 +33,19 @@ const Navigation = () => {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
   };
+
+  // Keyboard shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
   
   const navItems = [
     { path: "/", icon: Home, label: "Feed" },
@@ -69,7 +84,7 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="hidden sm:flex">
+              <Button variant="outline" size="sm" className="hidden sm:flex" onClick={() => setSearchOpen(true)}>
                 <Search className="h-4 w-4" />
               </Button>
               {user ? (
@@ -92,7 +107,7 @@ const Navigation = () => {
 
       {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
-        <div className="grid grid-cols-5 gap-1 px-2 py-2">
+        <div className="grid grid-cols-6 gap-1 px-2 py-2">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -108,8 +123,21 @@ const Navigation = () => {
               </Link>
             );
           })}
+          
+          {/* Mobile Search Button */}
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="h-12 w-full flex-col gap-1 px-1"
+            onClick={() => setSearchOpen(true)}
+          >
+            <Search className="h-4 w-4" />
+            <span className="text-xs leading-none">Search</span>
+          </Button>
         </div>
       </nav>
+      
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </>
   );
 };
