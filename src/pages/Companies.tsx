@@ -152,7 +152,8 @@ const Companies = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCompanies.map((company) => (
             <CompanyCard 
-              key={company.id} 
+              key={company.id}
+              id={company.id}
               name={company.name}
               category={company.category}
               logo={company.logo_url || undefined}

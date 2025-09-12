@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Feed from "./pages/Feed";
 import Profile from "./pages/Profile";
 import Companies from "./pages/Companies";
+import Company from "./pages/Company";
 import Boycotts from "./pages/Boycotts";
 import Creators from "./pages/Creators";
 import Auth from "./pages/Auth";
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/" element={<Feed />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/companies" element={<Companies />} />
+          <Route path="/company/:id" element={<Company />} />
           <Route path="/boycotts" element={<Boycotts />} />
           <Route path="/creators" element={<Creators />} />
           <Route path="/auth" element={<Auth />} />

@@ -2,8 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, MessageSquare } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface CompanyCardProps {
+  id: string;
   name: string;
   category: string;
   logo?: string;
@@ -23,6 +25,7 @@ interface CompanyCardProps {
 }
 
 const CompanyCard = ({
+  id,
   name,
   category,
   logo,
@@ -40,6 +43,7 @@ const CompanyCard = ({
   onReview,
   onStartBoycott
 }: CompanyCardProps) => {
+  const navigate = useNavigate();
   const ratings = [
     { label: "Ethics", value: ethicsRating, color: "text-earth-blue" },
     { label: "Environment", value: environmentRating, color: "text-earth-green" },
@@ -47,7 +51,7 @@ const CompanyCard = ({
   ];
 
   return (
-    <Card className="hover:shadow-card transition-all duration-300">
+    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer" onClick={() => navigate(`/company/${id}`)}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-3">
@@ -67,7 +71,7 @@ const CompanyCard = ({
           <div className="flex items-center gap-2">
             <div 
               className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={onReview}
+              onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
               {[...Array(5)].map((_, i) => (
                 <Star
@@ -93,7 +97,7 @@ const CompanyCard = ({
             <div 
               key={rating.label} 
               className="text-center cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={onReview}
+              onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
               <div className={`text-lg font-bold ${rating.color}`}>{rating.value}/5</div>
               <div className="text-xs text-muted-foreground">{rating.label}</div>
@@ -127,11 +131,21 @@ const CompanyCard = ({
         </div>
         
         <div className="flex gap-2">
-          <Button variant="default" size="sm" className="flex-1 gap-1" onClick={onRate}>
+          <Button 
+            variant="default" 
+            size="sm" 
+            className="flex-1 gap-1" 
+            onClick={(e) => { e.stopPropagation(); onRate?.(); }}
+          >
             <MessageSquare className="h-4 w-4" />
             Add Stance
           </Button>
-          <Button variant="outline" size="sm" className="flex-1" onClick={onStartBoycott}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex-1" 
+            onClick={(e) => { e.stopPropagation(); onStartBoycott?.(); }}
+          >
             Start Boycott
           </Button>
         </div>
