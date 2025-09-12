@@ -64,7 +64,7 @@ const BoycottsContent = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle">
+    <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
       <Navigation />
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">

@@ -49,7 +49,7 @@ const Company = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-primary">
+      <div className="min-h-screen bg-gradient-primary pb-20 md:pb-8">
         <Navigation />
         <div className="container mx-auto px-4 pt-20">
           <div className="flex items-center justify-center h-64">
@@ -62,7 +62,7 @@ const Company = () => {
 
   if (!company) {
     return (
-      <div className="min-h-screen bg-gradient-primary">
+      <div className="min-h-screen bg-gradient-primary pb-20 md:pb-8">
         <Navigation />
         <div className="container mx-auto px-4 pt-20">
           <div className="text-center">
@@ -83,63 +83,63 @@ const Company = () => {
     { label: "Politics", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange" },
   ];
 
-  return (
-    <div className="min-h-screen bg-gradient-primary">
-      <Navigation />
-      
-      <div className="container mx-auto px-4 pt-20 pb-8">
-        <div className="mb-6">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate("/companies")}
-            className="mb-4"
-          >
+    return (
+      <div className="min-h-screen bg-gradient-primary pb-20 md:pb-8">
+        <Navigation />
+        
+        <div className="container mx-auto px-4 pt-20 pb-8">
+          <div className="mb-6">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate("/companies")}
+              className="mb-4"
+            >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Companies
           </Button>
-          
-          <div className="flex items-start gap-6 mb-6">
-            <div className="w-20 h-20 bg-gradient-subtle rounded-lg flex items-center justify-center">
-              {company.logo_url ? (
-                <img src={company.logo_url} alt={company.name} className="w-16 h-16 object-contain" />
-              ) : (
-                <span className="text-2xl font-bold">{company.name?.charAt(0)}</span>
-              )}
-            </div>
             
-            <div className="flex-1">
-              <h1 className="text-3xl font-bold mb-2">{company.name}</h1>
-              <Badge variant="secondary" className="mb-2">{company.category}</Badge>
-              <p className="text-muted-foreground mb-4">{company.description}</p>
-              
-              {company.website_url && (
-                <Button variant="outline" size="sm" asChild>
-                  <a href={company.website_url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    Visit Website
-                  </a>
-                </Button>
-              )}
-            </div>
-            
-            <div className="text-right">
-              <div className="flex items-center gap-1 mb-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`h-5 w-5 ${
-                      i < Number(company.avg_overall_rating || 0) ? "text-earth-orange fill-current" : "text-muted-foreground"
-                    }`}
-                  />
-                ))}
-                <span className="ml-2 text-lg font-semibold">{Number(company.avg_overall_rating || 0).toFixed(1)}/5</span>
+            <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-subtle rounded-lg flex items-center justify-center mx-auto sm:mx-0">
+                {company.logo_url ? (
+                  <img src={company.logo_url} alt={company.name} className="w-12 h-12 sm:w-16 sm:h-16 object-contain" />
+                ) : (
+                  <span className="text-xl sm:text-2xl font-bold">{company.name?.charAt(0)}</span>
+                )}
               </div>
-              <div className="text-sm text-muted-foreground">{company.total_ratings} reviews</div>
+              
+              <div className="flex-1 text-center sm:text-left">
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2">{company.name}</h1>
+                <Badge variant="secondary" className="mb-2">{company.category}</Badge>
+                <p className="text-muted-foreground mb-4 text-sm sm:text-base">{company.description}</p>
+                
+                <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`h-4 w-4 sm:h-5 sm:w-5 ${
+                          i < Number(company.avg_overall_rating || 0) ? "text-earth-orange fill-current" : "text-muted-foreground"
+                        }`}
+                      />
+                    ))}
+                    <span className="ml-2 text-base sm:text-lg font-semibold">{Number(company.avg_overall_rating || 0).toFixed(1)}/5</span>
+                  </div>
+                  <div className="text-sm text-muted-foreground">{company.total_ratings} reviews</div>
+                </div>
+                
+                {company.website_url && (
+                  <Button variant="outline" size="sm" asChild className="w-full sm:w-auto">
+                    <a href={company.website_url} target="_blank" rel="noopener noreferrer">
+                      <ExternalLink className="h-4 w-4 mr-2" />
+                      Visit Website
+                    </a>
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
           
-          {/* Rating Categories */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+            {/* Rating Categories */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             {ratings.map((rating) => (
               <Card key={rating.label}>
                 <CardContent className="text-center py-4">
@@ -156,31 +156,31 @@ const Company = () => {
               <CardTitle>Community Stance</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-3 gap-4 mb-4">
-                <div className="text-center">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                <div className="flex items-center justify-center sm:block sm:text-center">
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <ThumbsUp className="h-5 w-5 text-recommend" />
                     <span className="text-2xl font-bold text-recommend">{company.recommend_count}</span>
                   </div>
-                  <div className="text-sm text-muted-foreground">Recommend</div>
+                  <div className="text-sm sm:text-xs text-muted-foreground">Recommend</div>
                 </div>
-                <div className="text-center">
+                <div className="flex items-center justify-center sm:block sm:text-center">
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <Minus className="h-5 w-5 text-neutral" />
                     <span className="text-2xl font-bold text-neutral">{company.neutral_count}</span>
                   </div>
-                  <div className="text-sm text-muted-foreground">Neutral</div>
+                  <div className="text-sm sm:text-xs text-muted-foreground">Neutral</div>
                 </div>
-                <div className="text-center">
+                <div className="flex items-center justify-center sm:block sm:text-center">
                   <div className="flex items-center justify-center gap-2 mb-2">
                     <ThumbsDown className="h-5 w-5 text-discourage" />
                     <span className="text-2xl font-bold text-discourage">{company.discourage_count}</span>
                   </div>
-                  <div className="text-sm text-muted-foreground">Discourage</div>
+                  <div className="text-sm sm:text-xs text-muted-foreground">Discourage</div>
                 </div>
               </div>
               
-              <Button onClick={() => setStanceDialogOpen(true)} className="w-full">
+              <Button onClick={() => setStanceDialogOpen(true)} className="w-full h-12">
                 Share Your Stance
               </Button>
             </CardContent>
@@ -201,11 +201,11 @@ const Company = () => {
           )}
           
           {/* Action Buttons */}
-          <div className="flex gap-4 mb-8">
-            <Button onClick={() => setReviewDialogOpen(true)} variant="default">
+          <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            <Button onClick={() => setReviewDialogOpen(true)} variant="default" className="h-12 flex-1">
               Write Review
             </Button>
-            <Button onClick={() => setBoycottDialogOpen(true)} variant="outline">
+            <Button onClick={() => setBoycottDialogOpen(true)} variant="outline" className="h-12 flex-1">
               Start Boycott
             </Button>
           </div>
