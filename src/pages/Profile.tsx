@@ -151,70 +151,75 @@ const Profile = () => {
           </CardContent>
         </Card>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        {/* Stats Cards - Compact on mobile */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <ThumbsUp className="h-4 w-4 text-recommend" />
-                Recommended
+            <CardHeader className="pb-1 sm:pb-2 p-3 sm:p-4 md:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+                <ThumbsUp className="h-3 w-3 sm:h-4 sm:w-4 text-recommend" />
+                <span className="hidden sm:inline">Recommended</span>
+                <span className="sm:hidden">Rec.</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-recommend">{stanceStats.recommend}</div>
-              <p className="text-xs text-muted-foreground">Companies</p>
+            <CardContent className="p-3 pt-0 sm:p-4 sm:pt-0 md:p-6 md:pt-0">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-recommend">{stanceStats.recommend}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Companies</p>
             </CardContent>
           </Card>
           
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Minus className="h-4 w-4 text-neutral" />
-                Neutral
+            <CardHeader className="pb-1 sm:pb-2 p-3 sm:p-4 md:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+                <Minus className="h-3 w-3 sm:h-4 sm:w-4 text-neutral" />
+                <span className="hidden sm:inline">Neutral</span>
+                <span className="sm:hidden">Neu.</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-neutral">{stanceStats.neutral}</div>
-              <p className="text-xs text-muted-foreground">Companies</p>
+            <CardContent className="p-3 pt-0 sm:p-4 sm:pt-0 md:p-6 md:pt-0">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-neutral">{stanceStats.neutral}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Companies</p>
             </CardContent>
           </Card>
           
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <ThumbsDown className="h-4 w-4 text-discourage" />
-                Discouraged
+            <CardHeader className="pb-1 sm:pb-2 p-3 sm:p-4 md:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+                <ThumbsDown className="h-3 w-3 sm:h-4 sm:w-4 text-discourage" />
+                <span className="hidden sm:inline">Discouraged</span>
+                <span className="sm:hidden">Disc.</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-discourage">{stanceStats.discourage}</div>
-              <p className="text-xs text-muted-foreground">Companies</p>
+            <CardContent className="p-3 pt-0 sm:p-4 sm:pt-0 md:p-6 md:pt-0">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold text-discourage">{stanceStats.discourage}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Companies</p>
             </CardContent>
           </Card>
           
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-brand-accent" />
-                Boycotts Created
+            <CardHeader className="pb-1 sm:pb-2 p-3 sm:p-4 md:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+                <AlertTriangle className="h-3 w-3 sm:h-4 sm:w-4 text-brand-accent" />
+                <span className="hidden sm:inline">Boycotts Created</span>
+                <span className="sm:hidden">Created</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{profileData.boycottsCreated}</div>
-              <p className="text-xs text-muted-foreground">Active campaigns</p>
+            <CardContent className="p-3 pt-0 sm:p-4 sm:pt-0 md:p-6 md:pt-0">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold">{profileData.boycottsCreated}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Boycotts</p>
             </CardContent>
           </Card>
           
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Users className="h-4 w-4 text-brand-success" />
-                Boycotts Joined
+            <CardHeader className="pb-1 sm:pb-2 p-3 sm:p-4 md:p-6">
+              <CardTitle className="text-xs sm:text-sm font-medium flex items-center gap-1 sm:gap-2">
+                <Users className="h-3 w-3 sm:h-4 sm:w-4 text-brand-success" />
+                <span className="hidden sm:inline">Boycotts Joined</span>
+                <span className="sm:hidden">Joined</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{profileData.boycottsJoined}</div>
-              <p className="text-xs text-muted-foreground">Supporting causes</p>
+            <CardContent className="p-3 pt-0 sm:p-4 sm:pt-0 md:p-6 md:pt-0">
+              <div className="text-lg sm:text-xl md:text-2xl font-bold">{profileData.boycottsJoined}</div>
+              <p className="text-[10px] sm:text-xs text-muted-foreground">Boycotts</p>
             </CardContent>
           </Card>
         </div>
