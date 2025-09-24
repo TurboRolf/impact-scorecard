@@ -52,99 +52,99 @@ const CompanyCard = ({
 
   return (
     <Card className="hover:shadow-card transition-all duration-300 cursor-pointer" onClick={() => navigate(`/company/${id}`)}>
-      <CardHeader className="pb-4">
+      <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
         <div className="flex items-start justify-between">
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-subtle rounded-lg flex items-center justify-center flex-shrink-0">
+          <div className="flex items-start gap-2 sm:gap-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-subtle rounded-lg flex items-center justify-center flex-shrink-0">
               {logo ? (
-                <img src={logo} alt={name} className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+                <img src={logo} alt={name} className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
               ) : (
-                <span className="text-lg font-bold">{name.charAt(0)}</span>
+                <span className="text-sm sm:text-lg font-bold">{name.charAt(0)}</span>
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-base sm:text-lg truncate">{name}</CardTitle>
-              <p className="text-sm text-muted-foreground truncate">{category}</p>
+              <CardTitle className="text-sm sm:text-base truncate">{name}</CardTitle>
+              <p className="text-xs sm:text-sm text-muted-foreground truncate">{category}</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
             <div 
-              className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+              className="flex items-center gap-0.5 sm:gap-1 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-3 w-3 sm:h-4 sm:w-4 ${
+                  className={`h-2.5 w-2.5 sm:h-3 sm:w-3 ${
                     i < overallRating ? "text-earth-orange fill-current" : "text-muted-foreground"
                   }`}
                 />
               ))}
-              <span className="ml-1 font-semibold text-sm">{overallRating}/5</span>
+              <span className="ml-0.5 sm:ml-1 font-semibold text-xs sm:text-sm">{overallRating}/5</span>
             </div>
-            {trend === "up" && <TrendingUp className="h-3 w-3 sm:h-4 sm:w-4 text-green-500" />}
-            {trend === "down" && <TrendingDown className="h-3 w-3 sm:h-4 sm:w-4 text-red-500" />}
+            {trend === "up" && <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-green-500" />}
+            {trend === "down" && <TrendingDown className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-red-500" />}
           </div>
         </div>
       </CardHeader>
       
-      <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">{description}</p>
+      <CardContent className="p-4 sm:p-6 pt-0">
+        <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
         
-        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4">
           {ratings.map((rating) => (
             <div 
               key={rating.label} 
-              className="text-center cursor-pointer hover:opacity-80 transition-opacity"
+              className="text-center cursor-pointer hover:opacity-80 transition-opacity py-1"
               onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
-              <div className={`text-base sm:text-lg font-bold ${rating.color}`}>{rating.value}/5</div>
-              <div className="text-xs text-muted-foreground">{rating.label}</div>
+              <div className={`text-sm sm:text-base font-bold ${rating.color}`}>{rating.value}/5</div>
+              <div className="text-[10px] sm:text-xs text-muted-foreground leading-tight">{rating.label}</div>
             </div>
           ))}
         </div>
         
         {activeBoycotts > 0 && (
-          <div className="flex items-center gap-2 mb-4">
-            <AlertTriangle className="h-4 w-4 text-destructive" />
-            <span className="text-sm text-destructive font-medium">
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+            <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
+            <span className="text-xs sm:text-sm text-destructive font-medium">
               {activeBoycotts} active boycott{activeBoycotts > 1 ? 's' : ''}
             </span>
           </div>
         )}
         
         {/* User Stance Distribution */}
-        <div className="flex gap-2 mb-4">
-          <div className="flex items-center gap-1 flex-1">
-            <ThumbsUp className="h-4 w-4 text-recommend" />
-            <span className="text-sm text-recommend font-medium">{recommendCount}</span>
+        <div className="flex gap-1 sm:gap-2 mb-3 sm:mb-4">
+          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+            <ThumbsUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-recommend" />
+            <span className="text-xs sm:text-sm text-recommend font-medium">{recommendCount}</span>
           </div>
-          <div className="flex items-center gap-1 flex-1">
-            <Minus className="h-4 w-4 text-neutral" />
-            <span className="text-sm text-neutral font-medium">{neutralCount}</span>
+          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+            <Minus className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-neutral" />
+            <span className="text-xs sm:text-sm text-neutral font-medium">{neutralCount}</span>
           </div>
-          <div className="flex items-center gap-1 flex-1">
-            <ThumbsDown className="h-4 w-4 text-discourage" />
-            <span className="text-sm text-discourage font-medium">{discourageCount}</span>
+          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+            <ThumbsDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-discourage" />
+            <span className="text-xs sm:text-sm text-discourage font-medium">{discourageCount}</span>
           </div>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex gap-1.5 sm:gap-2">
           <Button 
             variant="default" 
             size="sm" 
-            className="flex-1 gap-1 h-10" 
+            className="flex-1 gap-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
             onClick={(e) => { e.stopPropagation(); onRate?.(); }}
           >
-            <MessageSquare className="h-4 w-4" />
+            <MessageSquare className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             <span className="hidden sm:inline">Add Stance</span>
             <span className="sm:hidden">Stance</span>
           </Button>
           <Button 
             variant="outline" 
             size="sm" 
-            className="flex-1 h-10" 
+            className="flex-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
             onClick={(e) => { e.stopPropagation(); onStartBoycott?.(); }}
           >
             <span className="hidden sm:inline">Start Boycott</span>

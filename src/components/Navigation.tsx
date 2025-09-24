@@ -83,13 +83,17 @@ const Navigation = () => {
               })}
             </div>
 
-            <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="hidden sm:flex" onClick={() => setSearchOpen(true)}>
+            <div className="flex items-center gap-1 sm:gap-2">
+              <Button variant="outline" size="sm" className="hidden sm:flex gap-1" onClick={() => setSearchOpen(true)}>
+                <Search className="h-4 w-4" />
+                <span className="hidden md:inline">Search</span>
+              </Button>
+              <Button variant="ghost" size="sm" className="sm:hidden p-2" onClick={() => setSearchOpen(true)}>
                 <Search className="h-4 w-4" />
               </Button>
               {user ? (
-                <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1">
-                  <LogOut className="h-4 w-4" />
+                <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1 text-xs sm:text-sm px-2 sm:px-3">
+                  <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Sign Out</span>
                 </Button>
               ) : (
@@ -105,20 +109,20 @@ const Navigation = () => {
         </div>
       </nav>
 
-      {/* Mobile Bottom Navigation */}
+      {/* Mobile Bottom Navigation - Compact */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
-        <div className="grid grid-cols-6 gap-1 px-2 py-2">
+        <div className="grid grid-cols-6 gap-0 px-1 py-1">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
-              <Link key={item.path} to={item.path} className="flex flex-col items-center justify-center">
+              <Link key={item.path} to={item.path} className="flex items-center justify-center">
                 <Button 
                   variant={isActive ? "default" : "ghost"} 
                   size="sm"
-                  className="h-12 w-full flex-col gap-1 px-1"
+                  className="h-10 w-full flex-col gap-0.5 px-1 text-xs"
                 >
-                  <item.icon className="h-4 w-4" />
-                  <span className="text-xs leading-none">{item.label}</span>
+                  <item.icon className="h-3.5 w-3.5" />
+                  <span className="text-[10px] leading-tight">{item.label}</span>
                 </Button>
               </Link>
             );
@@ -128,11 +132,11 @@ const Navigation = () => {
           <Button 
             variant="ghost" 
             size="sm"
-            className="h-12 w-full flex-col gap-1 px-1"
+            className="h-10 w-full flex-col gap-0.5 px-1 text-xs"
             onClick={() => setSearchOpen(true)}
           >
-            <Search className="h-4 w-4" />
-            <span className="text-xs leading-none">Search</span>
+            <Search className="h-3.5 w-3.5" />
+            <span className="text-[10px] leading-tight">Search</span>
           </Button>
         </div>
       </nav>

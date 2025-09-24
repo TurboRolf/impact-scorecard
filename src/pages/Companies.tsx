@@ -64,82 +64,86 @@ const Companies = () => {
       <Navigation />
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Company Directory</h1>
-              <p className="text-muted-foreground">
+        <div className="mb-6">
+          <div className="flex items-start justify-between mb-3 sm:mb-4">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Company Directory</h1>
+              <p className="text-sm sm:text-base text-muted-foreground">
                 Rate companies and share your stance on ethical business practices.
               </p>
             </div>
             
-            <div className="flex gap-2">
-              <Button onClick={() => setStanceDialogOpen(true)} className="gap-2" variant="outline">
-                <Plus className="h-4 w-4" />
-                Add Stance
+            <div className="flex gap-1 sm:gap-2 ml-3">
+              <Button onClick={() => setStanceDialogOpen(true)} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" variant="outline" size="sm">
+                <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Add Stance</span>
+                <span className="sm:hidden">Stance</span>
               </Button>
-              <Button onClick={() => setReviewDialogOpen(true)} className="gap-2">
-                <Star className="h-4 w-4" />
-                Add Review
+              <Button onClick={() => setReviewDialogOpen(true)} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" size="sm">
+                <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Add Review</span>
+                <span className="sm:hidden">Review</span>
               </Button>
             </div>
           </div>
           
-          <div className="flex items-center gap-4 mb-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-recommend rounded-full"></div>
-              <span className="text-sm">Recommend</span>
+          <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-recommend rounded-full"></div>
+              <span className="text-xs sm:text-sm">Recommend</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-neutral rounded-full"></div>
-              <span className="text-sm">Neutral</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-neutral rounded-full"></div>
+              <span className="text-xs sm:text-sm">Neutral</span>
             </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-discourage rounded-full"></div>
-              <span className="text-sm">Discourage</span>
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 bg-discourage rounded-full"></div>
+              <span className="text-xs sm:text-sm">Discourage</span>
             </div>
           </div>
         </div>
 
         {/* Search and Filters */}
-        <div className="mb-6">
-          <div className="flex gap-4 mb-4">
+        <div className="mb-4 sm:mb-6">
+          <div className="flex gap-2 sm:gap-4 mb-3 sm:mb-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 sm:h-4 sm:w-4 text-muted-foreground" />
               <Input
                 placeholder="Search companies..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-8 sm:pl-10 text-sm sm:text-base h-9 sm:h-10"
               />
             </div>
             
-            <div className="flex gap-2">
+            <div className="flex gap-1 sm:gap-2">
               <Button
                 variant={viewType === "global" ? "default" : "outline"}
                 onClick={() => setViewType("global")}
-                className="gap-2"
+                className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
+                size="sm"
               >
-                <Globe className="h-4 w-4" />
-                Global
+                <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Global</span>
               </Button>
               <Button
                 variant={viewType === "following" ? "default" : "outline"}
                 onClick={() => setViewType("following")}
-                className="gap-2"
+                className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
+                size="sm"
               >
-                <Users className="h-4 w-4" />
-                Following
+                <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span className="hidden sm:inline">Following</span>
               </Button>
             </div>
           </div>
           
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex gap-1.5 sm:gap-2 flex-wrap">
             {categories.map((category) => (
               <Badge
                 key={category}
                 variant={selectedCategory === category ? "default" : "outline"}
-                className="cursor-pointer capitalize"
+                className="cursor-pointer capitalize text-xs sm:text-sm px-2 py-1"
                 onClick={() => setSelectedCategory(category)}
               >
                 {category}
