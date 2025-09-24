@@ -11,6 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Edit, Users, Building2, AlertTriangle, Award, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
@@ -21,6 +22,7 @@ const Profile = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("stances");
   const navigate = useNavigate();
 
   // Get current user and listen for auth changes
@@ -226,38 +228,56 @@ const Profile = () => {
 
         {/* Achievements - Hidden until user earns some */}
 
-        {/* Content Tabs */}
-        <Tabs defaultValue="stances" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="stances">Company Stances</TabsTrigger>
-            <TabsTrigger value="posts">Recent Posts</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews</TabsTrigger>
-            <TabsTrigger value="boycotts">Boycotts</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="stances" className="mt-6">
-            <UserStancesList userId={user?.id} />
-          </TabsContent>
+        {/* Content Tabs - Mobile Dropdown + Desktop Tabs */}
+        <div className="w-full">
+          {/* Mobile: Dropdown Selection */}
+          <div className="md:hidden mb-4">
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select content type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="stances">Company Stances</SelectItem>
+                <SelectItem value="posts">Recent Posts</SelectItem>
+                <SelectItem value="reviews">Reviews</SelectItem>
+                <SelectItem value="boycotts">Boycotts</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          <TabsContent value="posts" className="space-y-4 mt-6">
-            <Card>
-              <CardContent className="p-8 text-center">
-                <p className="text-muted-foreground mb-4">No posts yet. Share your thoughts to get started!</p>
-                <Button onClick={() => navigate('/feed')} variant="earth">
-                  Create Your First Post
-                </Button>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="reviews" className="mt-6">
-            <UserReviewsList userId={user?.id} />
-          </TabsContent>
-          
-          <TabsContent value="boycotts" className="mt-6">
-            <UserBoycottsList userId={user?.id} />
-          </TabsContent>
-        </Tabs>
+          {/* Desktop: Traditional Tabs */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="hidden md:grid w-full grid-cols-4">
+              <TabsTrigger value="stances">Company Stances</TabsTrigger>
+              <TabsTrigger value="posts">Recent Posts</TabsTrigger>
+              <TabsTrigger value="reviews">Reviews</TabsTrigger>
+              <TabsTrigger value="boycotts">Boycotts</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="stances" className="mt-4 md:mt-6">
+              <UserStancesList userId={user?.id} />
+            </TabsContent>
+
+            <TabsContent value="posts" className="space-y-4 mt-4 md:mt-6">
+              <Card>
+                <CardContent className="p-4 sm:p-6 md:p-8 text-center">
+                  <p className="text-sm text-muted-foreground mb-3 sm:mb-4">No posts yet. Share your thoughts to get started!</p>
+                  <Button onClick={() => navigate('/feed')} variant="earth" size="sm">
+                    Create Your First Post
+                  </Button>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="reviews" className="mt-4 md:mt-6">
+              <UserReviewsList userId={user?.id} />
+            </TabsContent>
+            
+            <TabsContent value="boycotts" className="mt-4 md:mt-6">
+              <UserBoycottsList userId={user?.id} />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
       
       <ProfileSettingsDialog
