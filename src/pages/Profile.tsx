@@ -52,61 +52,16 @@ const Profile = () => {
     discourage: userStances.filter(s => s.stance === 'discourage').length,
   };
   const profileData = {
-    name: "Sarah Green",
-    username: "sarahgreen",
-    bio: "Environmental advocate & ethical business researcher. Helping consumers make informed choices for a better world. 🌍✊",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b5e5?w=150",
-    isCreator: true,
-    followers: 1247,
-    following: 89,
-    postsCount: 156,
-    reviewsCount: 43,
-    boycottsCreated: 7,
-    boycottsJoined: 23
+    followers: 0,
+    following: 0,
+    postsCount: 0,
+    boycottsCreated: 0,
+    boycottsJoined: 0
   };
 
-  const recentPosts = [
-    {
-      user: {
-        name: profileData.name,
-        username: profileData.username,
-        avatar: profileData.avatar,
-        isCreator: true
-      },
-      content: "Just finished a deep dive into Tesla's latest sustainability report. While their EV mission is commendable, their labor practices still need significant improvement. Mixed feelings on this one.",
-      company: {
-        name: "Tesla",
-        rating: 3,
-        category: "Electric Vehicles"
-      },
-      timestamp: "2h",
-      likes: 24,
-      comments: 7
-    },
-    {
-      user: {
-        name: profileData.name,
-        username: profileData.username,
-        avatar: profileData.avatar,
-        isCreator: true
-      },
-      content: "Patagonia continues to set the gold standard for corporate responsibility. Their latest move to give away the company to fight climate change is unprecedented. More companies should follow this lead.",
-      company: {
-        name: "Patagonia",
-        rating: 5,
-        category: "Outdoor Apparel"
-      },
-      timestamp: "1d",
-      likes: 89,
-      comments: 23
-    }
-  ];
+  // No demo posts - will show empty state
 
-  const achievements = [
-    { icon: Award, label: "Top Reviewer", description: "50+ detailed reviews" },
-    { icon: Users, label: "Community Builder", description: "1000+ followers" },
-    { icon: AlertTriangle, label: "Boycott Leader", description: "5+ successful boycotts" },
-  ];
+  // Achievements will be earned through real activity
 
   // Show login prompt if not authenticated
   if (!user) {
@@ -264,25 +219,7 @@ const Profile = () => {
           </Card>
         </div>
 
-        {/* Achievements */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle>Achievements</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {achievements.map((achievement, index) => (
-                <div key={index} className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg">
-                  <achievement.icon className="h-8 w-8 text-earth-blue" />
-                  <div>
-                    <div className="font-medium">{achievement.label}</div>
-                    <div className="text-sm text-muted-foreground">{achievement.description}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {/* Achievements - Hidden until user earns some */}
 
         {/* Content Tabs */}
         <Tabs defaultValue="stances" className="w-full">
@@ -298,9 +235,14 @@ const Profile = () => {
           </TabsContent>
 
           <TabsContent value="posts" className="space-y-4 mt-6">
-            {recentPosts.map((post, index) => (
-              <PostCard key={index} {...post} />
-            ))}
+            <Card>
+              <CardContent className="p-8 text-center">
+                <p className="text-muted-foreground mb-4">No posts yet. Share your thoughts to get started!</p>
+                <Button onClick={() => navigate('/feed')} variant="earth">
+                  Create Your First Post
+                </Button>
+              </CardContent>
+            </Card>
           </TabsContent>
           
           <TabsContent value="reviews" className="mt-6">

@@ -72,7 +72,7 @@ const Feed = () => {
         company: companyMatch || post.company_name || "Unknown Company",
         subject: subjectMatch || "Corporate accountability",
         impact: 'medium' as const,
-        participants_count: Math.floor(Math.random() * 1000) + 100, // Mock data
+        participants_count: 0, // Will be updated with real data when boycott system is fully implemented
         category: post.company_category || 'General'
       };
       
