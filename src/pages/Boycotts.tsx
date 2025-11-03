@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,9 +10,7 @@ import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { useBoycotts, useBoycottStats, useJoinBoycott } from "@/hooks/useBoycotts";
 import { useToast } from "@/hooks/use-toast";
 
-const queryClient = new QueryClient();
-
-const BoycottsContent = () => {
+const Boycotts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
   
@@ -212,14 +209,6 @@ const BoycottsContent = () => {
         </div>
       </div>
     </div>
-  );
-};
-
-const Boycotts = () => {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BoycottsContent />
-    </QueryClientProvider>
   );
 };
 
