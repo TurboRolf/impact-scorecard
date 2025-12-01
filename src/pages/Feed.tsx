@@ -147,24 +147,24 @@ const Feed = () => {
     <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
       <Navigation />
       
-      <div className="max-w-2xl mx-auto pt-20 px-4 pb-8">
+      <div className="max-w-2xl mx-auto pt-20 px-3 md:px-4 pb-8">
         {/* Create Post */}
         {user ? (
-          <Card className="mb-6">
-            <CardContent className="p-4">
+          <Card className="mb-4 md:mb-6">
+            <CardContent className="p-3 md:p-4">
               <Textarea
                 placeholder="Share your thoughts on a company's ethics, environmental impact, or political stance..."
                 value={newPost}
                 onChange={(e) => setNewPost(e.target.value)}
-                className="min-h-24 resize-none border-0 focus-visible:ring-0 bg-transparent"
+                className="min-h-20 md:min-h-24 resize-none border-0 focus-visible:ring-0 bg-transparent text-sm md:text-base"
               />
-              <div className="flex items-center justify-between mt-3 pt-3 border-t">
-                <div className="flex gap-2">
-                  <Button variant="ghost" size="sm">
-                    <Image className="h-4 w-4" />
+              <div className="flex items-center justify-between mt-2 pt-2 md:mt-3 md:pt-3 border-t">
+                <div className="flex gap-1 md:gap-2">
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 md:h-9 md:w-auto md:px-3">
+                    <Image className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm">
-                    <Building2 className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 md:h-9 md:w-auto md:px-3">
+                    <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   </Button>
                 </div>
                 <Button 
@@ -172,18 +172,19 @@ const Feed = () => {
                   size="sm" 
                   disabled={!newPost.trim() || createPost.isPending}
                   onClick={handleCreatePost}
+                  className="h-8 text-xs md:h-9 md:text-sm"
                 >
-                  <PlusCircle className="h-4 w-4 mr-2" />
+                  <PlusCircle className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1 md:mr-2" />
                   {createPost.isPending ? "Posting..." : "Post"}
                 </Button>
               </div>
             </CardContent>
           </Card>
         ) : (
-          <Card className="mb-6">
-            <CardContent className="p-4 text-center">
-              <p className="text-muted-foreground mb-3">Join EthiCheck to share your thoughts</p>
-              <Button onClick={() => navigate("/auth")} variant="earth">
+          <Card className="mb-4 md:mb-6">
+            <CardContent className="p-3 md:p-4 text-center">
+              <p className="text-muted-foreground mb-2 md:mb-3 text-sm md:text-base">Join EthiCheck to share your thoughts</p>
+              <Button onClick={() => navigate("/auth")} variant="earth" size="sm" className="text-xs md:text-sm">
                 Join EthiCheck
               </Button>
             </CardContent>
@@ -192,23 +193,23 @@ const Feed = () => {
 
         {/* Feed Tabs */}
         <Tabs value={feedType} onValueChange={(value) => setFeedType(value as "trending" | "following")} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="trending">Trending</TabsTrigger>
-            <TabsTrigger value="following">Following</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 h-9 md:h-10">
+            <TabsTrigger value="trending" className="text-xs md:text-sm">Trending</TabsTrigger>
+            <TabsTrigger value="following" className="text-xs md:text-sm">Following</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="trending" className="mt-6">
-            <div className="space-y-4">
+          <TabsContent value="trending" className="mt-3 md:mt-6">
+            <div className="space-y-3 md:space-y-4">
               {transformedPosts.length > 0 ? (
                 transformedPosts.map((post, index) => (
                   <PostCard key={index} {...post} currentUserId={user?.id} />
                 ))
               ) : (
                 <Card>
-                  <CardContent className="p-8 text-center">
-                    <p className="text-muted-foreground mb-4">No posts yet. Be the first to share!</p>
+                  <CardContent className="p-4 md:p-8 text-center">
+                    <p className="text-muted-foreground mb-3 md:mb-4 text-sm md:text-base">No posts yet. Be the first to share!</p>
                     {user && (
-                      <Button onClick={() => document.querySelector('textarea')?.focus()} variant="outline">
+                      <Button onClick={() => document.querySelector('textarea')?.focus()} variant="outline" size="sm" className="text-xs md:text-sm">
                         Create First Post
                       </Button>
                     )}
@@ -218,20 +219,20 @@ const Feed = () => {
             </div>
           </TabsContent>
 
-          <TabsContent value="following" className="mt-6">
-            <div className="space-y-4">
+          <TabsContent value="following" className="mt-3 md:mt-6">
+            <div className="space-y-3 md:space-y-4">
               {transformedPosts.length > 0 ? (
                 transformedPosts.map((post, index) => (
                   <PostCard key={index} {...post} currentUserId={user?.id} />
                 ))
               ) : (
                 <Card>
-                  <CardContent className="p-8 text-center">
-                    <p className="text-muted-foreground mb-4">
+                  <CardContent className="p-4 md:p-8 text-center">
+                    <p className="text-muted-foreground mb-3 md:mb-4 text-sm md:text-base">
                       {user ? "No posts from people you follow yet. Start following users to see their posts here!" : "Sign in to see posts from people you follow."}
                     </p>
                     {user && (
-                      <Button onClick={() => setFeedType("trending")} variant="outline">
+                      <Button onClick={() => setFeedType("trending")} variant="outline" size="sm" className="text-xs md:text-sm">
                         Browse Trending Posts
                       </Button>
                     )}
