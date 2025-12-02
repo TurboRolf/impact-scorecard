@@ -1,32 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
+import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Star, Users, MessageCircle, TrendingUp, Search, Award, UserPlus, UserCheck } from "lucide-react";
+import { Search, Award, UserPlus, UserCheck, MessageCircle } from "lucide-react";
 import { useCreators } from "@/hooks/useProfile";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
-import { supabase } from "@/integrations/supabase/client";
-import { useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 const Creators = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const navigate = useNavigate();
   
+  const { user } = useAuth();
   const { data: creators = [], isLoading } = useCreators();
   const followUser = useFollowUser();
   const unfollowUser = useUnfollowUser();
-  const { data: followedUsers = [] } = useFollows(currentUserId || undefined);
-  
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setCurrentUserId(session?.user?.id || null);
-    });
-  }, []);
+  const { data: followedUsers = [] } = useFollows(user?.id);
   
   const filteredCreators = creators.filter(creator =>
     searchTerm === "" || 
@@ -36,39 +29,21 @@ const Creators = () => {
   );
 
   const handleFollowToggle = async (creatorUserId: string) => {
-    if (!currentUserId) {
+    if (!user) {
       navigate("/auth");
       return;
     }
 
-    try {
-      const isCurrentlyFollowing = followedUsers.includes(creatorUserId);
-      if (isCurrentlyFollowing) {
-        await unfollowUser.mutateAsync(creatorUserId);
-      } else {
-        await followUser.mutateAsync(creatorUserId);
-      }
-    } catch (error) {
-      console.error("Error toggling follow:", error);
+    const isCurrentlyFollowing = followedUsers.includes(creatorUserId);
+    if (isCurrentlyFollowing) {
+      await unfollowUser.mutateAsync(creatorUserId);
+    } else {
+      await followUser.mutateAsync(creatorUserId);
     }
   };
 
-  const handleViewProfile = (creatorUserId: string) => {
-    // For now, navigate to profile page - in the future could be creator-specific page
-    navigate("/profile");
-  };
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
-        <Navigation />
-        <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
-          <div className="flex items-center justify-center py-20">
-            <p className="text-muted-foreground">Loading creators...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading creators..." />;
   }
 
   return (
@@ -139,7 +114,7 @@ const Creators = () => {
                   </p>
                   
                   <div className="flex gap-2">
-                    {currentUserId && currentUserId !== creator.user_id ? (
+                    {user && user.id !== creator.user_id ? (
                       <Button 
                         variant={followedUsers.includes(creator.user_id) ? "secondary" : "default"}
                         size="sm" 
@@ -159,7 +134,7 @@ const Creators = () => {
                           </>
                         )}
                       </Button>
-                    ) : !currentUserId ? (
+                    ) : !user ? (
                       <Button 
                         variant="default"
                         size="sm" 
@@ -179,7 +154,7 @@ const Creators = () => {
                       variant="outline" 
                       size="sm" 
                       className="flex-1 gap-1"
-                      onClick={() => handleViewProfile(creator.user_id)}
+                      onClick={() => navigate("/profile")}
                     >
                       <MessageCircle className="h-3 w-3" />
                       View

@@ -2,37 +2,13 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Home, User, Building2, AlertTriangle, Users, Search, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 import SearchDialog from "./SearchDialog";
+import { useAuth } from "@/hooks/useAuth";
 
 const Navigation = () => {
   const location = useLocation();
-  const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const { user, signOut } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
-
-  useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
-
-    // THEN check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-  };
 
   // Keyboard shortcut for search
   useEffect(() => {
@@ -92,7 +68,7 @@ const Navigation = () => {
                 <Search className="h-4 w-4" />
               </Button>
               {user ? (
-                <Button variant="outline" size="sm" onClick={handleSignOut} className="gap-1 text-xs sm:text-sm px-2 sm:px-3">
+                <Button variant="outline" size="sm" onClick={signOut} className="gap-1 text-xs sm:text-sm px-2 sm:px-3">
                   <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   <span className="hidden sm:inline">Sign Out</span>
                 </Button>
