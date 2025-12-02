@@ -1,42 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import PostCard from "@/components/PostCard";
+import LoadingScreen from "@/components/LoadingScreen";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Image, Building2 } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
-import { supabase } from "@/integrations/supabase/client";
-import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
+import { useAuth } from "@/hooks/useAuth";
 
 const Feed = () => {
   const [newPost, setNewPost] = useState("");
-  const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
   const [feedType, setFeedType] = useState<"trending" | "following">("trending");
   const navigate = useNavigate();
   
+  const { user } = useAuth();
   const { data: posts = [], isLoading } = usePosts(feedType);
   const createPost = useCreatePost();
-
-  // Authentication state management
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const handleCreatePost = async () => {
     if (!newPost.trim() || !user) return;
@@ -131,16 +113,7 @@ const Feed = () => {
   }
   
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
-        <Navigation />
-        <div className="max-w-2xl mx-auto pt-20 px-4 pb-8">
-          <div className="flex items-center justify-center py-20">
-            <p className="text-muted-foreground">Loading posts...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading posts..." />;
   }
 
   return (

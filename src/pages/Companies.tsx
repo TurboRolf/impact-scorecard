@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Navigation from "@/components/Navigation";
+import LoadingScreen from "@/components/LoadingScreen";
 import CompanyCard from "@/components/CompanyCard";
 import CompanyStanceDialog from "@/components/CompanyStanceDialog";
 import CompanyReviewDialog from "@/components/CompanyReviewDialog";
@@ -7,17 +8,20 @@ import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, Globe, Users, Plus, Star } from "lucide-react";
+import { Search, Globe, Users, Plus, Star } from "lucide-react";
 import { useCompanies } from "@/hooks/useCompanyStances";
+import { useDialogState } from "@/hooks/useDialogState";
+
+type CompanyInfo = { name: string; category: string };
 
 const Companies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewType, setViewType] = useState<"global" | "following">("global");
-  const [stanceDialogOpen, setStanceDialogOpen] = useState(false);
-  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [boycottDialogOpen, setBoycottDialogOpen] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<{name: string, category: string} | null>(null);
+  
+  const stanceDialog = useDialogState<CompanyInfo>();
+  const reviewDialog = useDialogState<CompanyInfo>();
+  const boycottDialog = useDialogState<CompanyInfo>();
   
   const { data: companies = [], isLoading } = useCompanies();
   
@@ -31,32 +35,8 @@ const Companies = () => {
     (searchTerm === "" || company.name.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
-  const handleRateCompany = (companyName: string, companyCategory: string) => {
-    setSelectedCompany({ name: companyName, category: companyCategory });
-    setStanceDialogOpen(true);
-  };
-
-  const handleReviewCompany = (companyName: string, companyCategory: string) => {
-    setSelectedCompany({ name: companyName, category: companyCategory });
-    setReviewDialogOpen(true);
-  };
-
-  const handleStartBoycott = (companyName: string, companyCategory: string) => {
-    setSelectedCompany({ name: companyName, category: companyCategory });
-    setBoycottDialogOpen(true);
-  };
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
-        <Navigation />
-        <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
-          <div className="flex items-center justify-center py-20">
-            <p className="text-muted-foreground">Loading companies...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <LoadingScreen message="Loading companies..." />;
   }
 
   return (
@@ -74,12 +54,12 @@ const Companies = () => {
             </div>
             
             <div className="flex gap-1 sm:gap-2 ml-3">
-              <Button onClick={() => setStanceDialogOpen(true)} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" variant="outline" size="sm">
+              <Button onClick={() => stanceDialog.openDialog()} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" variant="outline" size="sm">
                 <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Add Stance</span>
                 <span className="sm:hidden">Stance</span>
               </Button>
-              <Button onClick={() => setReviewDialogOpen(true)} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" size="sm">
+              <Button onClick={() => reviewDialog.openDialog()} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" size="sm">
                 <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Add Review</span>
                 <span className="sm:hidden">Review</span>
@@ -171,9 +151,9 @@ const Companies = () => {
               recommendCount={company.recommend_count}
               neutralCount={company.neutral_count}
               discourageCount={company.discourage_count}
-              onRate={() => handleRateCompany(company.name, company.category)}
-              onReview={() => handleReviewCompany(company.name, company.category)}
-              onStartBoycott={() => handleStartBoycott(company.name, company.category)}
+              onRate={() => stanceDialog.openDialog({ name: company.name, category: company.category })}
+              onReview={() => reviewDialog.openDialog({ name: company.name, category: company.category })}
+              onStartBoycott={() => boycottDialog.openDialog({ name: company.name, category: company.category })}
             />
           ))}
         </div>
@@ -181,7 +161,7 @@ const Companies = () => {
         {filteredCompanies.length === 0 && (
           <div className="text-center py-20">
             <p className="text-muted-foreground mb-4">No companies found matching your criteria.</p>
-            <Button onClick={() => setStanceDialogOpen(true)} className="gap-2">
+            <Button onClick={() => stanceDialog.openDialog()} className="gap-2">
               <Plus className="h-4 w-4" />
               Add a Company
             </Button>
@@ -189,23 +169,23 @@ const Companies = () => {
         )}
         
       <CompanyStanceDialog
-        open={stanceDialogOpen}
-        onOpenChange={setStanceDialogOpen}
-        companyName={selectedCompany?.name}
-        companyCategory={selectedCompany?.category}
+        open={stanceDialog.isOpen}
+        onOpenChange={(open) => !open && stanceDialog.closeDialog()}
+        companyName={stanceDialog.data?.name}
+        companyCategory={stanceDialog.data?.category}
       />
       
       <CompanyReviewDialog
-        open={reviewDialogOpen}
-        onOpenChange={setReviewDialogOpen}
-        companyName={selectedCompany?.name}
+        open={reviewDialog.isOpen}
+        onOpenChange={(open) => !open && reviewDialog.closeDialog()}
+        companyName={reviewDialog.data?.name}
       />
       
       <CreateBoycottDialog
-        open={boycottDialogOpen}
-        onOpenChange={setBoycottDialogOpen}
-        preselectedCompany={selectedCompany?.name}
-        onBoycottCreated={() => setBoycottDialogOpen(false)}
+        open={boycottDialog.isOpen}
+        onOpenChange={(open) => !open && boycottDialog.closeDialog()}
+        preselectedCompany={boycottDialog.data?.name}
+        onBoycottCreated={boycottDialog.closeDialog}
       />
       </div>
     </div>
