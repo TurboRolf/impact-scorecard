@@ -81,6 +81,7 @@ export const useJoinBoycott = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['boycotts'] });
+      queryClient.invalidateQueries({ queryKey: ['boycott-participation'] });
     },
   });
 };
@@ -111,5 +112,68 @@ export const useBoycottStats = () => {
         companiesChanged: uniqueCompanies
       };
     },
+  });
+};
+
+export const useUserBoycottParticipation = (userId?: string) => {
+  return useQuery({
+    queryKey: ['boycott-participation', userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      
+      const { data, error } = await supabase
+        .from('boycott_participants')
+        .select('boycott_id')
+        .eq('user_id', userId);
+      
+      if (error) throw new Error(error.message);
+      return data?.map(p => p.boycott_id) || [];
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useLeaveBoycott = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boycottId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to leave a boycott');
+      }
+
+      const { error } = await supabase
+        .from('boycott_participants')
+        .delete()
+        .eq('boycott_id', boycottId)
+        .eq('user_id', user.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boycotts'] });
+      queryClient.invalidateQueries({ queryKey: ['boycott-participation'] });
+    },
+  });
+};
+
+export const useBoycottByCompany = (companyName: string) => {
+  return useQuery({
+    queryKey: ['boycott-by-company', companyName],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('boycotts')
+        .select(`*, categories (name, color)`)
+        .eq('company', companyName)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw new Error(error.message);
+      return data as Boycott[];
+    },
+    enabled: !!companyName,
   });
 };
