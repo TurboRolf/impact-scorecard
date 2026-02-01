@@ -31,18 +31,6 @@ const Boycotts = () => {
     }
   };
 
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case "very-high":
-        return "text-destructive";
-      case "high":
-        return "text-brand-accent";
-      case "medium":
-        return "text-brand-primary";
-      default:
-        return "text-muted-foreground";
-    }
-  };
 
   const handleJoinBoycott = async (boycottId: string) => {
     try {
@@ -151,10 +139,6 @@ const Boycotts = () => {
                         Against: <span className="font-medium">{boycott.company}</span> • 
                         Category: <span className="font-medium">{boycott.categories.name}</span>
                       </p>
-                    </div>
-                    <div className={`text-right ${getImpactColor(boycott.impact)}`}>
-                      <TrendingUp className="h-4 w-4 mb-1 ml-auto" />
-                      <div className="text-xs font-medium capitalize">{boycott.impact.replace('-', ' ')} impact</div>
                     </div>
                   </div>
                 </CardHeader>
