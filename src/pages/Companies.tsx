@@ -161,10 +161,6 @@ const Companies = () => {
         {filteredCompanies.length === 0 && (
           <div className="text-center py-20">
             <p className="text-muted-foreground mb-4">No companies found matching your criteria.</p>
-            <Button onClick={() => stanceDialog.openDialog()} className="gap-2">
-              <Plus className="h-4 w-4" />
-              Add a Company
-            </Button>
           </div>
         )}
         

@@ -75,7 +75,7 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
                     {boycott.status.charAt(0).toUpperCase() + boycott.status.slice(1)}
                   </Badge>
                   {boycott.categories && (
-                    <Badge variant="outline" style={{ backgroundColor: boycott.categories.color + '20', color: boycott.categories.color }}>
+                    <Badge variant="outline" style={{ backgroundColor: boycott.categories.color + '20', color: '#ffffff' }}>
                       {boycott.categories.name}
                     </Badge>
                   )}
