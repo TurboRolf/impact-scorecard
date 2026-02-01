@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PlusCircle, Image, Building2 } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
+import { useBoycottByCompany } from "@/hooks/useBoycotts";
 import { useAuth } from "@/hooks/useAuth";
 
 const Feed = () => {
@@ -50,11 +51,12 @@ const Feed = () => {
       const subjectMatch = lines.find(line => line.startsWith('Subject:'))?.replace('Subject:', '').trim();
       
       boycottData = {
+        // Note: We don't have the real boycott ID linked to posts yet
+        // This would require a database schema change to link posts to boycotts
         title: titleMatch || "Boycott Campaign",
         company: companyMatch || post.company_name || "Unknown Company",
         subject: subjectMatch || "Corporate accountability",
-        impact: 'medium' as const,
-        participants_count: 0, // Will be updated with real data when boycott system is fully implemented
+        participants_count: 0,
         category: post.company_category || 'General'
       };
       

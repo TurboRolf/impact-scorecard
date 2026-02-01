@@ -5,18 +5,22 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Users, Calendar, TrendingUp, Search } from "lucide-react";
+import { AlertTriangle, Users, Calendar, Search, Check } from "lucide-react";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
-import { useBoycotts, useBoycottStats, useJoinBoycott } from "@/hooks/useBoycotts";
+import { useBoycotts, useBoycottStats, useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
+import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
 const Boycotts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const { data: boycotts = [], isLoading, refetch } = useBoycotts(searchTerm);
   const { data: stats, isLoading: statsLoading } = useBoycottStats();
+  const { data: joinedBoycotts = [] } = useUserBoycottParticipation(user?.id);
   const joinBoycottMutation = useJoinBoycott();
+  const leaveBoycottMutation = useLeaveBoycott();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -31,13 +35,37 @@ const Boycotts = () => {
     }
   };
 
-
   const handleJoinBoycott = async (boycottId: string) => {
+    if (!user) {
+      toast({
+        title: "Login required",
+        description: "You need to be logged in to join a boycott",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     try {
       await joinBoycottMutation.mutateAsync(boycottId);
       toast({
         title: "Joined boycott",
         description: "You have successfully joined this boycott!"
+      });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleLeaveBoycott = async (boycottId: string) => {
+    try {
+      await leaveBoycottMutation.mutateAsync(boycottId);
+      toast({
+        title: "Left boycott",
+        description: "You have left this boycott"
       });
     } catch (error: any) {
       toast({
@@ -175,14 +203,27 @@ const Boycotts = () => {
                         Learn More
                       </Button>
                       {boycott.status === "active" && (
-                        <Button 
-                          variant="default" 
-                          size="sm"
-                          onClick={() => handleJoinBoycott(boycott.id)}
-                          disabled={joinBoycottMutation.isPending}
-                        >
-                          {joinBoycottMutation.isPending ? "Joining..." : "Join Boycott"}
-                        </Button>
+                        joinedBoycotts.includes(boycott.id) ? (
+                          <Button 
+                            variant="secondary" 
+                            size="sm"
+                            onClick={() => handleLeaveBoycott(boycott.id)}
+                            disabled={leaveBoycottMutation.isPending}
+                            className="gap-1"
+                          >
+                            <Check className="h-4 w-4" />
+                            {leaveBoycottMutation.isPending ? "Leaving..." : "Joined"}
+                          </Button>
+                        ) : (
+                          <Button 
+                            variant="default" 
+                            size="sm"
+                            onClick={() => handleJoinBoycott(boycott.id)}
+                            disabled={joinBoycottMutation.isPending}
+                          >
+                            {joinBoycottMutation.isPending ? "Joining..." : "Join Boycott"}
+                          </Button>
+                        )
                       )}
                     </div>
                   </div>

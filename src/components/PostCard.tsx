@@ -2,9 +2,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users } from "lucide-react";
-import { useJoinBoycott } from "@/hooks/useBoycotts";
+import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check } from "lucide-react";
+import { useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
+import { useToast } from "@/hooks/use-toast";
 
 interface PostCardProps {
   user: {
@@ -21,10 +22,10 @@ interface PostCardProps {
     category: string;
   };
   boycott?: {
+    id?: string;
     title: string;
     company: string;
     subject: string;
-    impact: 'low' | 'medium' | 'high' | 'very-high';
     participants_count: number;
     category?: string;
   };
@@ -37,18 +38,55 @@ interface PostCardProps {
 
 const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId }: PostCardProps) => {
   const joinBoycott = useJoinBoycott();
+  const leaveBoycott = useLeaveBoycott();
+  const { data: joinedBoycotts = [] } = useUserBoycottParticipation(currentUserId);
   const { data: following = [] } = useFollows(currentUserId);
   const followUser = useFollowUser();
   const unfollowUser = useUnfollowUser();
+  const { toast } = useToast();
   
   const isFollowing = user.id ? following.includes(user.id) : false;
   const isOwnPost = user.id === currentUserId;
+  const isJoined = boycott?.id ? joinedBoycotts.includes(boycott.id) : false;
   
   const handleJoinBoycott = () => {
-    if (boycott) {
-      // Generate a consistent boycott ID based on the boycott title and company
-      const boycottId = `${boycott.title.toLowerCase().replace(/\s+/g, '-')}-${boycott.company.toLowerCase().replace(/\s+/g, '-')}`;
-      joinBoycott.mutate(boycottId);
+    if (!currentUserId) {
+      toast({
+        title: "Login required",
+        description: "You need to be logged in to join a boycott",
+        variant: "destructive"
+      });
+      return;
+    }
+    if (boycott?.id) {
+      joinBoycott.mutate(boycott.id, {
+        onSuccess: () => {
+          toast({
+            title: "Joined boycott",
+            description: "You have successfully joined this boycott!"
+          });
+        },
+        onError: (error: any) => {
+          toast({
+            title: "Error",
+            description: error.message,
+            variant: "destructive"
+          });
+        }
+      });
+    }
+  };
+
+  const handleLeaveBoycott = () => {
+    if (boycott?.id) {
+      leaveBoycott.mutate(boycott.id, {
+        onSuccess: () => {
+          toast({
+            title: "Left boycott",
+            description: "You have left this boycott"
+          });
+        }
+      });
     }
   };
 
@@ -59,30 +97,6 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
       unfollowUser.mutate(user.id);
     } else {
       followUser.mutate(user.id);
-    }
-  };
-
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case 'low':
-        return 'bg-blue-500';
-      case 'medium':
-        return 'bg-yellow-500';
-      case 'high':
-        return 'bg-orange-500';
-      case 'very-high':
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
-  const getImpactText = (impact: string) => {
-    switch (impact) {
-      case 'very-high':
-        return 'Very High';
-      default:
-        return impact.charAt(0).toUpperCase() + impact.slice(1);
     }
   };
   return (
@@ -186,12 +200,6 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
                     <p className="text-xs md:text-sm text-muted-foreground truncate">{boycott.category}</p>
                   )}
                 </div>
-                <div className="text-right flex-shrink-0">
-                  <div className={`inline-flex items-center px-1.5 py-0.5 md:px-2 md:py-1 rounded-full text-[10px] md:text-xs font-medium text-white ${getImpactColor(boycott.impact)}`}>
-                    <span className="hidden sm:inline">{getImpactText(boycott.impact)} Impact</span>
-                    <span className="sm:hidden">{getImpactText(boycott.impact)}</span>
-                  </div>
-                </div>
               </div>
               
               <div className="flex items-center gap-3 md:gap-4 text-xs md:text-sm text-muted-foreground mb-2 md:mb-3">
@@ -205,17 +213,32 @@ const PostCard = ({ user, content, company, boycott, isBoycott, timestamp, likes
                 <p className="text-foreground mt-2 pt-2 md:mt-3 md:pt-3 border-t text-sm md:text-base">{content}</p>
               )}
               
-              <div className="mt-2 pt-2 md:mt-3 md:pt-3 border-t">
-                <Button 
-                  variant="boycott" 
-                  size="sm" 
-                  onClick={handleJoinBoycott}
-                  disabled={joinBoycott.isPending}
-                  className="px-3 md:px-4 h-7 md:h-8 text-xs md:text-sm"
-                >
-                  {joinBoycott.isPending ? "Joining..." : "Join Boycott"}
-                </Button>
-              </div>
+              {boycott.id && (
+                <div className="mt-2 pt-2 md:mt-3 md:pt-3 border-t">
+                  {isJoined ? (
+                    <Button 
+                      variant="secondary" 
+                      size="sm" 
+                      onClick={handleLeaveBoycott}
+                      disabled={leaveBoycott.isPending}
+                      className="gap-1 px-3 md:px-4 h-7 md:h-8 text-xs md:text-sm"
+                    >
+                      <Check className="h-3 w-3 md:h-4 md:w-4" />
+                      {leaveBoycott.isPending ? "Leaving..." : "Joined"}
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="boycott" 
+                      size="sm" 
+                      onClick={handleJoinBoycott}
+                      disabled={joinBoycott.isPending}
+                      className="px-3 md:px-4 h-7 md:h-8 text-xs md:text-sm"
+                    >
+                      {joinBoycott.isPending ? "Joining..." : "Join Boycott"}
+                    </Button>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         )}
