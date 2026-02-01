@@ -35,20 +35,6 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
     }
   };
 
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case 'low':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
-      case 'medium':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
-      case 'high':
-        return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
-      case 'very-high':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default:
-        return 'bg-muted text-muted-foreground';
-    }
-  };
 
   if (isLoading) {
     return (
@@ -87,9 +73,6 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
                 <div className="flex items-center gap-2 mb-2">
                   <Badge className={getStatusColor(boycott.status)}>
                     {boycott.status.charAt(0).toUpperCase() + boycott.status.slice(1)}
-                  </Badge>
-                  <Badge variant="outline" className={getImpactColor(boycott.impact)}>
-                    {boycott.impact.charAt(0).toUpperCase() + boycott.impact.slice(1)} Impact
                   </Badge>
                   {boycott.categories && (
                     <Badge variant="outline" style={{ backgroundColor: boycott.categories.color + '20', color: boycott.categories.color }}>
