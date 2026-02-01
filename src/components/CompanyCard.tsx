@@ -157,3 +157,4 @@ const CompanyCard = ({
 };
 
 export default CompanyCard;
+// hej
