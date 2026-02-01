@@ -35,7 +35,8 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     description: "",
     company: preselectedCompany || "",
     subject: "",
-    category_id: ""
+    category_id: "",
+    impact: "medium"
   });
   const [createPost, setCreatePost] = useState(true);
   const { toast } = useToast();
@@ -124,6 +125,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
           company: formData.company,
           subject: formData.subject,
           category_id: formData.category_id,
+          impact: formData.impact,
           organizer_id: user.id
         })
         .select()
@@ -175,7 +177,8 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
         description: "",
         company: preselectedCompany || "",
         subject: "",
-        category_id: ""
+        category_id: "",
+        impact: "medium"
       });
       setCreatePost(true);
       setOpen(false);
@@ -270,6 +273,23 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
             </Select>
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="impact">Expected Impact</Label>
+            <Select
+              value={formData.impact}
+              onValueChange={(value) => setFormData(prev => ({ ...prev, impact: value }))}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+                <SelectItem value="very-high">Very High</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
