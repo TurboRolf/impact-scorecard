@@ -80,17 +80,19 @@ const Profile = () => {
         
         <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">
           <Card className="text-center">
-            <CardContent className="p-8">
-              <h1 className="text-2xl font-bold mb-4">Profile Access Required</h1>
-              <p className="text-muted-foreground mb-6">
-                Please sign in to view your profile and manage your account settings.
+            <CardContent className="p-4 sm:p-8">
+              <h1 className="text-lg sm:text-2xl font-bold mb-2 sm:mb-4">Profile Access Required</h1>
+              <p className="text-xs sm:text-base text-muted-foreground mb-4 sm:mb-6">
+                Please sign in to view your profile.
               </p>
-              <Button onClick={() => navigate('/auth')} variant="earth" className="mr-4">
-                Sign In
-              </Button>
-              <Button onClick={() => navigate(-1)} variant="outline">
-                Go Back
-              </Button>
+              <div className="flex gap-2 justify-center">
+                <Button onClick={() => navigate('/auth')} variant="earth" size="sm" className="text-xs sm:text-sm">
+                  Sign In
+                </Button>
+                <Button onClick={() => navigate(-1)} variant="outline" size="sm" className="text-xs sm:text-sm">
+                  Go Back
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -104,64 +106,65 @@ const Profile = () => {
       
       <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">
         {/* Profile Header */}
-        <Card className="mb-6">
-          <CardContent className="p-6">
-            <div className="flex flex-col md:flex-row gap-6">
-              <Avatar className="h-24 w-24 mx-auto md:mx-0">
+        <Card className="mb-4 sm:mb-6">
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
+              <Avatar className="h-16 w-16 sm:h-24 sm:w-24 mx-auto md:mx-0">
                 <AvatarImage src={profile?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}` : undefined} />
-                <AvatarFallback className="text-2xl">
+                <AvatarFallback className="text-lg sm:text-2xl">
                   {profile?.display_name?.charAt(0) || profile?.username?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
               
               <div className="flex-1 text-center md:text-left">
-                <div className="flex flex-col md:flex-row md:items-center gap-2 mb-2">
-                 <h1 className="text-2xl font-bold">
+                <div className="flex flex-col md:flex-row md:items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
+                 <h1 className="text-lg sm:text-2xl font-bold truncate">
                    {profile?.display_name || profile?.username || user?.email || 'Loading...'}
                  </h1>
                   {profile?.profile_type === 'creator' && (
-                    <Badge className="bg-gradient-earth text-white w-fit mx-auto md:mx-0">
+                    <Badge className="bg-gradient-earth text-white w-fit mx-auto md:mx-0 text-xs">
                       Creator
                     </Badge>
                   )}
                 </div>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-xs sm:text-base text-muted-foreground mb-2 sm:mb-4">
                   @{profile?.username || 'username'}
                 </p>
-                <p className="text-foreground mb-4">
+                <p className="text-xs sm:text-base text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">
                   {profile?.bio || 'No bio provided yet.'}
                 </p>
                 
-                <div className="flex justify-center md:justify-start gap-6 mb-4">
+                <div className="flex justify-center md:justify-start gap-3 sm:gap-6 mb-3 sm:mb-4">
                   <button 
                     onClick={() => setFollowersOpen(true)}
-                    className="text-center hover:bg-muted/50 rounded-lg p-2 transition-colors cursor-pointer"
+                    className="text-center hover:bg-muted/50 rounded-lg p-1.5 sm:p-2 transition-colors cursor-pointer"
                   >
-                    <div className="font-bold">{followerCount}</div>
-                    <div className="text-sm text-muted-foreground">Followers</div>
+                    <div className="text-sm sm:text-base font-bold">{followerCount}</div>
+                    <div className="text-[10px] sm:text-sm text-muted-foreground">Followers</div>
                   </button>
                   <button 
                     onClick={() => setFollowingOpen(true)}
-                    className="text-center hover:bg-muted/50 rounded-lg p-2 transition-colors cursor-pointer"
+                    className="text-center hover:bg-muted/50 rounded-lg p-1.5 sm:p-2 transition-colors cursor-pointer"
                   >
-                    <div className="font-bold">{followingCount}</div>
-                    <div className="text-sm text-muted-foreground">Following</div>
+                    <div className="text-sm sm:text-base font-bold">{followingCount}</div>
+                    <div className="text-[10px] sm:text-sm text-muted-foreground">Following</div>
                   </button>
                   <button 
                     onClick={() => setPostsOpen(true)}
-                    className="text-center hover:bg-muted/50 rounded-lg p-2 transition-colors cursor-pointer"
+                    className="text-center hover:bg-muted/50 rounded-lg p-1.5 sm:p-2 transition-colors cursor-pointer"
                   >
-                    <div className="font-bold">{postsCount}</div>
-                    <div className="text-sm text-muted-foreground">Posts</div>
+                    <div className="text-sm sm:text-base font-bold">{postsCount}</div>
+                    <div className="text-[10px] sm:text-sm text-muted-foreground">Posts</div>
                   </button>
                 </div>
                 
                 <Button 
                   variant="earth" 
-                  className="gap-2"
+                  size="sm"
+                  className="gap-1.5 sm:gap-2 text-xs sm:text-sm"
                   onClick={() => setSettingsOpen(true)}
                 >
-                  <Edit className="h-4 w-4" />
+                  <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   Edit Profile
                 </Button>
               </div>
