@@ -6,6 +6,9 @@ import UserStancesList from "@/components/UserStancesList";
 import UserReviewsList from "@/components/UserReviewsList";
 import UserBoycottsList from "@/components/UserBoycottsList";
 import ProfileSettingsDialog from "@/components/ProfileSettingsDialog";
+import FollowersDialog from "@/components/FollowersDialog";
+import FollowingDialog from "@/components/FollowingDialog";
+import UserPostsDialog from "@/components/UserPostsDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -16,12 +19,16 @@ import { Edit, Users, Building2, AlertTriangle, Award, ThumbsUp, Minus, ThumbsDo
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
 import { useProfile } from "@/hooks/useProfile";
+import { useFollowerCount, useFollowingCount, usePostsCount } from "@/hooks/useFollowCounts";
 import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
 
 const Profile = () => {
   const [user, setUser] = useState<SupabaseUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [followersOpen, setFollowersOpen] = useState(false);
+  const [followingOpen, setFollowingOpen] = useState(false);
+  const [postsOpen, setPostsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("stances");
   const navigate = useNavigate();
 
@@ -46,6 +53,9 @@ const Profile = () => {
 
   const { data: userStances = [] } = useUserStances(user?.id);
   const { data: profile } = useProfile(user?.id);
+  const { data: followerCount = 0 } = useFollowerCount(user?.id);
+  const { data: followingCount = 0 } = useFollowingCount(user?.id);
+  const { data: postsCount = 0 } = usePostsCount(user?.id);
 
   // Calculate stance stats
   const stanceStats = {
@@ -54,9 +64,6 @@ const Profile = () => {
     discourage: userStances.filter(s => s.stance === 'discourage').length,
   };
   const profileData = {
-    followers: 0,
-    following: 0,
-    postsCount: 0,
     boycottsCreated: 0,
     boycottsJoined: 0
   };
@@ -126,18 +133,27 @@ const Profile = () => {
                 </p>
                 
                 <div className="flex justify-center md:justify-start gap-6 mb-4">
-                  <div className="text-center">
-                    <div className="font-bold">{profileData.followers}</div>
+                  <button 
+                    onClick={() => setFollowersOpen(true)}
+                    className="text-center hover:bg-muted/50 rounded-lg p-2 transition-colors cursor-pointer"
+                  >
+                    <div className="font-bold">{followerCount}</div>
                     <div className="text-sm text-muted-foreground">Followers</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-bold">{profileData.following}</div>
+                  </button>
+                  <button 
+                    onClick={() => setFollowingOpen(true)}
+                    className="text-center hover:bg-muted/50 rounded-lg p-2 transition-colors cursor-pointer"
+                  >
+                    <div className="font-bold">{followingCount}</div>
                     <div className="text-sm text-muted-foreground">Following</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-bold">{profileData.postsCount}</div>
+                  </button>
+                  <button 
+                    onClick={() => setPostsOpen(true)}
+                    className="text-center hover:bg-muted/50 rounded-lg p-2 transition-colors cursor-pointer"
+                  >
+                    <div className="font-bold">{postsCount}</div>
                     <div className="text-sm text-muted-foreground">Posts</div>
-                  </div>
+                  </button>
                 </div>
                 
                 <Button 
@@ -283,6 +299,24 @@ const Profile = () => {
       <ProfileSettingsDialog
         open={settingsOpen}
         onOpenChange={setSettingsOpen}
+        userId={user?.id}
+      />
+      
+      <FollowersDialog
+        open={followersOpen}
+        onOpenChange={setFollowersOpen}
+        userId={user?.id}
+      />
+      
+      <FollowingDialog
+        open={followingOpen}
+        onOpenChange={setFollowingOpen}
+        userId={user?.id}
+      />
+      
+      <UserPostsDialog
+        open={postsOpen}
+        onOpenChange={setPostsOpen}
         userId={user?.id}
       />
     </div>
