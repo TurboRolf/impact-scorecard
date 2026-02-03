@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Search, Award, UserPlus, UserCheck, MessageCircle } from "lucide-react";
+import { Search, Award, UserPlus, UserCheck, User } from "lucide-react";
 import { useCreators } from "@/hooks/useProfile";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 import { useAuth } from "@/hooks/useAuth";
@@ -155,9 +155,9 @@ const Creators = () => {
                       variant="outline" 
                       size="sm" 
                       className="flex-1 gap-1 text-xs sm:text-sm h-8 sm:h-9"
-                      onClick={() => navigate("/profile")}
+                      onClick={() => navigate(`/user/${creator.user_id}`)}
                     >
-                      <MessageCircle className="h-3 w-3" />
+                      <User className="h-3 w-3" />
                       View
                     </Button>
                   </div>
