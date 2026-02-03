@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Lazy load pages for better performance
 const Feed = lazy(() => import("./pages/Feed"));
 const Profile = lazy(() => import("./pages/Profile"));
+const UserProfile = lazy(() => import("./pages/UserProfile"));
 const Companies = lazy(() => import("./pages/Companies"));
 const Company = lazy(() => import("./pages/Company"));
 const Boycotts = lazy(() => import("./pages/Boycotts"));
@@ -31,6 +32,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Feed />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/user/:userId" element={<UserProfile />} />
             <Route path="/companies" element={<Companies />} />
             <Route path="/company/:id" element={<Company />} />
             <Route path="/boycotts" element={<Boycotts />} />
