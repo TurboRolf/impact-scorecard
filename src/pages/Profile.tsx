@@ -9,13 +9,14 @@ import ProfileSettingsDialog from "@/components/ProfileSettingsDialog";
 import FollowersDialog from "@/components/FollowersDialog";
 import FollowingDialog from "@/components/FollowingDialog";
 import UserPostsDialog from "@/components/UserPostsDialog";
+import AvatarUploadDialog from "@/components/AvatarUploadDialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Edit, Users, Building2, AlertTriangle, Award, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
+import { Edit, Users, Building2, AlertTriangle, Award, ThumbsUp, Minus, ThumbsDown, Camera } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
 import { useProfile } from "@/hooks/useProfile";
@@ -29,6 +30,7 @@ const Profile = () => {
   const [followersOpen, setFollowersOpen] = useState(false);
   const [followingOpen, setFollowingOpen] = useState(false);
   const [postsOpen, setPostsOpen] = useState(false);
+  const [avatarOpen, setAvatarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("stances");
   const navigate = useNavigate();
 
@@ -109,12 +111,21 @@ const Profile = () => {
         <Card className="mb-4 sm:mb-6">
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
-              <Avatar className="h-16 w-16 sm:h-24 sm:w-24 mx-auto md:mx-0">
-                <AvatarImage src={profile?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}` : undefined} />
-                <AvatarFallback className="text-lg sm:text-2xl">
-                  {profile?.display_name?.charAt(0) || profile?.username?.charAt(0) || 'U'}
-                </AvatarFallback>
-              </Avatar>
+              <button
+                onClick={() => setAvatarOpen(true)}
+                className="relative group cursor-pointer"
+                aria-label="Ändra profilbild"
+              >
+                <Avatar className="h-16 w-16 sm:h-24 sm:w-24 mx-auto md:mx-0 transition-opacity group-hover:opacity-80">
+                  <AvatarImage src={profile?.avatar_url || (profile?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}` : undefined)} />
+                  <AvatarFallback className="text-lg sm:text-2xl">
+                    {profile?.display_name?.charAt(0) || profile?.username?.charAt(0) || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Camera className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                </div>
+              </button>
               
               <div className="flex-1 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-center gap-1 sm:gap-2 mb-1 sm:mb-2">
@@ -321,6 +332,15 @@ const Profile = () => {
         open={postsOpen}
         onOpenChange={setPostsOpen}
         userId={user?.id}
+      />
+      
+      <AvatarUploadDialog
+        open={avatarOpen}
+        onOpenChange={setAvatarOpen}
+        userId={user?.id}
+        currentAvatarUrl={profile?.avatar_url}
+        username={profile?.username}
+        displayName={profile?.display_name}
       />
     </div>
   );
