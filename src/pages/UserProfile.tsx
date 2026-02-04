@@ -111,7 +111,7 @@ const UserProfile = () => {
           <CardContent className="p-4 sm:p-6">
             <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
               <Avatar className="h-16 w-16 sm:h-24 sm:w-24 mx-auto md:mx-0">
-                <AvatarImage src={profile.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}` : undefined} />
+                <AvatarImage src={profile.avatar_url || (profile.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}` : undefined)} />
                 <AvatarFallback className="text-lg sm:text-2xl">
                   {profile.display_name?.charAt(0) || profile.username?.charAt(0) || 'U'}
                 </AvatarFallback>

@@ -8,6 +8,7 @@ export interface Profile {
   display_name: string | null;
   username: string | null;
   bio: string | null;
+  avatar_url: string | null;
   profile_type: 'user' | 'creator';
   created_at: string;
   updated_at: string;
@@ -57,6 +58,7 @@ export const useUpdateProfile = () => {
       display_name?: string;
       username?: string;
       bio?: string;
+      avatar_url?: string;
       profile_type?: 'user' | 'creator';
     }) => {
       const { data: { user } } = await supabase.auth.getUser();
