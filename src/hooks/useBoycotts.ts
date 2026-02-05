@@ -19,6 +19,15 @@ export interface Boycott {
   };
 }
 
+// Sanitize search input to prevent SQL LIKE injection
+const sanitizeSearchTerm = (term: string): string => {
+  return term
+    .replace(/\\/g, '\\\\')  // Escape backslash first
+    .replace(/%/g, '\\%')    // Escape percent
+    .replace(/_/g, '\\_')    // Escape underscore
+    .slice(0, 100);          // Limit length to prevent DOS
+};
+
 export const useBoycotts = (searchTerm = '') => {
   return useQuery({
     queryKey: ['boycotts', searchTerm],
@@ -32,7 +41,8 @@ export const useBoycotts = (searchTerm = '') => {
         .order('created_at', { ascending: false });
 
       if (searchTerm) {
-        query = query.or(`title.ilike.%${searchTerm}%,company.ilike.%${searchTerm}%,subject.ilike.%${searchTerm}%`);
+        const sanitized = sanitizeSearchTerm(searchTerm);
+        query = query.or(`title.ilike.%${sanitized}%,company.ilike.%${sanitized}%,subject.ilike.%${sanitized}%`);
       }
 
       const { data, error } = await query;
