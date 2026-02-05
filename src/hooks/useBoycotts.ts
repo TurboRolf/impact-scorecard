@@ -8,7 +8,7 @@ export interface Boycott {
   company: string;
   subject: string;
   participants_count: number;
-  status: 'active' | 'successful' | 'ended';
+  status: 'active' | 'successful' | 'ended' | 'deactivated';
   impact: 'low' | 'medium' | 'high' | 'very-high';
   start_date: string;
   created_at: string;
@@ -156,6 +156,60 @@ export const useLeaveBoycott = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['boycotts'] });
       queryClient.invalidateQueries({ queryKey: ['boycott-participation'] });
+    },
+  });
+};
+
+export const useDeleteBoycott = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boycottId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to delete a boycott');
+      }
+
+      const { error } = await supabase
+        .from('boycotts')
+        .delete()
+        .eq('id', boycottId)
+        .eq('organizer_id', user.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boycotts'] });
+      queryClient.invalidateQueries({ queryKey: ['boycott-stats'] });
+    },
+  });
+};
+
+export const useDeactivateBoycott = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boycottId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to deactivate a boycott');
+      }
+
+      const { error } = await supabase
+        .from('boycotts')
+        .update({ status: 'deactivated' })
+        .eq('id', boycottId)
+        .eq('organizer_id', user.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boycotts'] });
+      queryClient.invalidateQueries({ queryKey: ['boycott-stats'] });
     },
   });
 };
