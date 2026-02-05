@@ -2,11 +2,11 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Users, Calendar, Search, Check } from "lucide-react";
+import { AlertTriangle, Users, Calendar, Search, Check, Ban } from "lucide-react";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
+import { BoycottManageMenu } from "@/components/BoycottManageMenu";
 import { useBoycotts, useBoycottStats, useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +28,8 @@ const Boycotts = () => {
         return "bg-brand-primary text-white";
       case "successful":
         return "bg-brand-success text-white";
+      case "deactivated":
+        return "bg-muted text-muted-foreground";
       case "ended":
         return "bg-muted text-muted-foreground";
       default:
@@ -152,12 +154,16 @@ const Boycotts = () => {
             </div>
           ) : (
             boycotts.map((boycott) => (
-              <Card key={boycott.id} className="hover:shadow-card transition-all duration-300">
+              <Card key={boycott.id} className={`hover:shadow-card transition-all duration-300 ${boycott.status === 'deactivated' ? 'opacity-70' : ''}`}>
                 <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2 flex-wrap">
-                        <AlertTriangle className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-destructive flex-shrink-0" />
+                        {boycott.status === 'deactivated' ? (
+                          <Ban className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
+                        ) : (
+                          <AlertTriangle className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-destructive flex-shrink-0" />
+                        )}
                         <CardTitle className="text-sm sm:text-lg truncate">{boycott.title}</CardTitle>
                         <Badge className={`${getStatusColor(boycott.status)} text-[10px] sm:text-xs`} variant="secondary">
                           {boycott.status}
@@ -167,6 +173,12 @@ const Boycotts = () => {
                         <span className="font-medium">{boycott.company}</span> • {boycott.categories.name}
                       </p>
                     </div>
+                    <BoycottManageMenu
+                      boycottId={boycott.id}
+                      boycottTitle={boycott.title}
+                      isOrganizer={user?.id === boycott.organizer_id}
+                      status={boycott.status}
+                    />
                   </div>
                 </CardHeader>
                 
@@ -212,6 +224,11 @@ const Boycotts = () => {
                             {joinBoycottMutation.isPending ? "..." : "Join"}
                           </Button>
                         )
+                      )}
+                      {boycott.status === "deactivated" && (
+                        <Badge variant="outline" className="text-xs">
+                          No longer active
+                        </Badge>
                       )}
                     </div>
                   </div>
