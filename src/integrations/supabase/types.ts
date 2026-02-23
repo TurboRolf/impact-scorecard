@@ -132,6 +132,7 @@ export type Database = {
       companies: {
         Row: {
           category: string
+          country: string | null
           created_at: string
           description: string | null
           id: string
@@ -142,6 +143,7 @@ export type Database = {
         }
         Insert: {
           category: string
+          country?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -152,6 +154,7 @@ export type Database = {
         }
         Update: {
           category?: string
+          country?: string | null
           created_at?: string
           description?: string | null
           id?: string
@@ -366,6 +369,7 @@ export type Database = {
           avg_overall_rating: number | null
           avg_politics_rating: number | null
           category: string | null
+          country: string | null
           description: string | null
           discourage_count: number | null
           id: string | null
