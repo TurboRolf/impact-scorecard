@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { countryCodeToFlag } from "@/lib/countryFlag";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -108,7 +109,10 @@ const Company = () => {
               </div>
               
               <div className="flex-1 text-center sm:text-left">
-                <h1 className="text-2xl sm:text-3xl font-bold mb-2">{company.name}</h1>
+                <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+                  {countryCodeToFlag(company.country) && <span className="mr-2">{countryCodeToFlag(company.country)}</span>}
+                  {company.name}
+                </h1>
                 <Badge variant="secondary" className="mb-2">{company.category}</Badge>
                 <p className="text-muted-foreground mb-4 text-sm sm:text-base">{company.description}</p>
                 

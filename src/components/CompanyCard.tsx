@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { countryCodeToFlag } from "@/lib/countryFlag";
 
 interface CompanyCardProps {
   id: string;
   name: string;
   category: string;
   logo?: string;
+  country?: string | null;
   overallRating: number;
   ethicsRating: number;
   environmentRating: number;
@@ -29,6 +31,7 @@ const CompanyCard = ({
   name,
   category,
   logo,
+  country,
   overallRating,
   ethicsRating,
   environmentRating,
@@ -44,6 +47,7 @@ const CompanyCard = ({
   onStartBoycott
 }: CompanyCardProps) => {
   const navigate = useNavigate();
+  const flag = countryCodeToFlag(country);
   const ratings = [
     { label: "Ethics", value: ethicsRating, color: "text-earth-blue" },
     { label: "Environment", value: environmentRating, color: "text-earth-green" },
@@ -63,7 +67,10 @@ const CompanyCard = ({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-sm sm:text-base truncate">{name}</CardTitle>
+              <CardTitle className="text-sm sm:text-base truncate">
+                {flag && <span className="mr-1.5">{flag}</span>}
+                {name}
+              </CardTitle>
               <p className="text-xs sm:text-sm text-muted-foreground truncate">{category}</p>
             </div>
           </div>

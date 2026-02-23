@@ -23,6 +23,7 @@ export interface CompanyData {
   description: string | null;
   logo_url: string | null;
   website_url: string | null;
+  country: string | null;
   avg_overall_rating: number | null;
   avg_ethics_rating: number | null;
   avg_environment_rating: number | null;
