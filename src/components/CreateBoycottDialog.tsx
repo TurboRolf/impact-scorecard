@@ -35,7 +35,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     description: "",
     company: preselectedCompany || "",
     subject: "",
-    category_id: ""
+    category_id: "",
   });
   const [createPost, setCreatePost] = useState(true);
   const { toast } = useToast();
@@ -175,7 +175,7 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
         description: "",
         company: preselectedCompany || "",
         subject: "",
-        category_id: ""
+        category_id: "",
       });
       setCreatePost(true);
       setOpen(false);
@@ -269,6 +269,7 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
               </SelectContent>
             </Select>
           </div>
+
 
 
           <div className="space-y-2">

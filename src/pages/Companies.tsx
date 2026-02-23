@@ -54,12 +54,12 @@ const Companies = () => {
             </div>
             
             <div className="flex gap-1 sm:gap-2 ml-3">
-              <Button onClick={() => stanceDialog.openDialog()} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" variant="outline" size="sm">
+              <Button onClick={() => stanceDialog.openDialog()} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" size="sm">
                 <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Add Stance</span>
                 <span className="sm:hidden">Stance</span>
               </Button>
-              <Button onClick={() => reviewDialog.openDialog()} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" size="sm">
+              <Button onClick={() => reviewDialog.openDialog()} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" variant="outline" size="sm">
                 <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Add Review</span>
                 <span className="sm:hidden">Review</span>
