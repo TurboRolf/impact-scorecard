@@ -78,7 +78,7 @@ export const usePostComments = (postId?: string) => {
         .eq("post_id", postId)
         .order("created_at", { ascending: true });
       if (error) throw error;
-      return data as PostComment[];
+      return data as unknown as PostComment[];
     },
     enabled: !!postId,
   });
