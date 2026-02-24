@@ -79,8 +79,9 @@ const Feed = () => {
     }
     
     return {
+      postId: post.id,
       user: {
-        id: post.user_id, // Add user ID for following functionality
+        id: post.user_id,
         name: post.profiles?.display_name || post.profiles?.username || "Anonymous User",
         username: post.profiles?.username || "unknown",
         avatar: post.profiles?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.profiles.username}` : undefined,
