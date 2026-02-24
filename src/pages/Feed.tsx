@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import PostCard from "@/components/PostCard";
 import LoadingScreen from "@/components/LoadingScreen";
+import LeftSidebar from "@/components/feed/LeftSidebar";
+import RightSidebar from "@/components/feed/RightSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -123,7 +125,15 @@ const Feed = () => {
     <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
       <Navigation />
       
-      <div className="max-w-2xl mx-auto pt-20 px-3 md:px-4 pb-8">
+      <div className="max-w-7xl mx-auto pt-20 px-3 md:px-4 pb-8">
+        <div className="flex gap-6">
+          {/* Left Sidebar - hidden on mobile */}
+          <aside className="hidden lg:block w-64 flex-shrink-0">
+            <LeftSidebar />
+          </aside>
+
+          {/* Main Feed */}
+          <div className="flex-1 max-w-2xl mx-auto lg:mx-0">
         {/* Create Post */}
         {user ? (
           <Card className="mb-4 md:mb-6">
@@ -218,6 +228,13 @@ const Feed = () => {
             </div>
           </TabsContent>
         </Tabs>
+          </div>
+
+          {/* Right Sidebar - hidden on mobile/tablet */}
+          <aside className="hidden xl:block w-72 flex-shrink-0">
+            <RightSidebar />
+          </aside>
+        </div>
       </div>
     </div>
   );
