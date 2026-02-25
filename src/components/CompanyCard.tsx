@@ -76,19 +76,19 @@ const CompanyCard = ({
           </div>
           
           <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-            <div 
-              className="flex items-center gap-0.5 sm:gap-1 cursor-pointer hover:opacity-80 transition-opacity"
+          <div 
+              className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
               {[...Array(5)].map((_, i) => (
                 <Star
                   key={i}
-                  className={`h-2.5 w-2.5 sm:h-3 sm:w-3 ${
+                  className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${
                     i < overallRating ? "text-earth-orange fill-current" : "text-muted-foreground"
                   }`}
                 />
               ))}
-              <span className="ml-0.5 sm:ml-1 font-semibold text-xs sm:text-sm">{overallRating}/5</span>
+              <span className="ml-1 font-semibold text-sm">{overallRating}/5</span>
             </div>
             {trend === "up" && <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-green-500" />}
             {trend === "down" && <TrendingDown className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-red-500" />}
