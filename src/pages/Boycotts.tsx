@@ -84,8 +84,8 @@ const Boycotts = () => {
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
         <div className="mb-4 sm:mb-8">
-          <h1 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Active Boycotts</h1>
-          <p className="text-xs sm:text-base text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Active Boycotts</h1>
+          <p className="text-sm text-muted-foreground">
             Join collective action for corporate accountability.
           </p>
         </div>
@@ -111,7 +111,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-brand-primary">
                 {statsLoading ? "..." : stats?.activeBoycotts}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Active</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Active</div>
             </CardContent>
           </Card>
           <Card>
@@ -119,7 +119,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-brand-success">
                 {statsLoading ? "..." : stats?.totalParticipants.toLocaleString()}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Participants</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Participants</div>
             </CardContent>
           </Card>
           <Card>
@@ -127,7 +127,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-brand-accent">
                 {statsLoading ? "..." : stats?.successfulCampaigns}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Successful</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Successful</div>
             </CardContent>
           </Card>
           <Card>
@@ -135,7 +135,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.companiesChanged}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Changed</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Changed</div>
             </CardContent>
           </Card>
         </div>
@@ -165,7 +165,7 @@ const Boycotts = () => {
                           <AlertTriangle className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-destructive flex-shrink-0" />
                         )}
                         <CardTitle className="text-sm sm:text-lg truncate">{boycott.title}</CardTitle>
-                        <Badge className={`${getStatusColor(boycott.status)} text-[10px] sm:text-xs`} variant="secondary">
+                        <Badge className={`${getStatusColor(boycott.status)} text-xs`} variant="secondary">
                           {boycott.status}
                         </Badge>
                       </div>
@@ -183,7 +183,7 @@ const Boycotts = () => {
                 </CardHeader>
                 
                 <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
-                  <p className="text-xs sm:text-base text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">{boycott.description}</p>
+                  <p className="text-sm text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">{boycott.description}</p>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
                     <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground flex-wrap">

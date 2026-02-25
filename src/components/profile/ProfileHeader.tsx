@@ -65,9 +65,10 @@ const ProfileHeader = ({
             @{profile?.username || 'username'}
           </h1>
           {profile?.profile_type === 'creator' && (
-            <Badge className="bg-gradient-earth text-white text-[10px] md:text-xs px-1.5 py-0">
+            <Badge className="bg-gradient-earth text-white text-xs px-1.5 py-0">
               Creator
             </Badge>
+
           )}
         </div>
         
@@ -83,21 +84,21 @@ const ProfileHeader = ({
             className="hover:opacity-70 transition-opacity"
           >
             <span className="text-sm md:text-base font-bold">{followerCount}</span>
-            <span className="text-[10px] md:text-sm text-muted-foreground ml-1">followers</span>
+            <span className="text-xs md:text-sm text-muted-foreground ml-1">followers</span>
           </button>
           <button 
             onClick={onFollowingClick}
             className="hover:opacity-70 transition-opacity"
           >
             <span className="text-sm md:text-base font-bold">{followingCount}</span>
-            <span className="text-[10px] md:text-sm text-muted-foreground ml-1">following</span>
+            <span className="text-xs md:text-sm text-muted-foreground ml-1">following</span>
           </button>
           <button 
             onClick={onPostsClick}
             className="hover:opacity-70 transition-opacity"
           >
             <span className="text-sm md:text-base font-bold">{postsCount}</span>
-            <span className="text-[10px] md:text-sm text-muted-foreground ml-1">posts</span>
+            <span className="text-xs md:text-sm text-muted-foreground ml-1">posts</span>
           </button>
         </div>
         
