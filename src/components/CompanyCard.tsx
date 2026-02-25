@@ -112,11 +112,17 @@ const CompanyCard = ({
           ))}
         </div>
         
-        {activeBoycotts > 0 && (
+        {activeBoycotts > 0 ? (
           <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
             <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
             <span className="text-xs sm:text-sm text-destructive font-medium">
               {activeBoycotts} active boycott{activeBoycotts > 1 ? 's' : ''}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+            <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+              0 active boycotts
             </span>
           </div>
         )}
