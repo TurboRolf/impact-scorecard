@@ -17,6 +17,10 @@ export interface Boycott {
     name: string;
     color: string;
   };
+  profiles: {
+    display_name: string | null;
+    username: string | null;
+  } | null;
 }
 
 // Sanitize search input to prevent SQL LIKE injection
@@ -50,8 +54,20 @@ export const useBoycotts = (searchTerm = '') => {
       if (error) {
         throw new Error(error.message);
       }
-      
-      return data as Boycott[];
+
+      // Fetch organizer profiles
+      const organizerIds = [...new Set(data?.map(b => b.organizer_id) || [])];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, display_name, username')
+        .in('user_id', organizerIds);
+
+      const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
+
+      return (data || []).map(b => ({
+        ...b,
+        profiles: profileMap.get(b.organizer_id) || null,
+      })) as Boycott[];
     },
   });
 };
@@ -236,7 +252,7 @@ export const useBoycottByCompany = (companyName: string) => {
         .order('created_at', { ascending: false });
       
       if (error) throw new Error(error.message);
-      return data as Boycott[];
+      return data.map(b => ({ ...b, profiles: null })) as Boycott[];
     },
     enabled: !!companyName,
   });
