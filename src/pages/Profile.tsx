@@ -25,7 +25,7 @@ const Profile = () => {
   const [followingOpen, setFollowingOpen] = useState(false);
   const [postsOpen, setPostsOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("stances");
+  const [activeTab, setActiveTab] = useState("posts");
   const navigate = useNavigate();
 
   useEffect(() => {
