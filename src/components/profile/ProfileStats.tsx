@@ -61,7 +61,7 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined }: ProfileS
           >
             <stat.icon className={`h-3.5 w-3.5 ${stat.color}`} />
             <span className={`text-sm font-semibold ${stat.color}`}>{stat.value}</span>
-            <span className="text-[10px] text-muted-foreground">{stat.label}</span>
+            <span className="text-xs text-muted-foreground">{stat.label}</span>
           </div>
         ))}
       </div>

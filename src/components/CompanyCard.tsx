@@ -107,7 +107,7 @@ const CompanyCard = ({
               onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
               <div className={`text-sm sm:text-base font-bold ${rating.color}`}>{rating.value}/5</div>
-              <div className="text-[10px] sm:text-xs text-muted-foreground leading-tight">{rating.label}</div>
+              <div className="text-xs text-muted-foreground leading-tight">{rating.label}</div>
             </div>
           ))}
         </div>

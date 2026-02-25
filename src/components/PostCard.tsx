@@ -135,10 +135,10 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
               <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
                 <span className="font-semibold text-sm md:text-base truncate">{user.name}</span>
                 {user.isCreator && (
-                  <Badge variant="secondary" className="text-[10px] md:text-xs px-1.5 md:px-2">Creator</Badge>
+                  <Badge variant="secondary" className="text-xs px-1.5 md:px-2">Creator</Badge>
                 )}
                 {isBoycott && (
-                  <Badge variant="destructive" className="text-[10px] md:text-xs gap-0.5 md:gap-1 px-1.5 md:px-2">
+                  <Badge variant="destructive" className="text-xs gap-0.5 md:gap-1 px-1.5 md:px-2">
                     <AlertTriangle className="h-2.5 w-2.5 md:h-3 md:w-3" />
                     Boycott
                   </Badge>
