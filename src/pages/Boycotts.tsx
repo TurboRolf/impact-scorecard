@@ -170,7 +170,7 @@ const Boycotts = () => {
                         </Badge>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground">
-                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name}
+                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name} • Started by {boycott.profiles?.display_name || boycott.profiles?.username || 'Unknown'}
                       </p>
                     </div>
                     <BoycottManageMenu
