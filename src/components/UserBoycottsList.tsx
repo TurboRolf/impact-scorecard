@@ -23,9 +23,9 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-brand-accent text-white';
+        return 'bg-destructive text-destructive-foreground';
       case 'successful':
-        return 'bg-brand-success text-white';
+        return 'bg-brand-success text-destructive-foreground';
       case 'deactivated':
         return 'bg-muted text-muted-foreground';
       case 'ended':

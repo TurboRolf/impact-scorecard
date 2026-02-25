@@ -39,14 +39,14 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined }: ProfileS
       value: boycottsCreated, 
       label: "Created", 
       fullLabel: "Boycotts Created",
-      color: "text-brand-accent" 
+      color: "text-destructive" 
     },
     { 
       icon: Users, 
       value: boycottsJoined, 
       label: "Joined", 
       fullLabel: "Boycotts Joined",
-      color: "text-brand-success" 
+      color: "text-destructive" 
     },
   ];
 
