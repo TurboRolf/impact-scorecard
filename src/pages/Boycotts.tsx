@@ -25,9 +25,9 @@ const Boycotts = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "active":
-        return "bg-brand-primary text-white";
+        return "bg-destructive text-destructive-foreground";
       case "successful":
-        return "bg-brand-success text-white";
+        return "bg-brand-success text-destructive-foreground";
       case "deactivated":
         return "bg-muted text-muted-foreground";
       case "ended":
@@ -108,7 +108,7 @@ const Boycotts = () => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6">
           <Card>
             <CardContent className="p-2.5 sm:p-4 text-center">
-              <div className="text-lg sm:text-2xl font-bold text-brand-primary">
+              <div className="text-lg sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.activeBoycotts}
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground">Active</div>
@@ -116,7 +116,7 @@ const Boycotts = () => {
           </Card>
           <Card>
             <CardContent className="p-2.5 sm:p-4 text-center">
-              <div className="text-lg sm:text-2xl font-bold text-brand-success">
+              <div className="text-lg sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.totalParticipants.toLocaleString()}
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground">Participants</div>
@@ -124,7 +124,7 @@ const Boycotts = () => {
           </Card>
           <Card>
             <CardContent className="p-2.5 sm:p-4 text-center">
-              <div className="text-lg sm:text-2xl font-bold text-brand-accent">
+              <div className="text-lg sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.successfulCampaigns}
               </div>
               <div className="text-xs sm:text-sm text-muted-foreground">Successful</div>
