@@ -55,7 +55,7 @@ const CompanyCard = ({
   ];
 
   return (
-    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer" onClick={() => navigate(`/company/${id}`)}>
+    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col" onClick={() => navigate(`/company/${id}`)}>
       <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-2 sm:gap-3">
@@ -96,7 +96,7 @@ const CompanyCard = ({
         </div>
       </CardHeader>
       
-      <CardContent className="p-4 sm:p-6 pt-0">
+      <CardContent className="p-4 sm:p-6 pt-0 flex-1 flex flex-col">
         <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
         
         <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4">
@@ -137,7 +137,7 @@ const CompanyCard = ({
           </div>
         </div>
         
-        <div className="flex gap-1.5 sm:gap-2">
+        <div className="flex gap-1.5 sm:gap-2 mt-auto">
           <Button 
             variant="default" 
             size="sm" 
@@ -164,4 +164,3 @@ const CompanyCard = ({
 };
 
 export default CompanyCard;
-// hej
