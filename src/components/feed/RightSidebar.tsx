@@ -32,7 +32,7 @@ const RightSidebar = () => {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
             <Flame className="h-4 w-4 text-discourage" />
-            Trendande ämnen
+            Trending Topics
           </CardTitle>
         </CardHeader>
         <CardContent className="p-3 pt-0">
@@ -41,7 +41,7 @@ const RightSidebar = () => {
               <div key={topic.tag} className="flex items-center justify-between group cursor-pointer">
                 <div>
                   <p className="text-sm font-medium group-hover:text-brand-primary transition-colors">{topic.tag}</p>
-                  <p className="text-xs text-muted-foreground">{topic.posts.toLocaleString()} inlägg</p>
+                  <p className="text-xs text-muted-foreground">{topic.posts.toLocaleString()} posts</p>
                 </div>
                 <TrendingUp className="h-3.5 w-3.5 text-recommend" />
               </div>
@@ -55,7 +55,7 @@ const RightSidebar = () => {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-discourage" />
-            Aktiva bojkotter
+            Active Boycotts
           </CardTitle>
         </CardHeader>
         <CardContent className="p-3 pt-0">
@@ -66,14 +66,14 @@ const RightSidebar = () => {
                 <p className="text-xs text-muted-foreground">{boycott.company}</p>
                 <div className="flex items-center gap-1 mt-1.5">
                   <Users className="h-3 w-3 text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">{boycott.participants.toLocaleString()} deltagare</span>
+                  <span className="text-xs text-muted-foreground">{boycott.participants.toLocaleString()} participants</span>
                 </div>
               </div>
             ))}
           </div>
           <Link to="/boycotts">
             <Button variant="ghost" size="sm" className="w-full mt-2 text-xs gap-1">
-              Visa alla <ArrowRight className="h-3 w-3" />
+              View all <ArrowRight className="h-3 w-3" />
             </Button>
           </Link>
         </CardContent>
@@ -84,7 +84,7 @@ const RightSidebar = () => {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-semibold flex items-center gap-2">
             <Shield className="h-4 w-4 text-brand-primary" />
-            Föreslagna skapare
+            Suggested Creators
           </CardTitle>
         </CardHeader>
         <CardContent className="p-3 pt-0">
@@ -100,14 +100,14 @@ const RightSidebar = () => {
                   <p className="text-xs text-muted-foreground truncate">{creator.bio}</p>
                 </div>
                 <Button variant="outline" size="sm" className="h-7 text-xs px-2.5 flex-shrink-0">
-                  Följ
+                  Follow
                 </Button>
               </div>
             ))}
           </div>
           <Link to="/creators">
             <Button variant="ghost" size="sm" className="w-full mt-2 text-xs gap-1">
-              Visa alla <ArrowRight className="h-3 w-3" />
+              View all <ArrowRight className="h-3 w-3" />
             </Button>
           </Link>
         </CardContent>
@@ -116,10 +116,10 @@ const RightSidebar = () => {
       {/* Footer */}
       <div className="px-2 text-[11px] text-muted-foreground space-y-1">
         <div className="flex flex-wrap gap-x-2 gap-y-0.5">
-          <span className="hover:underline cursor-pointer">Om</span>
-          <span className="hover:underline cursor-pointer">Integritet</span>
-          <span className="hover:underline cursor-pointer">Villkor</span>
-          <span className="hover:underline cursor-pointer">Kontakt</span>
+          <span className="hover:underline cursor-pointer">About</span>
+          <span className="hover:underline cursor-pointer">Privacy</span>
+          <span className="hover:underline cursor-pointer">Terms</span>
+          <span className="hover:underline cursor-pointer">Contact</span>
         </div>
         <p>© 2026 EthiCheck</p>
       </div>
