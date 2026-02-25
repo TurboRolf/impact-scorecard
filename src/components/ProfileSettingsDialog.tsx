@@ -40,7 +40,6 @@ const ProfileSettingsDialog = ({
   const [showPassword, setShowPassword] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  // Update form data when profile loads
   useEffect(() => {
     if (profile) {
       setFormData({
@@ -56,8 +55,8 @@ const ProfileSettingsDialog = ({
     e.preventDefault();
     await updateProfile.mutateAsync(formData);
     toast({
-      title: "Profil uppdaterad",
-      description: "Dina ändringar har sparats."
+      title: "Profile updated",
+      description: "Your changes have been saved."
     });
     onOpenChange(false);
   };
@@ -67,8 +66,8 @@ const ProfileSettingsDialog = ({
     
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast({
-        title: "Lösenorden matchar inte",
-        description: "Kontrollera att båda lösenorden är identiska.",
+        title: "Passwords don't match",
+        description: "Please make sure both passwords are identical.",
         variant: "destructive"
       });
       return;
@@ -76,8 +75,8 @@ const ProfileSettingsDialog = ({
 
     if (passwordData.newPassword.length < 6) {
       toast({
-        title: "Lösenordet är för kort",
-        description: "Lösenordet måste vara minst 6 tecken.",
+        title: "Password too short",
+        description: "Password must be at least 6 characters.",
         variant: "destructive"
       });
       return;
@@ -93,14 +92,14 @@ const ProfileSettingsDialog = ({
       if (error) throw error;
 
       toast({
-        title: "Lösenord uppdaterat",
-        description: "Ditt lösenord har ändrats."
+        title: "Password updated",
+        description: "Your password has been changed."
       });
       
       setPasswordData({ newPassword: "", confirmPassword: "" });
     } catch (error: any) {
       toast({
-        title: "Kunde inte ändra lösenord",
+        title: "Could not change password",
         description: error.message,
         variant: "destructive"
       });
@@ -113,18 +112,18 @@ const ProfileSettingsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Profilinställningar</DialogTitle>
+          <DialogTitle>Profile Settings</DialogTitle>
         </DialogHeader>
 
         <Tabs defaultValue="profile" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="profile" className="gap-2">
               <User className="h-4 w-4" />
-              Profil
+              Profile
             </TabsTrigger>
             <TabsTrigger value="security" className="gap-2">
               <Lock className="h-4 w-4" />
-              Säkerhet
+              Security
             </TabsTrigger>
           </TabsList>
 
@@ -132,21 +131,21 @@ const ProfileSettingsDialog = ({
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="display_name">Visningsnamn</Label>
+                  <Label htmlFor="display_name">Display Name</Label>
                   <Input
                     id="display_name"
                     value={formData.display_name}
                     onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
-                    placeholder="Ditt visningsnamn"
+                    placeholder="Your display name"
                   />
                 </div>
                 <div>
-                  <Label htmlFor="username">Användarnamn</Label>
+                  <Label htmlFor="username">Username</Label>
                   <Input
                     id="username"
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    placeholder="@användarnamn"
+                    placeholder="@username"
                   />
                 </div>
               </div>
@@ -157,13 +156,13 @@ const ProfileSettingsDialog = ({
                   id="bio"
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  placeholder="Berätta lite om dig själv..."
+                  placeholder="Tell us a bit about yourself..."
                   rows={3}
                 />
               </div>
 
               <div className="space-y-4">
-                <Label className="text-base font-medium">Profiltyp</Label>
+                <Label className="text-base font-medium">Profile Type</Label>
                 <RadioGroup
                   value={formData.profile_type}
                   onValueChange={(value: 'user' | 'creator') => 
@@ -174,9 +173,9 @@ const ProfileSettingsDialog = ({
                   <div className="flex items-start space-x-3 p-3 border rounded-lg">
                     <RadioGroupItem value="user" id="user" className="mt-1" />
                     <div className="space-y-1">
-                      <Label htmlFor="user" className="font-medium text-sm">Vanlig användare</Label>
+                      <Label htmlFor="user" className="font-medium text-sm">Regular User</Label>
                       <p className="text-xs text-muted-foreground">
-                        Följ kreatörer, betygsätt företag och gå med i bojkotter.
+                        Follow creators, rate companies and join boycotts.
                       </p>
                     </div>
                   </div>
@@ -184,9 +183,9 @@ const ProfileSettingsDialog = ({
                   <div className="flex items-start space-x-3 p-3 border rounded-lg">
                     <RadioGroupItem value="creator" id="creator" className="mt-1" />
                     <div className="space-y-1">
-                      <Label htmlFor="creator" className="font-medium text-sm">Kreatör</Label>
+                      <Label htmlFor="creator" className="font-medium text-sm">Creator</Label>
                       <p className="text-xs text-muted-foreground">
-                        Skapa innehåll, bygg en följarskara och påverka konsumentval.
+                        Create content, build a following and influence consumer choices.
                       </p>
                     </div>
                   </div>
@@ -196,12 +195,12 @@ const ProfileSettingsDialog = ({
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-brand-accent" />
-                      <span className="text-sm font-medium">Kreatörsfördelar</span>
+                      <span className="text-sm font-medium">Creator Benefits</span>
                     </div>
                     <ul className="text-xs text-muted-foreground mt-2 space-y-1">
-                      <li>• Kreatörsmärke på din profil</li>
-                      <li>• Syns i kreatörskatalogen</li>
-                      <li>• Tillgång till kreatörsanalys</li>
+                      <li>• Creator badge on your profile</li>
+                      <li>• Listed in the creator directory</li>
+                      <li>• Access to creator analytics</li>
                     </ul>
                   </div>
                 )}
@@ -209,10 +208,10 @@ const ProfileSettingsDialog = ({
 
               <div className="flex gap-2 justify-end">
                 <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                  Avbryt
+                  Cancel
                 </Button>
                 <Button type="submit" disabled={updateProfile.isPending}>
-                  {updateProfile.isPending ? "Sparar..." : "Spara ändringar"}
+                  {updateProfile.isPending ? "Saving..." : "Save Changes"}
                 </Button>
               </div>
             </form>
@@ -222,14 +221,14 @@ const ProfileSettingsDialog = ({
             <form onSubmit={handlePasswordChange} className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="newPassword">Nytt lösenord</Label>
+                  <Label htmlFor="newPassword">New Password</Label>
                   <div className="relative">
                     <Input
                       id="newPassword"
                       type={showPassword ? "text" : "password"}
                       value={passwordData.newPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                      placeholder="Ange nytt lösenord"
+                      placeholder="Enter new password"
                       className="pr-10"
                     />
                     <button
@@ -243,30 +242,30 @@ const ProfileSettingsDialog = ({
                 </div>
 
                 <div>
-                  <Label htmlFor="confirmPassword">Bekräfta lösenord</Label>
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
                   <Input
                     id="confirmPassword"
                     type={showPassword ? "text" : "password"}
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    placeholder="Bekräfta nytt lösenord"
+                    placeholder="Confirm new password"
                   />
                 </div>
 
                 <p className="text-xs text-muted-foreground">
-                  Lösenordet måste vara minst 6 tecken långt.
+                  Password must be at least 6 characters long.
                 </p>
               </div>
 
               <div className="flex gap-2 justify-end">
                 <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                  Avbryt
+                  Cancel
                 </Button>
                 <Button 
                   type="submit" 
                   disabled={isChangingPassword || !passwordData.newPassword || !passwordData.confirmPassword}
                 >
-                  {isChangingPassword ? "Ändrar..." : "Ändra lösenord"}
+                  {isChangingPassword ? "Changing..." : "Change Password"}
                 </Button>
               </div>
             </form>

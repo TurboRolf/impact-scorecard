@@ -43,11 +43,10 @@ const ProfileHeader = ({
 
   return (
     <div className="flex gap-3 md:gap-6">
-      {/* Avatar - smaller on mobile */}
       <button
         onClick={onAvatarClick}
         className="relative group cursor-pointer flex-shrink-0"
-        aria-label="Ändra profilbild"
+        aria-label="Change profile picture"
       >
         <Avatar className="h-14 w-14 md:h-24 md:w-24 transition-opacity group-hover:opacity-80">
           <AvatarImage src={avatarUrl} />
@@ -60,9 +59,7 @@ const ProfileHeader = ({
         </div>
       </button>
       
-      {/* Info section */}
       <div className="flex-1 min-w-0">
-        {/* Name and badge - inline on mobile */}
         <div className="flex items-center gap-2 mb-1 md:mb-3">
           <h1 className="text-base md:text-2xl font-bold truncate">
             @{profile?.username || 'username'}
@@ -104,7 +101,6 @@ const ProfileHeader = ({
           </button>
         </div>
         
-        {/* Edit button - smaller on mobile */}
         <Button 
           variant="earth" 
           size="sm"

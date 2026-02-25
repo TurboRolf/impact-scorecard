@@ -40,21 +40,19 @@ const AvatarUploadDialog = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Validate file type
     if (!ACCEPTED_TYPES.includes(file.type)) {
       toast({
-        title: "Ogiltigt filformat",
-        description: "Endast JPG, PNG och WEBP är tillåtna.",
+        title: "Invalid file format",
+        description: "Only JPG, PNG and WEBP are allowed.",
         variant: "destructive",
       });
       return;
     }
 
-    // Validate file size
     if (file.size > MAX_FILE_SIZE) {
       toast({
-        title: "Filen är för stor",
-        description: "Max filstorlek är 5MB.",
+        title: "File too large",
+        description: "Maximum file size is 5MB.",
         variant: "destructive",
       });
       return;
@@ -71,13 +69,11 @@ const AvatarUploadDialog = ({
     setUploadProgress(10);
 
     try {
-      // Generate unique filename
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${userId}/avatar-${Date.now()}.${fileExt}`;
 
       setUploadProgress(30);
 
-      // Delete old avatar if exists
       if (currentAvatarUrl) {
         const oldPath = currentAvatarUrl.split('/avatars/')[1];
         if (oldPath) {
@@ -87,7 +83,6 @@ const AvatarUploadDialog = ({
 
       setUploadProgress(50);
 
-      // Upload new avatar
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(fileName, selectedFile, {
@@ -99,14 +94,12 @@ const AvatarUploadDialog = ({
 
       setUploadProgress(70);
 
-      // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
         .getPublicUrl(fileName);
 
       setUploadProgress(85);
 
-      // Update profile with new avatar URL
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ avatar_url: publicUrl })
@@ -116,21 +109,19 @@ const AvatarUploadDialog = ({
 
       setUploadProgress(100);
 
-      // Invalidate profile query to refresh data
       queryClient.invalidateQueries({ queryKey: ["profile", userId] });
 
       toast({
-        title: "Profilbild uppdaterad",
-        description: "Din nya profilbild har sparats.",
+        title: "Profile picture updated",
+        description: "Your new profile picture has been saved.",
       });
 
-      // Reset and close
       handleClose();
     } catch (error: any) {
       console.error('Upload error:', error);
       toast({
-        title: "Uppladdning misslyckades",
-        description: error.message || "Kunde inte ladda upp bilden.",
+        title: "Upload failed",
+        description: error.message || "Could not upload the image.",
         variant: "destructive",
       });
     } finally {
@@ -161,15 +152,14 @@ const AvatarUploadDialog = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Camera className="h-5 w-5" />
-            Ändra profilbild
+            Change Profile Picture
           </DialogTitle>
           <DialogDescription>
-            Ladda upp en ny profilbild. Max 5MB, JPG/PNG/WEBP.
+            Upload a new profile picture. Max 5MB, JPG/PNG/WEBP.
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col items-center gap-6 py-4">
-          {/* Preview */}
           <div className="relative">
             <Avatar className="h-32 w-32 border-4 border-muted">
               <AvatarImage src={displayUrl} />
@@ -190,7 +180,6 @@ const AvatarUploadDialog = ({
             )}
           </div>
 
-          {/* Hidden file input */}
           <input
             ref={fileInputRef}
             type="file"
@@ -199,17 +188,15 @@ const AvatarUploadDialog = ({
             className="hidden"
           />
 
-          {/* Upload progress */}
           {isUploading && (
             <div className="w-full space-y-2">
               <Progress value={uploadProgress} className="h-2" />
               <p className="text-sm text-center text-muted-foreground">
-                Laddar upp... {uploadProgress}%
+                Uploading... {uploadProgress}%
               </p>
             </div>
           )}
 
-          {/* Select file button */}
           {!isUploading && (
             <Button
               variant="outline"
@@ -217,22 +204,21 @@ const AvatarUploadDialog = ({
               className="gap-2"
             >
               <Upload className="h-4 w-4" />
-              Välj bild
+              Choose Image
             </Button>
           )}
         </div>
 
-        {/* Action buttons */}
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={handleClose} disabled={isUploading}>
-            Avbryt
+            Cancel
           </Button>
           <Button
             variant="earth"
             onClick={handleUpload}
             disabled={!selectedFile || isUploading}
           >
-            {isUploading ? "Sparar..." : "Spara"}
+            {isUploading ? "Saving..." : "Save"}
           </Button>
         </div>
       </DialogContent>

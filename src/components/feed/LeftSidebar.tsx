@@ -22,7 +22,6 @@ const LeftSidebar = () => {
 
   return (
     <div className="sticky top-20 space-y-4">
-      {/* Profile card */}
       {user && profile && (
         <Card className="overflow-hidden">
           <div className="h-16 bg-gradient-brand" />
@@ -42,7 +41,6 @@ const LeftSidebar = () => {
         </Card>
       )}
 
-      {/* Navigation */}
       <Card>
         <CardContent className="p-2">
           <nav className="space-y-0.5">
@@ -64,14 +62,13 @@ const LeftSidebar = () => {
         </CardContent>
       </Card>
 
-      {/* Quick stats */}
       {!user && (
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-sm text-muted-foreground mb-3">Gå med i EthiCheck och gör din röst hörd</p>
+            <p className="text-sm text-muted-foreground mb-3">Join EthiCheck and make your voice heard</p>
             <Link to="/auth">
               <Button className="w-full bg-gradient-brand text-primary-foreground" size="sm">
-                Skapa konto
+                Create Account
               </Button>
             </Link>
           </CardContent>
