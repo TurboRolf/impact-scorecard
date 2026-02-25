@@ -140,6 +140,7 @@ const Companies = () => {
               id={company.id}
               name={company.name}
               category={company.category}
+              country={company.country}
               logo={company.logo_url || undefined}
               overallRating={Math.round(company.avg_overall_rating || 0)}
               ethicsRating={Math.round(company.avg_ethics_rating || 0)}

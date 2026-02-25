@@ -8,7 +8,7 @@ export interface Boycott {
   company: string;
   subject: string;
   participants_count: number;
-  status: 'active' | 'successful' | 'ended';
+  status: 'active' | 'successful' | 'ended' | 'deactivated';
   impact: 'low' | 'medium' | 'high' | 'very-high';
   start_date: string;
   created_at: string;
@@ -17,7 +17,20 @@ export interface Boycott {
     name: string;
     color: string;
   };
+  profiles: {
+    display_name: string | null;
+    username: string | null;
+  } | null;
 }
+
+// Sanitize search input to prevent SQL LIKE injection
+const sanitizeSearchTerm = (term: string): string => {
+  return term
+    .replace(/\\/g, '\\\\')  // Escape backslash first
+    .replace(/%/g, '\\%')    // Escape percent
+    .replace(/_/g, '\\_')    // Escape underscore
+    .slice(0, 100);          // Limit length to prevent DOS
+};
 
 export const useBoycotts = (searchTerm = '') => {
   return useQuery({
@@ -32,7 +45,8 @@ export const useBoycotts = (searchTerm = '') => {
         .order('created_at', { ascending: false });
 
       if (searchTerm) {
-        query = query.or(`title.ilike.%${searchTerm}%,company.ilike.%${searchTerm}%,subject.ilike.%${searchTerm}%`);
+        const sanitized = sanitizeSearchTerm(searchTerm);
+        query = query.or(`title.ilike.%${sanitized}%,company.ilike.%${sanitized}%,subject.ilike.%${sanitized}%`);
       }
 
       const { data, error } = await query;
@@ -40,8 +54,20 @@ export const useBoycotts = (searchTerm = '') => {
       if (error) {
         throw new Error(error.message);
       }
-      
-      return data as Boycott[];
+
+      // Fetch organizer profiles
+      const organizerIds = [...new Set(data?.map(b => b.organizer_id) || [])];
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, display_name, username')
+        .in('user_id', organizerIds);
+
+      const profileMap = new Map(profiles?.map(p => [p.user_id, p]) || []);
+
+      return (data || []).map(b => ({
+        ...b,
+        profiles: profileMap.get(b.organizer_id) || null,
+      })) as Boycott[];
     },
   });
 };
@@ -113,5 +139,121 @@ export const useBoycottStats = () => {
       };
     },
   });
-  
+};
+
+export const useUserBoycottParticipation = (userId?: string) => {
+  return useQuery({
+    queryKey: ['boycott-participation', userId],
+    queryFn: async () => {
+      if (!userId) return [];
+      
+      const { data, error } = await supabase
+        .from('boycott_participants')
+        .select('boycott_id')
+        .eq('user_id', userId);
+      
+      if (error) throw new Error(error.message);
+      return data?.map(p => p.boycott_id) || [];
+    },
+    enabled: !!userId,
+  });
+};
+
+export const useLeaveBoycott = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boycottId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to leave a boycott');
+      }
+
+      const { error } = await supabase
+        .from('boycott_participants')
+        .delete()
+        .eq('boycott_id', boycottId)
+        .eq('user_id', user.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boycotts'] });
+      queryClient.invalidateQueries({ queryKey: ['boycott-participation'] });
+    },
+  });
+};
+
+export const useDeleteBoycott = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boycottId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to delete a boycott');
+      }
+
+      const { error } = await supabase
+        .from('boycotts')
+        .delete()
+        .eq('id', boycottId)
+        .eq('organizer_id', user.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boycotts'] });
+      queryClient.invalidateQueries({ queryKey: ['boycott-stats'] });
+    },
+  });
+};
+
+export const useDeactivateBoycott = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (boycottId: string) => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error('You must be logged in to deactivate a boycott');
+      }
+
+      const { error } = await supabase
+        .from('boycotts')
+        .update({ status: 'deactivated' })
+        .eq('id', boycottId)
+        .eq('organizer_id', user.id);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['boycotts'] });
+      queryClient.invalidateQueries({ queryKey: ['boycott-stats'] });
+    },
+  });
+};
+
+export const useBoycottByCompany = (companyName: string) => {
+  return useQuery({
+    queryKey: ['boycott-by-company', companyName],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('boycotts')
+        .select(`*, categories (name, color)`)
+        .eq('company', companyName)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw new Error(error.message);
+      return data.map(b => ({ ...b, profiles: null })) as Boycott[];
+    },
+    enabled: !!companyName,
+  });
 };

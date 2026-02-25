@@ -2,11 +2,11 @@ import { useState } from "react";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Users, Calendar, Search, Check } from "lucide-react";
+import { AlertTriangle, Users, Calendar, Search, Check, Ban } from "lucide-react";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
+import { BoycottManageMenu } from "@/components/BoycottManageMenu";
 import { useBoycotts, useBoycottStats, useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
@@ -28,6 +28,8 @@ const Boycotts = () => {
         return "bg-brand-primary text-white";
       case "successful":
         return "bg-brand-success text-white";
+      case "deactivated":
+        return "bg-muted text-muted-foreground";
       case "ended":
         return "bg-muted text-muted-foreground";
       default:
@@ -82,8 +84,8 @@ const Boycotts = () => {
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
         <div className="mb-4 sm:mb-8">
-          <h1 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Active Boycotts</h1>
-          <p className="text-xs sm:text-base text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Active Boycotts</h1>
+          <p className="text-sm text-muted-foreground">
             Join collective action for corporate accountability.
           </p>
         </div>
@@ -109,7 +111,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-brand-primary">
                 {statsLoading ? "..." : stats?.activeBoycotts}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Active</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Active</div>
             </CardContent>
           </Card>
           <Card>
@@ -117,7 +119,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-brand-success">
                 {statsLoading ? "..." : stats?.totalParticipants.toLocaleString()}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Participants</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Participants</div>
             </CardContent>
           </Card>
           <Card>
@@ -125,7 +127,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-brand-accent">
                 {statsLoading ? "..." : stats?.successfulCampaigns}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Successful</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Successful</div>
             </CardContent>
           </Card>
           <Card>
@@ -133,7 +135,7 @@ const Boycotts = () => {
               <div className="text-lg sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.companiesChanged}
               </div>
-              <div className="text-[10px] sm:text-sm text-muted-foreground">Changed</div>
+              <div className="text-xs sm:text-sm text-muted-foreground">Changed</div>
             </CardContent>
           </Card>
         </div>
@@ -152,26 +154,36 @@ const Boycotts = () => {
             </div>
           ) : (
             boycotts.map((boycott) => (
-              <Card key={boycott.id} className="hover:shadow-card transition-all duration-300">
+              <Card key={boycott.id} className={`hover:shadow-card transition-all duration-300 ${boycott.status === 'deactivated' ? 'opacity-70' : ''}`}>
                 <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2 flex-wrap">
-                        <AlertTriangle className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-destructive flex-shrink-0" />
+                        {boycott.status === 'deactivated' ? (
+                          <Ban className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
+                        ) : (
+                          <AlertTriangle className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-destructive flex-shrink-0" />
+                        )}
                         <CardTitle className="text-sm sm:text-lg truncate">{boycott.title}</CardTitle>
-                        <Badge className={`${getStatusColor(boycott.status)} text-[10px] sm:text-xs`} variant="secondary">
+                        <Badge className={`${getStatusColor(boycott.status)} text-xs`} variant="secondary">
                           {boycott.status}
                         </Badge>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground">
-                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name}
+                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name} • Started by {boycott.profiles?.display_name || boycott.profiles?.username || 'Unknown'}
                       </p>
                     </div>
+                    <BoycottManageMenu
+                      boycottId={boycott.id}
+                      boycottTitle={boycott.title}
+                      isOrganizer={user?.id === boycott.organizer_id}
+                      status={boycott.status}
+                    />
                   </div>
                 </CardHeader>
                 
                 <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
-                  <p className="text-xs sm:text-base text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">{boycott.description}</p>
+                  <p className="text-sm text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">{boycott.description}</p>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
                     <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground flex-wrap">
@@ -212,6 +224,11 @@ const Boycotts = () => {
                             {joinBoycottMutation.isPending ? "..." : "Join"}
                           </Button>
                         )
+                      )}
+                      {boycott.status === "deactivated" && (
+                        <Badge variant="outline" className="text-xs">
+                          No longer active
+                        </Badge>
                       )}
                     </div>
                   </div>

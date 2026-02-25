@@ -1,9 +1,10 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle, Users, Clock, Target } from "lucide-react";
+import { AlertTriangle, Users, Clock, Target, Ban } from "lucide-react";
 import { useBoycotts } from "@/hooks/useBoycotts";
+import { BoycottManageMenu } from "@/components/BoycottManageMenu";
+import { useAuth } from "@/hooks/useAuth";
 import { format } from "date-fns";
 
 interface UserBoycottsListProps {
@@ -12,15 +13,12 @@ interface UserBoycottsListProps {
 
 const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
   const { data: boycotts = [], isLoading } = useBoycotts();
-
-  console.log('UserBoycottsList - userId:', userId);
-  console.log('UserBoycottsList - boycotts:', boycotts);
+  const { user } = useAuth();
 
   // Filter boycotts created by the user
-  const userBoycotts = boycotts.filter(boycott => {
-    console.log('Checking boycott:', boycott.id, 'organizer_id:', boycott.organizer_id, 'userId:', userId);
-    return boycott.organizer_id === userId;
-  });
+  const userBoycotts = boycotts.filter(boycott => boycott.organizer_id === userId);
+
+  const isOwnProfile = user?.id === userId;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -28,6 +26,8 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
         return 'bg-brand-accent text-white';
       case 'successful':
         return 'bg-brand-success text-white';
+      case 'deactivated':
+        return 'bg-muted text-muted-foreground';
       case 'ended':
         return 'bg-muted text-muted-foreground';
       default:
@@ -65,11 +65,18 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
       </div>
       
       {userBoycotts.map((boycott) => (
-        <Card key={boycott.id} className="hover:shadow-md transition-shadow">
+        <Card key={boycott.id} className={`hover:shadow-md transition-shadow ${boycott.status === 'deactivated' ? 'opacity-70' : ''}`}>
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex-1">
-                <CardTitle className="text-lg mb-2">{boycott.title}</CardTitle>
+                <div className="flex items-center gap-2 mb-2">
+                  {boycott.status === 'deactivated' ? (
+                    <Ban className="h-4 w-4 text-muted-foreground" />
+                  ) : (
+                    <AlertTriangle className="h-4 w-4 text-destructive" />
+                  )}
+                  <CardTitle className="text-lg">{boycott.title}</CardTitle>
+                </div>
                 <div className="flex items-center gap-2 mb-2">
                   <Badge className={getStatusColor(boycott.status)}>
                     {boycott.status.charAt(0).toUpperCase() + boycott.status.slice(1)}
@@ -81,6 +88,14 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
                   )}
                 </div>
               </div>
+              {isOwnProfile && (
+                <BoycottManageMenu
+                  boycottId={boycott.id}
+                  boycottTitle={boycott.title}
+                  isOrganizer={true}
+                  status={boycott.status}
+                />
+              )}
             </div>
           </CardHeader>
           

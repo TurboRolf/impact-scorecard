@@ -98,7 +98,7 @@ const Navigation = () => {
                   className="h-10 w-full flex-col gap-0.5 px-1 text-xs"
                 >
                   <item.icon className="h-3.5 w-3.5" />
-                  <span className="text-[10px] leading-tight">{item.label}</span>
+                  <span className="text-xs leading-tight">{item.label}</span>
                 </Button>
               </Link>
             );
@@ -112,7 +112,7 @@ const Navigation = () => {
             onClick={() => setSearchOpen(true)}
           >
             <Search className="h-3.5 w-3.5" />
-            <span className="text-[10px] leading-tight">Search</span>
+            <span className="text-xs leading-tight">Search</span>
           </Button>
         </div>
       </nav>

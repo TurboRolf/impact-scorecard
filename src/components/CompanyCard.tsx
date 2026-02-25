@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { countryCodeToFlag } from "@/lib/countryFlag";
 
 interface CompanyCardProps {
   id: string;
   name: string;
   category: string;
   logo?: string;
+  country?: string | null;
   overallRating: number;
   ethicsRating: number;
   environmentRating: number;
@@ -29,6 +31,7 @@ const CompanyCard = ({
   name,
   category,
   logo,
+  country,
   overallRating,
   ethicsRating,
   environmentRating,
@@ -44,6 +47,7 @@ const CompanyCard = ({
   onStartBoycott
 }: CompanyCardProps) => {
   const navigate = useNavigate();
+  const flag = countryCodeToFlag(country);
   const ratings = [
     { label: "Ethics", value: ethicsRating, color: "text-earth-blue" },
     { label: "Environment", value: environmentRating, color: "text-earth-green" },
@@ -51,7 +55,7 @@ const CompanyCard = ({
   ];
 
   return (
-    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer" onClick={() => navigate(`/company/${id}`)}>
+    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col" onClick={() => navigate(`/company/${id}`)}>
       <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
         <div className="flex items-start justify-between">
           <div className="flex items-start gap-2 sm:gap-3">
@@ -63,7 +67,10 @@ const CompanyCard = ({
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-sm sm:text-base truncate">{name}</CardTitle>
+              <CardTitle className="text-sm sm:text-base truncate">
+                {flag && <span className="mr-1.5">{flag}</span>}
+                {name}
+              </CardTitle>
               <p className="text-xs sm:text-sm text-muted-foreground truncate">{category}</p>
             </div>
           </div>
@@ -89,7 +96,7 @@ const CompanyCard = ({
         </div>
       </CardHeader>
       
-      <CardContent className="p-4 sm:p-6 pt-0">
+      <CardContent className="p-4 sm:p-6 pt-0 flex-1 flex flex-col">
         <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
         
         <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4">
@@ -100,16 +107,22 @@ const CompanyCard = ({
               onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
               <div className={`text-sm sm:text-base font-bold ${rating.color}`}>{rating.value}/5</div>
-              <div className="text-[10px] sm:text-xs text-muted-foreground leading-tight">{rating.label}</div>
+              <div className="text-xs text-muted-foreground leading-tight">{rating.label}</div>
             </div>
           ))}
         </div>
         
-        {activeBoycotts > 0 && (
+        {activeBoycotts > 0 ? (
           <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
             <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
             <span className="text-xs sm:text-sm text-destructive font-medium">
               {activeBoycotts} active boycott{activeBoycotts > 1 ? 's' : ''}
+            </span>
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+            <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+              0 active boycotts
             </span>
           </div>
         )}
@@ -130,7 +143,7 @@ const CompanyCard = ({
           </div>
         </div>
         
-        <div className="flex gap-1.5 sm:gap-2">
+        <div className="flex gap-1.5 sm:gap-2 mt-auto">
           <Button 
             variant="default" 
             size="sm" 
