@@ -19,8 +19,8 @@ const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true }: Pr
   const navigate = useNavigate();
 
   const tabs = [
-    { value: "stances", label: "Stances", mobileLabel: "Stances" },
     ...(showPosts ? [{ value: "posts", label: "Posts", mobileLabel: "Posts" }] : []),
+    { value: "stances", label: "Stances", mobileLabel: "Stances" },
     { value: "reviews", label: "Reviews", mobileLabel: "Reviews" },
     { value: "boycotts", label: "Boycotts", mobileLabel: "Boycotts" },
   ];

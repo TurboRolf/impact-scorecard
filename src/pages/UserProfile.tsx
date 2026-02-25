@@ -25,7 +25,7 @@ const UserProfile = () => {
   const [followersOpen, setFollowersOpen] = useState(false);
   const [followingOpen, setFollowingOpen] = useState(false);
   const [postsOpen, setPostsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("stances");
+  const [activeTab, setActiveTab] = useState("posts");
 
   const { data: userStances = [] } = useUserStances(userId);
   const { data: profile, isLoading } = useProfile(userId);
