@@ -126,9 +126,9 @@ const UserProfile = () => {
               
               {/* Info section */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-0.5">
+                <div className="flex items-center gap-2 mb-1 md:mb-3">
                   <h1 className="text-base md:text-2xl font-bold truncate">
-                    {profile.display_name || profile.username || 'Anonymous User'}
+                    @{profile.username || 'username'}
                   </h1>
                   {profile.profile_type === 'creator' && (
                     <Badge className="bg-gradient-earth text-white text-[10px] md:text-xs px-1.5 py-0">
@@ -136,10 +136,6 @@ const UserProfile = () => {
                     </Badge>
                   )}
                 </div>
-                
-                <p className="text-xs md:text-base text-muted-foreground mb-1 md:mb-3">
-                  @{profile.username || 'username'}
-                </p>
                 
                 {/* Bio - desktop only */}
                 <p className="hidden md:block text-base text-foreground mb-4 line-clamp-2">

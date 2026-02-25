@@ -63,9 +63,9 @@ const ProfileHeader = ({
       {/* Info section */}
       <div className="flex-1 min-w-0">
         {/* Name and badge - inline on mobile */}
-        <div className="flex items-center gap-2 mb-0.5">
+        <div className="flex items-center gap-2 mb-1 md:mb-3">
           <h1 className="text-base md:text-2xl font-bold truncate">
-            {displayName}
+            @{profile?.username || 'username'}
           </h1>
           {profile?.profile_type === 'creator' && (
             <Badge className="bg-gradient-earth text-white text-[10px] md:text-xs px-1.5 py-0">
@@ -73,11 +73,6 @@ const ProfileHeader = ({
             </Badge>
           )}
         </div>
-        
-        {/* Username */}
-        <p className="text-xs md:text-base text-muted-foreground mb-1 md:mb-3">
-          @{profile?.username || 'username'}
-        </p>
         
         {/* Bio - hidden on mobile, shown below on desktop */}
         <p className="hidden md:block text-base text-foreground mb-4 line-clamp-2">
