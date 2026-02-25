@@ -45,6 +45,7 @@ export const BoycottManageMenu = ({
 }: BoycottManageMenuProps) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
+  const [deactivateReason, setDeactivateReason] = useState("");
   const deleteBoycott = useDeleteBoycott();
   const deactivateBoycott = useDeactivateBoycott();
   const { toast } = useToast();
@@ -70,11 +71,12 @@ export const BoycottManageMenu = ({
 
   const handleDeactivate = async () => {
     try {
-      await deactivateBoycott.mutateAsync(boycottId);
+      await deactivateBoycott.mutateAsync({ boycottId, reason: deactivateReason.trim() || undefined });
       toast({
         title: "Boycott deactivated",
         description: "The boycott has been deactivated and marked as inactive.",
       });
+      setDeactivateReason("");
     } catch (error: any) {
       toast({
         title: "Error",
@@ -134,23 +136,38 @@ export const BoycottManageMenu = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      <AlertDialog open={deactivateDialogOpen} onOpenChange={setDeactivateDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Deactivate boycott?</AlertDialogTitle>
-            <AlertDialogDescription>
+      <Dialog open={deactivateDialogOpen} onOpenChange={(open) => {
+        setDeactivateDialogOpen(open);
+        if (!open) setDeactivateReason("");
+      }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Deactivate boycott?</DialogTitle>
+            <DialogDescription>
               Are you sure you want to deactivate "{boycottTitle}"? 
               The boycott will remain visible but marked as inactive. Users will no longer be able to join.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeactivate}>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="deactivate-reason">Reason for deactivation (optional)</Label>
+            <Textarea
+              id="deactivate-reason"
+              placeholder="e.g. The company has addressed our concerns..."
+              value={deactivateReason}
+              onChange={(e) => setDeactivateReason(e.target.value)}
+              maxLength={500}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeactivateDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleDeactivate} disabled={deactivateBoycott.isPending}>
               {deactivateBoycott.isPending ? "Deactivating..." : "Deactivate"}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

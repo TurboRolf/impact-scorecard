@@ -48,6 +48,7 @@ export type Database = {
           category_id: string
           company: string
           created_at: string
+          deactivation_reason: string | null
           description: string
           end_date: string | null
           id: string
@@ -64,6 +65,7 @@ export type Database = {
           category_id: string
           company: string
           created_at?: string
+          deactivation_reason?: string | null
           description: string
           end_date?: string | null
           id?: string
@@ -80,6 +82,7 @@ export type Database = {
           category_id?: string
           company?: string
           created_at?: string
+          deactivation_reason?: string | null
           description?: string
           end_date?: string | null
           id?: string

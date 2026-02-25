@@ -1,0 +1,1 @@
+ALTER TABLE public.boycotts ADD COLUMN deactivation_reason text;
