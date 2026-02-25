@@ -217,7 +217,7 @@ export const useDeactivateBoycott = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (boycottId: string) => {
+    mutationFn: async ({ boycottId, reason }: { boycottId: string; reason?: string }) => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         throw new Error('You must be logged in to deactivate a boycott');
@@ -225,7 +225,7 @@ export const useDeactivateBoycott = () => {
 
       const { error } = await supabase
         .from('boycotts')
-        .update({ status: 'deactivated' })
+        .update({ status: 'deactivated', deactivation_reason: reason || null } as any)
         .eq('id', boycottId)
         .eq('organizer_id', user.id);
 
