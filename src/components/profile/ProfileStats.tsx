@@ -74,8 +74,8 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined }: ProfileS
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
               <span className="text-sm font-medium">{stat.fullLabel}</span>
             </div>
-            <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-            <p className="text-xs text-muted-foreground">
+            <div className={`text-2xl font-bold ${stat.color} text-center`}>{stat.value}</div>
+            <p className="text-xs text-muted-foreground text-center">
               {index < 3 ? "Companies" : "Boycotts"}
             </p>
           </div>
