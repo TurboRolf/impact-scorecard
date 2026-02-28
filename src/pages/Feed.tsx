@@ -13,6 +13,7 @@ import { PlusCircle, Image, Building2 } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
 import { useBoycottByCompany } from "@/hooks/useBoycotts";
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const Feed = () => {
   const [newPost, setNewPost] = useState("");
@@ -20,7 +21,8 @@ const Feed = () => {
   const navigate = useNavigate();
   
   const { user } = useAuth();
-  const { data: posts = [], isLoading } = usePosts(feedType);
+  const { data: posts = [], isLoading, isError, refetch } = usePosts(feedType);
+  useDocumentTitle("Feed");
   const createPost = useCreatePost();
 
   const handleCreatePost = async () => {
@@ -119,6 +121,19 @@ const Feed = () => {
   
   if (isLoading) {
     return <LoadingScreen message="Loading posts..." />;
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
+        <Navigation />
+        <div className="max-w-2xl mx-auto pt-20 px-4 text-center">
+          <h1 className="text-xl font-bold mb-2">Failed to load posts</h1>
+          <p className="text-muted-foreground mb-4 text-sm">Something went wrong.</p>
+          <Button onClick={() => refetch()} variant="outline" size="sm">Retry</Button>
+        </div>
+      </div>
+    );
   }
 
   return (

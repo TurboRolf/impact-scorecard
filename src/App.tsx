@@ -15,6 +15,7 @@ const Boycotts = lazy(() => import("./pages/Boycotts"));
 const Creators = lazy(() => import("./pages/Creators"));
 const Auth = lazy(() => import("./pages/Auth"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,7 @@ const App = () => (
         }>
           <Routes>
             <Route path="/" element={<Feed />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/user/:userId" element={<UserProfile />} />
             <Route path="/companies" element={<Companies />} />
             <Route path="/company/:id" element={<Company />} />

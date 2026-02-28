@@ -14,6 +14,7 @@ import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { useState } from "react";
 import { useCompanyReviews } from "@/hooks/useCompanyReviews";
 import { useBoycotts } from "@/hooks/useBoycotts";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const Company = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,7 +23,7 @@ const Company = () => {
   const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
   const [boycottDialogOpen, setBoycottDialogOpen] = useState(false);
 
-  const { data: company, isLoading } = useQuery({
+  const { data: company, isLoading, isError, refetch } = useQuery({
     queryKey: ["company", id],
     queryFn: async () => {
       if (!id) throw new Error("Company ID is required");
@@ -41,6 +42,7 @@ const Company = () => {
     enabled: !!id
   });
 
+  useDocumentTitle(company?.name || "Company");
   const { data: reviews } = useCompanyReviews(company?.name || "");
   const { data: boycotts } = useBoycotts();
 
@@ -55,6 +57,25 @@ const Company = () => {
         <div className="container mx-auto px-4 pt-20">
           <div className="flex items-center justify-center h-64">
             <div className="text-lg">Loading company details...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-gradient-primary pb-20 md:pb-8">
+        <Navigation />
+        <div className="container mx-auto px-4 pt-20 text-center">
+          <h1 className="text-2xl font-bold mb-4">Failed to load company</h1>
+          <p className="text-muted-foreground mb-4">Something went wrong. Please try again.</p>
+          <div className="flex gap-2 justify-center">
+            <Button onClick={() => refetch()}>Retry</Button>
+            <Button variant="outline" onClick={() => navigate("/companies")}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Companies
+            </Button>
           </div>
         </div>
       </div>
@@ -118,6 +139,7 @@ const Company = () => {
                 
                 <button
                   onClick={() => setReviewDialogOpen(true)}
+                  aria-label={`Rate ${company.name} - currently ${Number(company.avg_overall_rating || 0).toFixed(1)} out of 5. Click to write a review.`}
                   className="flex flex-col sm:flex-row items-center gap-4 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
                 >
                   <div className="flex items-center gap-1">

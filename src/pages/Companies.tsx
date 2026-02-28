@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import LoadingScreen from "@/components/LoadingScreen";
 import CompanyCard from "@/components/CompanyCard";
@@ -11,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Globe, Users, Plus, Star } from "lucide-react";
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useDialogState } from "@/hooks/useDialogState";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 type CompanyInfo = { name: string; category: string };
 
@@ -24,6 +26,7 @@ const Companies = () => {
   const boycottDialog = useDialogState<CompanyInfo>();
   
   const { data: companies = [], isLoading } = useCompanies();
+  useDocumentTitle("Companies");
   
   const categories = [
     "all", "Technology", "Fashion", "Food & Beverage", "Automotive", 
@@ -118,16 +121,21 @@ const Companies = () => {
             </div>
           </div>
           
-          <div className="flex gap-1.5 sm:gap-2 flex-wrap">
+          <div className="flex gap-1.5 sm:gap-2 flex-wrap" role="group" aria-label="Filter by category">
             {categories.map((category) => (
-              <Badge
+              <button
                 key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                className="cursor-pointer capitalize text-xs sm:text-sm px-2 py-1"
+                className={cn(
+                  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs sm:text-sm font-semibold transition-colors capitalize cursor-pointer",
+                  selectedCategory === category
+                    ? "border-transparent bg-primary text-primary-foreground"
+                    : "text-foreground border-border hover:bg-accent"
+                )}
                 onClick={() => setSelectedCategory(category)}
+                aria-pressed={selectedCategory === category}
               >
                 {category}
-              </Badge>
+              </button>
             ))}
           </div>
         </div>

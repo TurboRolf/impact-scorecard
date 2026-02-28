@@ -10,12 +10,14 @@ import { BoycottManageMenu } from "@/components/BoycottManageMenu";
 import { useBoycotts, useBoycottStats, useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const Boycotts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
   const { user } = useAuth();
   
+  useDocumentTitle("Boycotts");
   const { data: boycotts = [], isLoading, refetch } = useBoycotts(searchTerm);
   const { data: stats, isLoading: statsLoading } = useBoycottStats();
   const { data: joinedBoycotts = [] } = useUserBoycottParticipation(user?.id);

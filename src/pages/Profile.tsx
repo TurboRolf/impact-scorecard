@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import ProfileHeader from "@/components/profile/ProfileHeader";
@@ -9,17 +9,16 @@ import FollowersDialog from "@/components/FollowersDialog";
 import FollowingDialog from "@/components/FollowingDialog";
 import UserPostsDialog from "@/components/UserPostsDialog";
 import AvatarUploadDialog from "@/components/AvatarUploadDialog";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
 import { useProfile } from "@/hooks/useProfile";
 import { useFollowerCount, useFollowingCount, usePostsCount } from "@/hooks/useFollowCounts";
-import type { User as SupabaseUser, Session } from "@supabase/supabase-js";
+import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const Profile = () => {
-  const [user, setUser] = useState<SupabaseUser | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
+  const { user } = useAuth();
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [followersOpen, setFollowersOpen] = useState(false);
   const [followingOpen, setFollowingOpen] = useState(false);
@@ -27,22 +26,7 @@ const Profile = () => {
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  useDocumentTitle("Profile");
 
   const { data: userStances = [] } = useUserStances(user?.id);
   const { data: profile } = useProfile(user?.id);
@@ -56,31 +40,8 @@ const Profile = () => {
     discourage: userStances.filter(s => s.stance === 'discourage').length,
   };
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
-        <Navigation />
-        <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">
-          <Card className="text-center">
-            <CardContent className="p-4 md:p-8">
-              <h1 className="text-lg md:text-2xl font-bold mb-2 md:mb-4">Profile Access Required</h1>
-              <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6">
-                Please sign in to view your profile.
-              </p>
-              <div className="flex gap-2 justify-center">
-                <Button onClick={() => navigate('/auth')} variant="earth" size="sm">
-                  Sign In
-                </Button>
-                <Button onClick={() => navigate(-1)} variant="outline" size="sm">
-                  Go Back
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
+  // ProtectedRoute handles unauthenticated state
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-gradient-subtle pb-20 md:pb-8">
