@@ -1,49 +1,52 @@
 
 
-# Förbättringsförslag för EthiCheck
+# Ytterligare förbättringar för EthiCheck
 
-Efter en genomgång av kodbasen identifierar jag följande förbättringar:
+Efter en djupare genomgång av hela kodbasen hittar jag följande förbättringsmöjligheter:
 
-## 1. Dark mode-stöd
-Projektet har redan dark mode CSS-variabler definierade i `index.css` och `darkMode: ["class"]` i tailwind-konfigurationen, men ingen möjlighet för användaren att växla tema. En theme toggle-knapp i navigationen skulle aktivera det som redan är förberett.
+## 1. Optimistiska uppdateringar för likes och follow
+`useToggleLike` och `useFollowUser`/`useUnfollowUser` väntar på serverrespons innan UI:t uppdateras. Optimistiska uppdateringar via React Query's `onMutate`/`onError`/`onSettled` skulle ge omedelbar feedback.
 
-## 2. Skydd av rutter (Route guards)
-Sidor som `/profile` hanterar oautentiserade användare genom att visa "sign in"-meddelanden inuti komponenten. En central `ProtectedRoute`-wrapper skulle ge ett mer konsekvent beteende och automatisk redirect till `/auth`.
+## 2. Paginering/infinite scroll på Feed
+Alla inlägg laddas i ett enda anrop. Vid tillväxt blir detta långsamt. Implementera `useInfiniteQuery` med cursor-baserad paginering och en "Load more"-knapp eller infinite scroll.
 
-## 3. Förbättrad felhantering och tomma tillstånd
-- Company-sidan (`Company.tsx`) saknar error state — om API-anropet misslyckas visas bara "loading" för alltid.
-- Feed-sidan saknar retry-logik vid misslyckade laddningar.
+## 3. Saknad `useDocumentTitle` på UserProfile och Auth
+`UserProfile.tsx` och `Auth.tsx` sätter inte sidtitel trots att hooken redan finns. Bör läggas till för konsekvens.
 
-## 4. SEO och sidtitlar
-Ingen sida sätter `document.title`. En enkel hook eller `useEffect` per sida skulle förbättra SEO och användarupplevelse i flikarna.
+## 4. Förbättrad Auth-sida
+- Ingen lösenordsvalidering (minimikrav) vid registrering.
+- Saknar "glömt lösenord"-funktionalitet.
+- Delat state för `email`/`password` mellan Sign In och Sign Up-flikarna — att byta flik behåller formulärdata, vilket kan vara förvirrande.
 
-## 5. Tillgänglighet (a11y)
-- Stjärnbetygen på Company-sidan är en `<button>` utan `aria-label`.
-- Navigationslänkarna saknar `aria-current`.
-- Badge-filtren på Companies-sidan är `<Badge>` med `onClick` men utan keyboard-stöd (borde vara knappar).
+## 5. Bättre empty states
+- Companies-sidan visar bara "No companies found matching your criteria" utan illustration eller uppmaning att rensa filter.
+- Creators-sidan saknar visuell illustration vid tomt resultat.
+
+## 6. Skeleton loading istället för spinner
+Alla sidor använder `LoadingScreen` (spinner). Skeleton-loaders som matchar layouten ger en bättre upplevd prestanda.
+
+## 7. Bildoptimering
+Avatar-bilder från DiceBear laddas utan `loading="lazy"`. Company-logotyper i `CompanyCard` saknar också lazy loading.
 
 ---
 
 ## Implementeringsplan
 
-### Steg 1: Lägg till dark mode toggle
-- Skapa en `ThemeProvider`-komponent som hanterar `class`-baserad dark mode med `localStorage`-persistens.
-- Lägg till en sol/måne-ikon i `Navigation.tsx` som växlar tema.
+### Steg 1: Lägg till `useDocumentTitle` på saknade sidor
+- `UserProfile.tsx`: `useDocumentTitle(profile?.display_name || profile?.username || "User Profile")`
+- `Auth.tsx`: `useDocumentTitle("Sign In")`
 
-### Steg 2: Förbättra felhantering
-- Lägg till `isError`/`error`-hantering i Company-sidans query med retry-knapp.
-- Gör samma sak i Feed-sidan.
+### Steg 2: Separera formulärstate i Auth
+- Ge Sign In och Sign Up separata `email`/`password`-state så att byte av flik rensar formuläret.
+- Lägg till lösenordskrav-text (min 6 tecken) vid registrering.
 
-### Steg 3: Lägg till dynamiska sidtitlar
-- Skapa en `useDocumentTitle`-hook.
-- Anropa den i varje sida med relevant titel (t.ex. "EthiCheck - Companies", "EthiCheck - [Company Name]").
+### Steg 3: Förbättra empty states
+- Lägg till en "Clear filters"-knapp i Companies-sidan vid tomt sökresultat.
+- Lägg till enkel illustration/ikon i tomma tillstånd.
 
-### Steg 4: Tillgänglighetsfixar
-- Lägg till `aria-label="Write a review"` på stjärnbetygsknappen i `Company.tsx`.
-- Byt `Badge`-filter på Companies-sidan till `<button>`-element med lämpliga ARIA-attribut.
-- Lägg till `aria-current="page"` på aktiva navigationslänkar.
+### Steg 4: Lazy loading på bilder
+- Lägg till `loading="lazy"` på alla `<img>`-element i `CompanyCard`, `Company.tsx` och avatar-bilder.
 
-### Steg 5: Skydda rutter
-- Skapa en `ProtectedRoute`-komponent som kollar auth-status och redirectar till `/auth`.
-- Wrappa `/profile` i `App.tsx` med denna.
+### Steg 5: Optimistiska uppdateringar för likes
+- Uppdatera `useToggleLike` med `onMutate` för att direkt visa liked-state och räkna om likes-count, med rollback vid fel.
 
