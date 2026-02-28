@@ -69,13 +69,13 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined }: ProfileS
       {/* Desktop: Grid cards */}
       <div className="hidden md:grid grid-cols-5 gap-4">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-card border rounded-lg p-4">
+          <div key={index} className="bg-card border rounded-lg p-4 flex flex-col h-full">
             <div className="flex items-center gap-2 mb-2">
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
               <span className="text-sm font-medium">{stat.fullLabel}</span>
             </div>
             <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground mt-auto">
               {index < 3 ? "Companies" : "Boycotts"}
             </p>
           </div>
