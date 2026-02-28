@@ -10,12 +10,14 @@ import { Search, Award, UserPlus, UserCheck, User } from "lucide-react";
 import { useCreators } from "@/hooks/useProfile";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const Creators = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   
   const { user } = useAuth();
+  useDocumentTitle("Creators");
   const { data: creators = [], isLoading } = useCreators();
   const followUser = useFollowUser();
   const unfollowUser = useUnfollowUser();

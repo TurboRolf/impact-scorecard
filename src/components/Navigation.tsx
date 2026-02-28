@@ -1,14 +1,16 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, User, Building2, AlertTriangle, Users, Search, LogOut } from "lucide-react";
+import { Home, User, Building2, AlertTriangle, Users, Search, LogOut, Sun, Moon } from "lucide-react";
 import { useEffect, useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 
 const Navigation = () => {
   const location = useLocation();
   const { user, signOut } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   // Keyboard shortcut for search
   useEffect(() => {
@@ -45,7 +47,7 @@ const Navigation = () => {
               {navItems.map((item) => {
                 const isActive = location.pathname === item.path;
                 return (
-                  <Link key={item.path} to={item.path}>
+                  <Link key={item.path} to={item.path} aria-current={isActive ? "page" : undefined}>
                     <Button 
                       variant={isActive ? "default" : "ghost"} 
                       size="sm"
@@ -60,6 +62,9 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
+              <Button variant="ghost" size="sm" className="p-2" onClick={toggleTheme} aria-label="Toggle dark mode">
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
               <Button variant="outline" size="sm" className="hidden sm:flex gap-1" onClick={() => setSearchOpen(true)}>
                 <Search className="h-4 w-4" />
                 <span className="hidden md:inline">Search</span>
@@ -91,7 +96,7 @@ const Navigation = () => {
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
-              <Link key={item.path} to={item.path} className="flex items-center justify-center">
+              <Link key={item.path} to={item.path} className="flex items-center justify-center" aria-current={isActive ? "page" : undefined}>
                 <Button 
                   variant={isActive ? "default" : "ghost"} 
                   size="sm"
