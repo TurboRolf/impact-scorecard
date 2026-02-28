@@ -121,7 +121,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
 
   const handleFollowToggle = () => {
     if (!user.id || !currentUserId) return;
-    if (isFollowing) { unfollowUser.mutate(user.id); } else { followUser.mutate(user.id); }
+    if (isFollowing) { unfollowUser.mutate(user.id); } else { followUser.mutate({ followingId: user.id, isPrivate: false }); }
   };
 
   return (

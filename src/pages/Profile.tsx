@@ -9,11 +9,15 @@ import FollowersDialog from "@/components/FollowersDialog";
 import FollowingDialog from "@/components/FollowingDialog";
 import UserPostsDialog from "@/components/UserPostsDialog";
 import AvatarUploadDialog from "@/components/AvatarUploadDialog";
+import FollowRequestsDialog from "@/components/FollowRequestsDialog";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
 import { useProfile } from "@/hooks/useProfile";
 import { useFollowerCount, useFollowingCount, usePostsCount } from "@/hooks/useFollowCounts";
+import { usePendingFollowRequests } from "@/hooks/useFollows";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
@@ -24,6 +28,7 @@ const Profile = () => {
   const [followingOpen, setFollowingOpen] = useState(false);
   const [postsOpen, setPostsOpen] = useState(false);
   const [avatarOpen, setAvatarOpen] = useState(false);
+  const [requestsOpen, setRequestsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
   const navigate = useNavigate();
   useDocumentTitle("Profile");
@@ -33,6 +38,8 @@ const Profile = () => {
   const { data: followerCount = 0 } = useFollowerCount(user?.id);
   const { data: followingCount = 0 } = useFollowingCount(user?.id);
   const { data: postsCount = 0 } = usePostsCount(user?.id);
+  const { data: pendingRequests = [] } = usePendingFollowRequests(user?.id);
+  const isPrivateProfile = profile?.profile_type !== 'creator';
 
   const stanceStats = {
     recommend: userStances.filter(s => s.stance === 'recommend').length,
@@ -73,6 +80,17 @@ const Profile = () => {
           </CardContent>
         </Card>
 
+        {/* Follow Requests - only for private profiles */}
+        {isPrivateProfile && pendingRequests.length > 0 && (
+          <Button
+            variant="outline"
+            className="w-full mb-3 md:mb-6 gap-2 justify-center"
+            onClick={() => setRequestsOpen(true)}
+          >
+            <UserPlus className="h-4 w-4" />
+            {pendingRequests.length} väntande följförfrågan{pendingRequests.length > 1 ? 'or' : ''}
+          </Button>
+        )}
         {/* Stats */}
         <div className="mb-3 md:mb-6">
           <ProfileStats
@@ -122,6 +140,12 @@ const Profile = () => {
         currentAvatarUrl={profile?.avatar_url}
         username={profile?.username}
         displayName={profile?.display_name}
+      />
+      
+      <FollowRequestsDialog
+        open={requestsOpen}
+        onOpenChange={setRequestsOpen}
+        userId={user?.id}
       />
     </div>
   );

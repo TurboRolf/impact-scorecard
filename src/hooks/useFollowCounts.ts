@@ -10,7 +10,8 @@ export const useFollowerCount = (userId?: string) => {
       const { count, error } = await supabase
         .from("follows")
         .select("*", { count: "exact", head: true })
-        .eq("following_id", userId);
+        .eq("following_id", userId)
+        .eq("status", "accepted");
       
       if (error) throw error;
       return count || 0;
@@ -28,7 +29,8 @@ export const useFollowingCount = (userId?: string) => {
       const { count, error } = await supabase
         .from("follows")
         .select("*", { count: "exact", head: true })
-        .eq("follower_id", userId);
+        .eq("follower_id", userId)
+        .eq("status", "accepted");
       
       if (error) throw error;
       return count || 0;
@@ -63,16 +65,13 @@ export const useFollowers = (userId?: string) => {
       
       const { data, error } = await supabase
         .from("follows")
-        .select(`
-          follower_id,
-          created_at
-        `)
+        .select("follower_id, created_at")
         .eq("following_id", userId)
+        .eq("status", "accepted")
         .order("created_at", { ascending: false });
       
       if (error) throw error;
       
-      // Get profile info for each follower
       const followerIds = data.map(f => f.follower_id);
       if (followerIds.length === 0) return [];
       
@@ -97,16 +96,13 @@ export const useFollowing = (userId?: string) => {
       
       const { data, error } = await supabase
         .from("follows")
-        .select(`
-          following_id,
-          created_at
-        `)
+        .select("following_id, created_at")
         .eq("follower_id", userId)
+        .eq("status", "accepted")
         .order("created_at", { ascending: false });
       
       if (error) throw error;
       
-      // Get profile info for each following
       const followingIds = data.map(f => f.following_id);
       if (followingIds.length === 0) return [];
       

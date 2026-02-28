@@ -40,7 +40,7 @@ const Creators = () => {
     if (isCurrentlyFollowing) {
       await unfollowUser.mutateAsync(creatorUserId);
     } else {
-      await followUser.mutateAsync(creatorUserId);
+      await followUser.mutateAsync({ followingId: creatorUserId, isPrivate: false });
     }
   };
 
