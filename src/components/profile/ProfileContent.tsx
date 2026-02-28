@@ -64,7 +64,7 @@ const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true }: Pr
                 <p className="text-sm text-muted-foreground mb-3">
                   No posts yet. Share your thoughts to get started!
                 </p>
-                <Button onClick={() => navigate('/feed')} variant="earth" size="sm">
+                <Button onClick={() => navigate('/')} variant="earth" size="sm">
                   Create Your First Post
                 </Button>
               </CardContent>
