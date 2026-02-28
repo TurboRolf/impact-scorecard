@@ -8,13 +8,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const Auth = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [signInEmail, setSignInEmail] = useState("");
+  const [signInPassword, setSignInPassword] = useState("");
+  const [signUpEmail, setSignUpEmail] = useState("");
+  const [signUpPassword, setSignUpPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  useDocumentTitle("Sign In");
 
   useEffect(() => {
     // Check if user is already logged in
@@ -31,9 +35,19 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
+    if (signUpPassword.length < 6) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 6 characters.",
+        variant: "destructive"
+      });
+      setLoading(false);
+      return;
+    }
+
     const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: signUpEmail,
+      password: signUpPassword,
       options: {
         emailRedirectTo: `${window.location.origin}/`
       }
@@ -67,8 +81,8 @@ const Auth = () => {
     setLoading(true);
 
     const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
+      email: signInEmail,
+      password: signInPassword
     });
 
     if (error) {
@@ -116,8 +130,8 @@ const Auth = () => {
                   <Input
                     id="signin-email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={signInEmail}
+                    onChange={(e) => setSignInEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
                   />
@@ -127,8 +141,8 @@ const Auth = () => {
                   <Input
                     id="signin-password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    value={signInPassword}
+                    onChange={(e) => setSignInPassword(e.target.value)}
                     placeholder="Enter your password"
                     required
                   />
@@ -146,8 +160,8 @@ const Auth = () => {
                   <Input
                     id="signup-email"
                     type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={signUpEmail}
+                    onChange={(e) => setSignUpEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
                   />
@@ -157,11 +171,13 @@ const Auth = () => {
                   <Input
                     id="signup-password"
                     type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Choose a password"
+                    value={signUpPassword}
+                    onChange={(e) => setSignUpPassword(e.target.value)}
+                    placeholder="Choose a password (min 6 characters)"
                     required
+                    minLength={6}
                   />
+                  <p className="text-xs text-muted-foreground mt-1">Minimum 6 characters</p>
                 </div>
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? "Creating account..." : "Create Account"}

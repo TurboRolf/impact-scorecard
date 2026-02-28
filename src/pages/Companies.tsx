@@ -169,7 +169,13 @@ const Companies = () => {
         
         {filteredCompanies.length === 0 && (
           <div className="text-center py-20">
+            <Search className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
             <p className="text-muted-foreground mb-4">No companies found matching your criteria.</p>
+            {(searchTerm || selectedCategory !== "all") && (
+              <Button variant="outline" onClick={() => { setSearchTerm(""); setSelectedCategory("all"); }}>
+                Clear filters
+              </Button>
+            )}
           </div>
         )}
         

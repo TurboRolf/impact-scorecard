@@ -16,6 +16,7 @@ import { useProfile } from "@/hooks/useProfile";
 import { useFollowerCount, useFollowingCount, usePostsCount } from "@/hooks/useFollowCounts";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 import { useAuth } from "@/hooks/useAuth";
+import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -29,6 +30,7 @@ const UserProfile = () => {
 
   const { data: userStances = [] } = useUserStances(userId);
   const { data: profile, isLoading } = useProfile(userId);
+  useDocumentTitle(profile?.display_name || profile?.username || "User Profile");
   const { data: followerCount = 0 } = useFollowerCount(userId);
   const { data: followingCount = 0 } = useFollowingCount(userId);
   const { data: postsCount = 0 } = usePostsCount(userId);
