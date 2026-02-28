@@ -1,0 +1,2 @@
+ALTER TABLE public.boycotts DROP CONSTRAINT IF EXISTS boycotts_status_check;
+ALTER TABLE public.boycotts ADD CONSTRAINT boycotts_status_check CHECK (status IN ('active', 'successful', 'ended', 'deactivated'));
