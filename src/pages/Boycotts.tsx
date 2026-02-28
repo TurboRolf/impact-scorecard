@@ -105,37 +105,37 @@ const Boycotts = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6">
+        <div className="grid grid-cols-4 gap-1.5 sm:gap-4 mb-4 sm:mb-6">
           <Card>
-            <CardContent className="p-2.5 sm:p-4 text-center">
-              <div className="text-lg sm:text-2xl font-bold text-destructive">
+            <CardContent className="p-1.5 sm:p-4 text-center">
+              <div className="text-sm sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.activeBoycotts}
               </div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Active</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground">Active</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-2.5 sm:p-4 text-center">
-              <div className="text-lg sm:text-2xl font-bold text-destructive">
+            <CardContent className="p-1.5 sm:p-4 text-center">
+              <div className="text-sm sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.totalParticipants.toLocaleString()}
               </div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Participants</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground">Participants</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-2.5 sm:p-4 text-center">
-              <div className="text-lg sm:text-2xl font-bold text-destructive">
+            <CardContent className="p-1.5 sm:p-4 text-center">
+              <div className="text-sm sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.successfulCampaigns}
               </div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Successful</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground">Successful</div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-2.5 sm:p-4 text-center">
-              <div className="text-lg sm:text-2xl font-bold text-destructive">
+            <CardContent className="p-1.5 sm:p-4 text-center">
+              <div className="text-sm sm:text-2xl font-bold text-destructive">
                 {statsLoading ? "..." : stats?.companiesChanged}
               </div>
-              <div className="text-xs sm:text-sm text-muted-foreground">Changed</div>
+              <div className="text-[10px] sm:text-sm text-muted-foreground">Changed</div>
             </CardContent>
           </Card>
         </div>
