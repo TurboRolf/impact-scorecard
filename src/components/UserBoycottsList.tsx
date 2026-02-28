@@ -122,8 +122,8 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
               
               
               {boycott.status === 'deactivated' && boycott.deactivation_reason && (
-                <div className="bg-destructive/10 border border-destructive/20 p-3 rounded-lg">
-                  <p className="text-sm font-medium text-destructive mb-1">Reason for deactivation:</p>
+                <div className="bg-brand-success/10 border border-brand-success/20 p-3 rounded-lg">
+                  <p className="text-sm font-medium text-brand-success mb-1">Reason for deactivation:</p>
                   <p className="text-sm text-muted-foreground">{boycott.deactivation_reason}</p>
                 </div>
               )}
