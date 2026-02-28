@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ interface FollowersDialogProps {
 
 const FollowersDialog = ({ open, onOpenChange, userId }: FollowersDialogProps) => {
   const { data: followers = [], isLoading } = useFollowers(userId);
+  const navigate = useNavigate();
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -37,7 +39,7 @@ const FollowersDialog = ({ open, onOpenChange, userId }: FollowersDialogProps) =
           ) : (
             <div className="space-y-3">
               {followers.map((profile) => (
-                <div key={profile.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                <div key={profile.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors cursor-pointer" onClick={() => { onOpenChange(false); navigate(`/user/${profile.user_id}`); }}>
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={profile.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${profile.username}` : undefined} />
                     <AvatarFallback>
