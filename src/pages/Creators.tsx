@@ -78,10 +78,17 @@ const Creators = () => {
         {/* Creators Grid */}
         {filteredCreators.length === 0 ? (
           <div className="text-center py-12 sm:py-20">
+            <User className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
             <p className="text-sm sm:text-base text-muted-foreground mb-2 sm:mb-4">No creators found.</p>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              Be the first creator! Switch to creator mode in your profile settings.
-            </p>
+            {searchTerm ? (
+              <Button variant="outline" size="sm" onClick={() => setSearchTerm("")}>
+                Clear search
+              </Button>
+            ) : (
+              <p className="text-xs sm:text-sm text-muted-foreground">
+                Be the first creator! Switch to creator mode in your profile settings.
+              </p>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">

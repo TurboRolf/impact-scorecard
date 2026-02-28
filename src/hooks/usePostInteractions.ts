@@ -43,12 +43,34 @@ export const useToggleLike = () => {
         if (error) throw error;
       }
     },
-    onSuccess: () => {
+    onMutate: async ({ postId, liked }) => {
+      await queryClient.cancelQueries({ queryKey: ["post-likes"] });
+      await queryClient.cancelQueries({ queryKey: ["posts"] });
+
+      const previousLikes = queryClient.getQueryData<string[]>(["post-likes"]);
+      const previousPosts = queryClient.getQueryData(["posts"]);
+
+      // Optimistically update likes list
+      queryClient.setQueryData<string[]>(["post-likes"], (old) => {
+        if (!old) return liked ? [] : [postId];
+        return liked ? old.filter((id) => id !== postId) : [...old, postId];
+      });
+
+      return { previousLikes, previousPosts };
+    },
+    onError: (error: Error, _variables, context) => {
+      // Rollback on error
+      if (context?.previousLikes) {
+        queryClient.setQueryData(["post-likes"], context.previousLikes);
+      }
+      if (context?.previousPosts) {
+        queryClient.setQueryData(["posts"], context.previousPosts);
+      }
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["post-likes"] });
       queryClient.invalidateQueries({ queryKey: ["posts"] });
-    },
-    onError: (error: Error) => {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
     },
   });
 };

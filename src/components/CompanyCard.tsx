@@ -61,7 +61,7 @@ const CompanyCard = ({
           <div className="flex items-start gap-2 sm:gap-3">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-subtle rounded-lg flex items-center justify-center flex-shrink-0">
               {logo ? (
-                <img src={logo} alt={name} className="w-6 h-6 sm:w-8 sm:h-8 object-contain" />
+                <img src={logo} alt={name} className="w-6 h-6 sm:w-8 sm:h-8 object-contain" loading="lazy" />
               ) : (
                 <span className="text-sm sm:text-lg font-bold">{name.charAt(0)}</span>
               )}

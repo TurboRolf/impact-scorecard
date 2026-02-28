@@ -123,7 +123,7 @@ const Company = () => {
             <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-6 mb-6">
               <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-subtle rounded-lg flex items-center justify-center mx-auto sm:mx-0">
                 {company.logo_url ? (
-                  <img src={company.logo_url} alt={company.name} className="w-12 h-12 sm:w-16 sm:h-16 object-contain" />
+                  <img src={company.logo_url} alt={company.name} className="w-12 h-12 sm:w-16 sm:h-16 object-contain" loading="lazy" />
                 ) : (
                   <span className="text-xl sm:text-2xl font-bold">{company.name?.charAt(0)}</span>
                 )}
