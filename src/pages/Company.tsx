@@ -116,7 +116,10 @@ const Company = () => {
                 <Badge variant="secondary" className="mb-2">{company.category}</Badge>
                 <p className="text-muted-foreground mb-4 text-sm sm:text-base">{company.description}</p>
                 
-                <div className="flex flex-col sm:flex-row items-center gap-4 mb-4">
+                <button
+                  onClick={() => setReviewDialogOpen(true)}
+                  className="flex flex-col sm:flex-row items-center gap-4 mb-4 cursor-pointer hover:opacity-80 transition-opacity"
+                >
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <Star
@@ -129,7 +132,7 @@ const Company = () => {
                     <span className="ml-2 text-base sm:text-lg font-semibold">{Number(company.avg_overall_rating || 0).toFixed(1)}/5</span>
                   </div>
                   <div className="text-sm text-muted-foreground">{company.total_ratings} reviews</div>
-                </div>
+                </button>
                 
                 {company.website_url && (
                   <Button variant="outline" size="sm" asChild className="w-full sm:w-auto">
