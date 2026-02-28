@@ -93,7 +93,7 @@ const Creators = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {filteredCreators.map((creator) => (
-              <Card key={creator.id} className="hover:shadow-card transition-all duration-300">
+              <Card key={creator.id} className="hover:shadow-card transition-all duration-300 cursor-pointer" onClick={() => navigate(`/user/${creator.user_id}`)}>
                 <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-4">
                   <div className="flex items-start gap-2.5 sm:gap-3">
                     <Avatar className="h-10 w-10 sm:h-16 sm:w-16">
@@ -128,7 +128,7 @@ const Creators = () => {
                         variant={followedUsers.includes(creator.user_id) ? "secondary" : "default"}
                         size="sm" 
                         className="flex-1 gap-1 text-xs sm:text-sm h-8 sm:h-9"
-                        onClick={() => handleFollowToggle(creator.user_id)}
+                        onClick={(e) => { e.stopPropagation(); handleFollowToggle(creator.user_id); }}
                         disabled={followUser.isPending || unfollowUser.isPending}
                       >
                         {followedUsers.includes(creator.user_id) ? (
@@ -149,7 +149,7 @@ const Creators = () => {
                         variant="default"
                         size="sm" 
                         className="flex-1 gap-1 text-xs sm:text-sm h-8 sm:h-9"
-                        onClick={() => navigate("/auth")}
+                        onClick={(e) => { e.stopPropagation(); navigate("/auth"); }}
                       >
                         <UserPlus className="h-3 w-3" />
                         Follow
