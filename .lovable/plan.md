@@ -1,130 +1,49 @@
 
 
-# Lägg till Redigering av Profilbild
+# Förbättringsförslag för EthiCheck
 
-## Översikt
-Gör avataren på profilsidan klickbar så användaren kan ladda upp en egen profilbild. Bilden sparas i Supabase Storage och URL:en lagras i profiles-tabellen.
+Efter en genomgång av kodbasen identifierar jag följande förbättringar:
 
-## Ändringar
+## 1. Dark mode-stöd
+Projektet har redan dark mode CSS-variabler definierade i `index.css` och `darkMode: ["class"]` i tailwind-konfigurationen, men ingen möjlighet för användaren att växla tema. En theme toggle-knapp i navigationen skulle aktivera det som redan är förberett.
 
-### 1. Databasändringar
-- Lägg till `avatar_url` kolumn i `profiles`-tabellen (text, nullable)
-- Skapa en `avatars` storage bucket för profilbilder
-- Konfigurera RLS-policies för bucketen:
-  - Alla kan se bilder (public bucket)
-  - Endast inloggade användare kan ladda upp till sin egen mapp
-  - Endast ägaren kan ta bort sina bilder
+## 2. Skydd av rutter (Route guards)
+Sidor som `/profile` hanterar oautentiserade användare genom att visa "sign in"-meddelanden inuti komponenten. En central `ProtectedRoute`-wrapper skulle ge ett mer konsekvent beteende och automatisk redirect till `/auth`.
 
-### 2. Ny Komponent: AvatarUploadDialog
-Skapa `src/components/AvatarUploadDialog.tsx` med:
-- Filväljare för bilduppladdning (accepterar jpg, png, webp)
-- Förhandsvisning av vald bild
-- Uppladdningslogik till Supabase Storage
-- Uppdatera `avatar_url` i profiles-tabellen
-- Visa laddningsindikator under uppladdning
-- Felhantering med toast-notifikationer
+## 3. Förbättrad felhantering och tomma tillstånd
+- Company-sidan (`Company.tsx`) saknar error state — om API-anropet misslyckas visas bara "loading" för alltid.
+- Feed-sidan saknar retry-logik vid misslyckade laddningar.
 
-### 3. Uppdatera Profile.tsx
-- Gör avataren klickbar med hover-effekt
-- Lägg till en liten kameraikon som overlay för att indikera att bilden är redigerbar
-- Öppna AvatarUploadDialog när användaren klickar
-- Visa användarens uppladdade bild om `avatar_url` finns, annars fallback till DiceBear
+## 4. SEO och sidtitlar
+Ingen sida sätter `document.title`. En enkel hook eller `useEffect` per sida skulle förbättra SEO och användarupplevelse i flikarna.
 
-### 4. Uppdatera useProfile.ts
-- Inkludera `avatar_url` i Profile-interfacet
-- Lägg till stöd för att uppdatera `avatar_url` i useUpdateProfile
-
-### 5. Uppdatera UserProfile.tsx
-- Visa andra användares uppladdade profilbilder (ej klickbar)
-
-## Flöde
-
-```text
-┌─────────────────────────────────────────┐
-│         Profilsidan                     │
-│  ┌──────────┐                           │
-│  │  Avatar  │ ← Klickbar med kamera-    │
-│  │    📷    │   ikon som overlay        │
-│  └──────────┘                           │
-└─────────────────────────────────────────┘
-          │
-          ▼ (klick)
-┌─────────────────────────────────────────┐
-│    AvatarUploadDialog                   │
-│  ┌────────────────────────────┐         │
-│  │   Förhandsvisning          │         │
-│  │   [Nuvarande bild]         │         │
-│  └────────────────────────────┘         │
-│                                         │
-│  [Välj bild...]                         │
-│                                         │
-│  [Avbryt]              [Spara]          │
-└─────────────────────────────────────────┘
-          │
-          ▼ (spara)
-┌─────────────────────────────────────────┐
-│  1. Ladda upp till Supabase Storage     │
-│     → avatars/{user_id}/{filename}      │
-│  2. Hämta public URL                    │
-│  3. Uppdatera profiles.avatar_url       │
-│  4. Invalidera profile query cache      │
-└─────────────────────────────────────────┘
-```
-
-## UX-detaljer
-- Hover-effekt på avatar: lätt mörkare med kameraikon
-- Max filstorlek: 5MB
-- Godkända format: JPG, PNG, WEBP
-- Laddningsindikator under uppladdning
-- Success/error toast efter operation
+## 5. Tillgänglighet (a11y)
+- Stjärnbetygen på Company-sidan är en `<button>` utan `aria-label`.
+- Navigationslänkarna saknar `aria-current`.
+- Badge-filtren på Companies-sidan är `<Badge>` med `onClick` men utan keyboard-stöd (borde vara knappar).
 
 ---
 
-## Tekniska Detaljer
+## Implementeringsplan
 
-### Nya filer
-- `src/components/AvatarUploadDialog.tsx`
+### Steg 1: Lägg till dark mode toggle
+- Skapa en `ThemeProvider`-komponent som hanterar `class`-baserad dark mode med `localStorage`-persistens.
+- Lägg till en sol/måne-ikon i `Navigation.tsx` som växlar tema.
 
-### Modifierade filer
-- `src/pages/Profile.tsx` - Klickbar avatar med overlay
-- `src/pages/UserProfile.tsx` - Visa avatar_url
-- `src/hooks/useProfile.ts` - Lägg till avatar_url i interface
+### Steg 2: Förbättra felhantering
+- Lägg till `isError`/`error`-hantering i Company-sidans query med retry-knapp.
+- Gör samma sak i Feed-sidan.
 
-### Databasmigration
-```sql
--- Lägg till avatar_url kolumn
-ALTER TABLE profiles ADD COLUMN avatar_url text;
+### Steg 3: Lägg till dynamiska sidtitlar
+- Skapa en `useDocumentTitle`-hook.
+- Anropa den i varje sida med relevant titel (t.ex. "EthiCheck - Companies", "EthiCheck - [Company Name]").
 
--- Skapa avatars bucket
-INSERT INTO storage.buckets (id, name, public)
-VALUES ('avatars', 'avatars', true);
+### Steg 4: Tillgänglighetsfixar
+- Lägg till `aria-label="Write a review"` på stjärnbetygsknappen i `Company.tsx`.
+- Byt `Badge`-filter på Companies-sidan till `<button>`-element med lämpliga ARIA-attribut.
+- Lägg till `aria-current="page"` på aktiva navigationslänkar.
 
--- RLS för storage
-CREATE POLICY "Anyone can view avatars"
-ON storage.objects FOR SELECT
-TO public
-USING (bucket_id = 'avatars');
-
-CREATE POLICY "Authenticated users can upload their own avatar"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK (
-  bucket_id = 'avatars' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-
-CREATE POLICY "Users can delete their own avatar"
-ON storage.objects FOR DELETE
-TO authenticated
-USING (
-  bucket_id = 'avatars' AND
-  (storage.foldername(name))[1] = auth.uid()::text
-);
-```
-
-### Beroenden
-Använder befintliga komponenter:
-- `Camera` ikon från lucide-react
-- Dialog, Button, Input komponenter
-- Supabase Storage API
+### Steg 5: Skydda rutter
+- Skapa en `ProtectedRoute`-komponent som kollar auth-status och redirectar till `/auth`.
+- Wrappa `/profile` i `App.tsx` med denna.
 
