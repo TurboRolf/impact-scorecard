@@ -37,7 +37,7 @@ export const useFollowStatus = (currentUserId?: string, targetUserId?: string) =
         .maybeSingle();
       
       if (error) throw error;
-      return data?.status as string | null;
+      return (data?.status as string) ?? null;
     },
     enabled: !!currentUserId && !!targetUserId
   });
