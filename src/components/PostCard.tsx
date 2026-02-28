@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +44,7 @@ interface PostCardProps {
 const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId }: PostCardProps) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const navigate = useNavigate();
 
   const joinBoycott = useJoinBoycott();
   const leaveBoycott = useLeaveBoycott();
@@ -126,14 +128,14 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
     <Card className="hover:shadow-card transition-all duration-300">
       <CardHeader className="pb-2 md:pb-3">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0">
+          <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0 cursor-pointer" onClick={() => user.id && navigate(`/user/${user.id}`)}>
             <Avatar className="h-8 w-8 md:h-10 md:w-10 flex-shrink-0">
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
-                <span className="font-semibold text-sm md:text-base truncate">{user.name}</span>
+                <span className="font-semibold text-sm md:text-base truncate hover:underline">{user.name}</span>
                 {user.isCreator && (
                   <Badge variant="secondary" className="text-xs px-1.5 md:px-2">Creator</Badge>
                 )}
