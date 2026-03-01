@@ -158,6 +158,15 @@ const Boycotts = () => {
             boycotts.map((boycott) => (
               <Card key={boycott.id} className={`hover:shadow-card transition-all duration-300 ${boycott.status === 'deactivated' ? 'opacity-70' : ''}`}>
                 <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-4">
+                  {boycott.status === 'deactivated' && boycott.deactivation_reason && (
+                    <div className="flex items-start gap-2 mb-2 p-2.5 sm:p-3 rounded-md bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-sm">
+                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-medium text-green-700 dark:text-green-300">Resolved:</span>
+                        <span className="text-green-600 dark:text-green-400 ml-1">{boycott.deactivation_reason}</span>
+                      </div>
+                    </div>
+                  )}
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2 flex-wrap">
@@ -185,16 +194,6 @@ const Boycotts = () => {
                 </CardHeader>
                 
                 <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
-                  {boycott.status === 'deactivated' && boycott.deactivation_reason && (
-                    <div className="flex items-start gap-2 mb-3 p-2.5 sm:p-3 rounded-md bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-sm">
-                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-medium text-green-700 dark:text-green-300">Resolved:</span>
-                        <span className="text-green-600 dark:text-green-400 ml-1">{boycott.deactivation_reason}</span>
-                      </div>
-                    </div>
-                  )}
-                  <p className="text-sm text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">{boycott.description}</p>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
                     <div className="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm text-muted-foreground flex-wrap">
