@@ -31,7 +31,7 @@ const Boycotts = () => {
       case "successful":
         return "bg-brand-success text-destructive-foreground";
       case "deactivated":
-        return "bg-muted text-muted-foreground";
+        return "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300";
       case "ended":
         return "bg-muted text-muted-foreground";
       default:
