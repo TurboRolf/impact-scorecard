@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Users, Calendar, Search, Check, Ban, CheckCircle } from "lucide-react";
+import { AlertTriangle, Users, Calendar, Search, Check, CheckCircle } from "lucide-react";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { BoycottManageMenu } from "@/components/BoycottManageMenu";
 import { useBoycotts, useBoycottStats, useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
@@ -156,16 +156,19 @@ const Boycotts = () => {
             </div>
           ) : (
             boycotts.map((boycott) => (
-              <Card key={boycott.id} className={`hover:shadow-card transition-all duration-300 ${boycott.status === 'deactivated' ? 'opacity-70' : ''}`}>
+              <Card key={boycott.id} className={`hover:shadow-card transition-all duration-300 ${boycott.status === 'deactivated' ? 'border-green-300 dark:border-green-800' : ''}`}>
+                {boycott.status === 'deactivated' && boycott.deactivation_reason && (
+                  <div className="flex items-center gap-2 px-3 sm:px-6 py-2 bg-green-50 dark:bg-green-950/40 border-b border-green-200 dark:border-green-800 rounded-t-lg">
+                    <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+                    <span className="font-medium text-sm text-green-700 dark:text-green-300">Resolved:</span>
+                    <span className="text-sm text-green-600 dark:text-green-400 truncate">{boycott.deactivation_reason}</span>
+                  </div>
+                )}
                 <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-4">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 sm:gap-2 mb-1 sm:mb-2 flex-wrap">
-                        {boycott.status === 'deactivated' ? (
-                          <Ban className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-muted-foreground flex-shrink-0" />
-                        ) : (
-                          <AlertTriangle className="h-3.5 w-3.5 sm:h-5 sm:w-5 text-destructive flex-shrink-0" />
-                        )}
+                        <AlertTriangle className={`h-3.5 w-3.5 sm:h-5 sm:w-5 flex-shrink-0 ${boycott.status === 'deactivated' ? 'text-muted-foreground' : 'text-destructive'}`} />
                         <CardTitle className="text-sm sm:text-lg truncate">{boycott.title}</CardTitle>
                         <Badge className={`${getStatusColor(boycott.status)} text-xs`} variant="secondary">
                           {boycott.status}
@@ -185,15 +188,6 @@ const Boycotts = () => {
                 </CardHeader>
                 
                 <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
-                  {boycott.status === 'deactivated' && boycott.deactivation_reason && (
-                    <div className="flex items-start gap-2 mb-3 p-2.5 sm:p-3 rounded-md bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-sm">
-                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <span className="font-medium text-green-700 dark:text-green-300">Resolved:</span>
-                        <span className="text-green-600 dark:text-green-400 ml-1">{boycott.deactivation_reason}</span>
-                      </div>
-                    </div>
-                  )}
                   <p className="text-sm text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">{boycott.description}</p>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
