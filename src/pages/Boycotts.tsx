@@ -185,6 +185,15 @@ const Boycotts = () => {
                 </CardHeader>
                 
                 <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
+                  {boycott.status === 'deactivated' && boycott.deactivation_reason && (
+                    <div className="flex items-start gap-2 mb-3 p-2.5 sm:p-3 rounded-md bg-muted border text-sm">
+                      <Ban className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-medium text-foreground">Deactivation reason:</span>
+                        <span className="text-muted-foreground ml-1">{boycott.deactivation_reason}</span>
+                      </div>
+                    </div>
+                  )}
                   <p className="text-sm text-foreground mb-3 sm:mb-4 line-clamp-2 sm:line-clamp-none">{boycott.description}</p>
                   
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
