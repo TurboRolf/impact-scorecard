@@ -18,6 +18,7 @@ export interface PostData {
     display_name: string | null;
     username: string | null;
     profile_type: string | null;
+    avatar_url: string | null;
   };
 }
 
@@ -55,7 +56,8 @@ export const usePosts = (feedType: "trending" | "following" = "trending") => {
             profiles (
               display_name,
               username,
-              profile_type
+              profile_type,
+              avatar_url
             )
           `)
           .in("user_id", followingIds)
@@ -72,7 +74,8 @@ export const usePosts = (feedType: "trending" | "following" = "trending") => {
             profiles (
               display_name,
               username,
-              profile_type
+              profile_type,
+              avatar_url
             )
           `)
           .order("created_at", { ascending: false });
@@ -105,13 +108,14 @@ export const useCreatePost = () => {
         })
         .select(`
           *,
-          profiles (
-            display_name,
-            username,
-            profile_type
-          )
-        `)
-        .single();
+            profiles (
+              display_name,
+              username,
+              profile_type,
+              avatar_url
+            )
+          `)
+          .single();
 
       if (error) throw error;
       return data;

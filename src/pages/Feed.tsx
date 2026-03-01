@@ -88,7 +88,7 @@ const Feed = () => {
         id: post.user_id,
         name: post.profiles?.display_name || post.profiles?.username || "Anonymous User",
         username: post.profiles?.username || "unknown",
-        avatar: post.profiles?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.profiles.username}` : undefined,
+        avatar: post.profiles?.avatar_url || (post.profiles?.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${post.profiles.username}` : undefined),
         isCreator: post.profiles?.profile_type === 'creator'
       },
       content: cleanContent,
