@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Users, Calendar, Search, Check, Ban } from "lucide-react";
+import { AlertTriangle, Users, Calendar, Search, Check, Ban, CheckCircle } from "lucide-react";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { BoycottManageMenu } from "@/components/BoycottManageMenu";
 import { useBoycotts, useBoycottStats, useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
@@ -186,11 +186,11 @@ const Boycotts = () => {
                 
                 <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
                   {boycott.status === 'deactivated' && boycott.deactivation_reason && (
-                    <div className="flex items-start gap-2 mb-3 p-2.5 sm:p-3 rounded-md bg-muted border text-sm">
-                      <Ban className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-2 mb-3 p-2.5 sm:p-3 rounded-md bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 text-sm">
+                      <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5" />
                       <div>
-                        <span className="font-medium text-foreground">Deactivation reason:</span>
-                        <span className="text-muted-foreground ml-1">{boycott.deactivation_reason}</span>
+                        <span className="font-medium text-green-700 dark:text-green-300">Resolved:</span>
+                        <span className="text-green-600 dark:text-green-400 ml-1">{boycott.deactivation_reason}</span>
                       </div>
                     </div>
                   )}
