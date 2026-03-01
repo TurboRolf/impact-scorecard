@@ -128,7 +128,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
     <Card className="hover:shadow-card transition-all duration-300">
       <CardHeader className="pb-2 md:pb-3">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0 cursor-pointer" onClick={() => user.id && navigate(`/user/${user.id}`)}>
+          <div className="flex items-start gap-2 md:gap-3 flex-1 min-w-0 cursor-pointer" onClick={() => user.id && navigate(isOwnPost ? '/profile' : `/user/${user.id}`)}>
             <Avatar className="h-8 w-8 md:h-10 md:w-10 flex-shrink-0">
               <AvatarImage src={user.avatar} />
               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
