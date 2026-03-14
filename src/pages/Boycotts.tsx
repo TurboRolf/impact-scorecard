@@ -188,12 +188,12 @@ const Boycotts = () => {
                 </CardHeader>
                 
                 <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
-                  {(boycott as any).condition && (
+                  {boycott.condition && (
                     <div className="flex items-start gap-2 mb-3 p-2.5 sm:p-3 rounded-md bg-muted/50 border text-sm">
                       <CheckCircle className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
                       <div>
                         <span className="font-medium text-foreground">Condition:</span>
-                        <span className="text-muted-foreground ml-1">{(boycott as any).condition}</span>
+                        <span className="text-muted-foreground ml-1">{boycott.condition}</span>
                       </div>
                     </div>
                   )}
