@@ -260,6 +260,21 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
             />
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="condition">Condition for resolution</Label>
+            <Textarea
+              id="condition"
+              value={formData.condition}
+              onChange={(e) => setFormData(prev => ({ ...prev, condition: e.target.value }))}
+              placeholder="e.g., The company commits to carbon neutrality by 2027..."
+              rows={2}
+              required
+            />
+            <p className="text-xs text-muted-foreground">
+              What must the company do for this boycott to be resolved?
+            </p>
+          </div>
+
           <div className="flex items-center space-x-2">
             <Checkbox
               id="create-post"
