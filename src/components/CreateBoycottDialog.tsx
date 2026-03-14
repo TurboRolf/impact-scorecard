@@ -90,18 +90,6 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
         return;
       }
 
-      // Check for duplicate subject
-      const isDuplicate = await checkDuplicateSubject(formData.subject);
-      if (isDuplicate) {
-        toast({
-          title: "Duplicate boycott",
-          description: "A boycott with this subject already exists. Please join the existing one or create a boycott with a different subject.",
-          variant: "destructive"
-        });
-        setLoading(false);
-        return;
-      }
-
       const { data: boycottData, error } = await supabase
         .from('boycotts')
         .insert({
@@ -110,8 +98,9 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
           company: formData.company,
           subject: formData.subject,
           category_id: formData.category_id,
-          organizer_id: user.id
-        })
+          organizer_id: user.id,
+          condition: formData.condition || null,
+        } as any)
         .select()
         .single();
 
