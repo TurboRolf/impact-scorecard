@@ -73,21 +73,6 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     }
   };
 
-  const checkDuplicateSubject = async (subject: string) => {
-    const { data, error } = await supabase
-      .from('boycotts')
-      .select('id')
-      .eq('status', 'active')
-      .ilike('subject', subject.trim());
-    
-    if (error) {
-      console.error('Error checking duplicate:', error);
-      return false;
-    }
-    
-    return data && data.length > 0;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
