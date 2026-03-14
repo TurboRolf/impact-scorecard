@@ -36,6 +36,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     company: preselectedCompany || "",
     subject: "",
     category_id: "",
+    condition: "",
   });
   const [createPost, setCreatePost] = useState(true);
   const { toast } = useToast();
