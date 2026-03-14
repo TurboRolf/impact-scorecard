@@ -221,9 +221,6 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
               placeholder="e.g., Volvo factory CO2 emissions"
               required
             />
-            <p className="text-xs text-muted-foreground">
-              This must be unique - we'll prevent duplicate boycotts on the same topic
-            </p>
           </div>
 
           <div className="space-y-2">
