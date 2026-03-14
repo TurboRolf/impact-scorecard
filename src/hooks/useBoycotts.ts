@@ -14,6 +14,7 @@ export interface Boycott {
   created_at: string;
   organizer_id: string;
   deactivation_reason: string | null;
+  condition: string | null;
   categories: {
     name: string;
     color: string;
