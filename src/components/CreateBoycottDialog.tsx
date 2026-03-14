@@ -36,6 +36,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     company: preselectedCompany || "",
     subject: "",
     category_id: "",
+    condition: "",
   });
   const [createPost, setCreatePost] = useState(true);
   const { toast } = useToast();
@@ -72,21 +73,6 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     }
   };
 
-  const checkDuplicateSubject = async (subject: string) => {
-    const { data, error } = await supabase
-      .from('boycotts')
-      .select('id')
-      .eq('status', 'active')
-      .ilike('subject', subject.trim());
-    
-    if (error) {
-      console.error('Error checking duplicate:', error);
-      return false;
-    }
-    
-    return data && data.length > 0;
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -104,18 +90,6 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
         return;
       }
 
-      // Check for duplicate subject
-      const isDuplicate = await checkDuplicateSubject(formData.subject);
-      if (isDuplicate) {
-        toast({
-          title: "Duplicate boycott",
-          description: "A boycott with this subject already exists. Please join the existing one or create a boycott with a different subject.",
-          variant: "destructive"
-        });
-        setLoading(false);
-        return;
-      }
-
       const { data: boycottData, error } = await supabase
         .from('boycotts')
         .insert({
@@ -124,8 +98,9 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
           company: formData.company,
           subject: formData.subject,
           category_id: formData.category_id,
-          organizer_id: user.id
-        })
+          organizer_id: user.id,
+          condition: formData.condition || null,
+        } as any)
         .select()
         .single();
 
@@ -176,6 +151,7 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
         company: preselectedCompany || "",
         subject: "",
         category_id: "",
+        condition: "",
       });
       setCreatePost(true);
       setOpen(false);
@@ -245,9 +221,6 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
               placeholder="e.g., Volvo factory CO2 emissions"
               required
             />
-            <p className="text-xs text-muted-foreground">
-              This must be unique - we'll prevent duplicate boycotts on the same topic
-            </p>
           </div>
 
           <div className="space-y-2">
@@ -282,6 +255,21 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
               rows={4}
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="condition">Condition for resolution</Label>
+            <Textarea
+              id="condition"
+              value={formData.condition}
+              onChange={(e) => setFormData(prev => ({ ...prev, condition: e.target.value }))}
+              placeholder="e.g., The company commits to carbon neutrality by 2027..."
+              rows={2}
+              required
+            />
+            <p className="text-xs text-muted-foreground">
+              What must the company do for this boycott to be resolved?
+            </p>
           </div>
 
           <div className="flex items-center space-x-2">
