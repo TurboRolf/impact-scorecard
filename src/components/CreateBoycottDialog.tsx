@@ -212,16 +212,6 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
             </Select>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="subject">Subject/Topic</Label>
-            <Input
-              id="subject"
-              value={formData.subject}
-              onChange={(e) => setFormData(prev => ({ ...prev, subject: e.target.value }))}
-              placeholder="e.g., Volvo factory CO2 emissions"
-              required
-            />
-          </div>
 
           <div className="space-y-2">
             <Label htmlFor="category">Category</Label>
