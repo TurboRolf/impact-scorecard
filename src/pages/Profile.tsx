@@ -31,6 +31,7 @@ const Profile = () => {
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
+  const [boycottSubTab, setBoycottSubTab] = useState<string | undefined>();
   const navigate = useNavigate();
   useDocumentTitle("Profile");
 
@@ -100,7 +101,15 @@ const Profile = () => {
             stanceStats={stanceStats}
             boycottsCreated={boycotts.filter(b => b.organizer_id === user?.id).length}
             boycottsJoined={boycotts.filter(b => joinedBoycottIds.includes(b.id) && b.organizer_id !== user?.id).length}
-            onStatClick={(tab) => setActiveTab(tab)}
+            onStatClick={(tab) => {
+              if (tab.startsWith("boycotts:")) {
+                setActiveTab("boycotts");
+                setBoycottSubTab(tab.split(":")[1]);
+              } else {
+                setActiveTab(tab);
+                setBoycottSubTab(undefined);
+              }
+            }}
           />
         </div>
 
@@ -110,6 +119,7 @@ const Profile = () => {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           showPosts={true}
+          boycottSubTab={boycottSubTab}
         />
       </div>
       

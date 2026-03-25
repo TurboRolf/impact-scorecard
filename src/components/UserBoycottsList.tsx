@@ -10,9 +10,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface UserBoycottsListProps {
   userId?: string;
+  defaultTab?: string;
 }
 
-const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
+const UserBoycottsList = ({ userId, defaultTab = "joined" }: UserBoycottsListProps) => {
   const { data: boycotts = [], isLoading } = useBoycotts();
   const { data: joinedBoycottIds = [], isLoading: isLoadingJoined } = useUserBoycottParticipation(userId);
   const { user } = useAuth();
@@ -121,7 +122,7 @@ const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
   );
 
   return (
-    <Tabs defaultValue="joined" className="w-full">
+    <Tabs value={defaultTab} className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="joined" className="gap-1.5">
           <UserCheck className="h-3.5 w-3.5" />

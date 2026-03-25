@@ -13,9 +13,10 @@ interface ProfileContentProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   showPosts?: boolean;
+  boycottSubTab?: string;
 }
 
-const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true }: ProfileContentProps) => {
+const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true, boycottSubTab }: ProfileContentProps) => {
   const navigate = useNavigate();
 
   const tabs = [
@@ -77,7 +78,7 @@ const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true }: Pr
         </TabsContent>
         
         <TabsContent value="boycotts" className="mt-3 md:mt-6">
-          <UserBoycottsList userId={userId} />
+          <UserBoycottsList userId={userId} defaultTab={boycottSubTab} />
         </TabsContent>
       </Tabs>
     </div>
