@@ -115,7 +115,6 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
         const postContent = `${formData.title}
 
 Target: ${formData.company}
-Subject: ${formData.subject}
 
 ${formData.description}
 
