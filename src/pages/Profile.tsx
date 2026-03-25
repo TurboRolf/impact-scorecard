@@ -119,6 +119,7 @@ const Profile = () => {
           activeTab={activeTab}
           onTabChange={setActiveTab}
           showPosts={true}
+          boycottSubTab={boycottSubTab}
         />
       </div>
       
