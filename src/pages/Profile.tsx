@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
+import { useBoycotts, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useProfile } from "@/hooks/useProfile";
 import { useFollowerCount, useFollowingCount, usePostsCount } from "@/hooks/useFollowCounts";
 import { usePendingFollowRequests } from "@/hooks/useFollows";
