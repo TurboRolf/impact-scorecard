@@ -147,7 +147,6 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
         title: "",
         description: "",
         company: preselectedCompany || "",
-        subject: "",
         category_id: "",
         condition: "",
       });
