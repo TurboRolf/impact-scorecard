@@ -61,14 +61,15 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined, onStatClic
       {/* Mobile: Compact horizontal scroll */}
       <div className="md:hidden flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-hide">
         {stats.map((stat, index) => (
-          <div 
+          <button 
             key={index}
-            className="flex-shrink-0 flex items-center gap-1.5 bg-card border rounded-lg px-2.5 py-1.5"
+            onClick={() => onStatClick?.(stat.tab)}
+            className="flex-shrink-0 flex items-center gap-1.5 bg-card border rounded-lg px-2.5 py-1.5 hover:bg-accent transition-colors cursor-pointer"
           >
             <stat.icon className={`h-3.5 w-3.5 ${stat.color}`} />
             <span className={`text-sm font-semibold ${stat.color}`}>{stat.value}</span>
             <span className="text-xs text-muted-foreground">{stat.label}</span>
-          </div>
+          </button>
         ))}
       </div>
 
