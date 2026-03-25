@@ -9,9 +9,10 @@ interface ProfileStatsProps {
   };
   boycottsCreated: number;
   boycottsJoined: number;
+  onStatClick?: (tab: string) => void;
 }
 
-const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined }: ProfileStatsProps) => {
+const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined, onStatClick }: ProfileStatsProps) => {
   const stats = [
     { 
       icon: ThumbsUp, 
