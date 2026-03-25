@@ -16,7 +16,7 @@ interface ProfileContentProps {
   boycottSubTab?: string;
 }
 
-const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true }: ProfileContentProps) => {
+const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true, boycottSubTab }: ProfileContentProps) => {
   const navigate = useNavigate();
 
   const tabs = [
