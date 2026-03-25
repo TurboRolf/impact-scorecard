@@ -76,7 +76,11 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined, onStatClic
       {/* Desktop: Grid cards */}
       <div className="hidden md:grid grid-cols-5 gap-4">
         {stats.map((stat, index) => (
-          <div key={index} className="bg-card border rounded-lg p-4 flex flex-col h-full">
+          <button 
+            key={index} 
+            onClick={() => onStatClick?.(stat.tab)}
+            className="bg-card border rounded-lg p-4 flex flex-col h-full text-left hover:bg-accent transition-colors cursor-pointer"
+          >
             <div className="flex items-center gap-2 mb-2">
               <stat.icon className={`h-4 w-4 ${stat.color}`} />
               <span className="text-sm font-medium">{stat.fullLabel}</span>
@@ -85,7 +89,7 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined, onStatClic
             <p className="text-xs text-muted-foreground">
               {index < 3 ? "Companies" : "Boycotts"}
             </p>
-          </div>
+          </button>
         ))}
       </div>
     </>
