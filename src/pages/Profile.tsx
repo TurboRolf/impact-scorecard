@@ -31,6 +31,7 @@ const Profile = () => {
   const [avatarOpen, setAvatarOpen] = useState(false);
   const [requestsOpen, setRequestsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("posts");
+  const [boycottSubTab, setBoycottSubTab] = useState<string | undefined>();
   const navigate = useNavigate();
   useDocumentTitle("Profile");
 
