@@ -19,35 +19,40 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined, onStatClic
       value: stanceStats.recommend, 
       label: "Rec.", 
       fullLabel: "Recommended",
-      color: "text-recommend" 
+      color: "text-recommend",
+      tab: "stances",
     },
     { 
       icon: Minus, 
       value: stanceStats.neutral, 
       label: "Neu.", 
       fullLabel: "Neutral",
-      color: "text-neutral" 
+      color: "text-neutral",
+      tab: "stances",
     },
     { 
       icon: ThumbsDown, 
       value: stanceStats.discourage, 
       label: "Disc.", 
       fullLabel: "Discouraged",
-      color: "text-discourage" 
+      color: "text-discourage",
+      tab: "stances",
     },
     { 
       icon: AlertTriangle, 
       value: boycottsCreated, 
       label: "Created", 
       fullLabel: "Boycotts Created",
-      color: "text-destructive" 
+      color: "text-destructive",
+      tab: "boycotts",
     },
     { 
       icon: Users, 
       value: boycottsJoined, 
       label: "Joined", 
       fullLabel: "Boycotts Joined",
-      color: "text-destructive" 
+      color: "text-destructive",
+      tab: "boycotts",
     },
   ];
 
