@@ -177,7 +177,20 @@ const Boycotts = () => {
                         </Badge>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground">
-                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name} • Started by {boycott.profiles?.display_name || boycott.profiles?.username || 'Unknown'}
+                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name} • Started by{' '}
+                        <span
+                          className="font-medium hover:underline cursor-pointer text-foreground"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (boycott.organizer_id === user?.id) {
+                              navigate('/profile');
+                            } else {
+                              navigate(`/user/${boycott.organizer_id}`);
+                            }
+                          }}
+                        >
+                          {boycott.profiles?.display_name || boycott.profiles?.username || 'Unknown'}
+                        </span>
                       </p>
                     </div>
                     <BoycottManageMenu
