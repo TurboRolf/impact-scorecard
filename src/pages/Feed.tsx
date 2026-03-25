@@ -21,10 +21,15 @@ import { useToast } from "@/hooks/use-toast";
 const Feed = () => {
   const [newPost, setNewPost] = useState("");
   const [feedType, setFeedType] = useState<"trending" | "following">("trending");
+  const [taggedCompany, setTaggedCompany] = useState<{ name: string; category: string } | null>(null);
+  const [companyRating, setCompanyRating] = useState<number>(0);
+  const [showCompanyTag, setShowCompanyTag] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
   
   const { user } = useAuth();
   const { data: posts = [], isLoading, isError, refetch } = usePosts(feedType);
+  const { data: companies = [] } = useCompanies();
   useDocumentTitle("Feed");
   const createPost = useCreatePost();
 
