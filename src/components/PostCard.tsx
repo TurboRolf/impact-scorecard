@@ -33,6 +33,9 @@ interface PostCardProps {
     subject: string;
     participants_count: number;
     category?: string;
+    condition?: string | null;
+    status?: string | null;
+    deactivation_reason?: string | null;
   };
   isBoycott?: boolean;
   timestamp: string;
