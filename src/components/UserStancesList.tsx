@@ -70,41 +70,6 @@ const UserStancesList = ({ userId }: UserStancesListProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-3 gap-4">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <ThumbsUp className="h-5 w-5 text-recommend" />
-              <div>
-                <p className="text-2xl font-bold text-recommend">{stanceStats.recommend}</p>
-                <p className="text-sm text-muted-foreground">Recommend</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <Minus className="h-5 w-5 text-neutral" />
-              <div>
-                <p className="text-2xl font-bold text-neutral">{stanceStats.neutral}</p>
-                <p className="text-sm text-muted-foreground">Neutral</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2">
-              <ThumbsDown className="h-5 w-5 text-discourage" />
-              <div>
-                <p className="text-2xl font-bold text-discourage">{stanceStats.discourage}</p>
-                <p className="text-sm text-muted-foreground">Discourage</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Search and Filter */}
       <div className="flex gap-4">
