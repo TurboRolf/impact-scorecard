@@ -30,6 +30,7 @@ const Feed = () => {
   const { user } = useAuth();
   const { data: posts = [], isLoading, isError, refetch } = usePosts(feedType);
   const { data: companies = [] } = useCompanies();
+  const { data: allBoycotts = [] } = useBoycotts();
   useDocumentTitle("Feed");
   const createPost = useCreatePost();
 
