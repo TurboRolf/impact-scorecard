@@ -101,7 +101,15 @@ const Profile = () => {
             stanceStats={stanceStats}
             boycottsCreated={boycotts.filter(b => b.organizer_id === user?.id).length}
             boycottsJoined={boycotts.filter(b => joinedBoycottIds.includes(b.id) && b.organizer_id !== user?.id).length}
-            onStatClick={(tab) => setActiveTab(tab)}
+            onStatClick={(tab) => {
+              if (tab.startsWith("boycotts:")) {
+                setActiveTab("boycotts");
+                setBoycottSubTab(tab.split(":")[1]);
+              } else {
+                setActiveTab(tab);
+                setBoycottSubTab(undefined);
+              }
+            }}
           />
         </div>
 
