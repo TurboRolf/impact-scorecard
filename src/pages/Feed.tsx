@@ -38,9 +38,17 @@ const Feed = () => {
 
     await createPost.mutateAsync({
       content: newPost.trim(),
+      ...(taggedCompany && companyRating > 0 ? {
+        company_name: taggedCompany.name,
+        company_category: taggedCompany.category,
+        company_rating: companyRating,
+      } : {}),
     });
 
     setNewPost("");
+    setTaggedCompany(null);
+    setCompanyRating(0);
+    setShowCompanyTag(false);
   };
 
   // Transform posts data for PostCard component
