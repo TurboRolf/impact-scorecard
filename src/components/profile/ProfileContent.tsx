@@ -13,6 +13,7 @@ interface ProfileContentProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
   showPosts?: boolean;
+  boycottSubTab?: string;
 }
 
 const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true }: ProfileContentProps) => {
