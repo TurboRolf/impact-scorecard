@@ -35,6 +35,8 @@ const Profile = () => {
   useDocumentTitle("Profile");
 
   const { data: userStances = [] } = useUserStances(user?.id);
+  const { data: boycotts = [] } = useBoycotts();
+  const { data: joinedBoycottIds = [] } = useUserBoycottParticipation(user?.id);
   const { data: profile } = useProfile(user?.id);
   const { data: followerCount = 0 } = useFollowerCount(user?.id);
   const { data: followingCount = 0 } = useFollowingCount(user?.id);
