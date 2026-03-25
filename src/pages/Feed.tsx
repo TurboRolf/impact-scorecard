@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Image, Building2, Star, X } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
-import { useBoycottByCompany } from "@/hooks/useBoycotts";
+import { useBoycottByCompany, useBoycotts } from "@/hooks/useBoycotts";
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
@@ -30,6 +30,7 @@ const Feed = () => {
   const { user } = useAuth();
   const { data: posts = [], isLoading, isError, refetch } = usePosts(feedType);
   const { data: companies = [] } = useCompanies();
+  const { data: allBoycotts = [] } = useBoycotts();
   useDocumentTitle("Feed");
   const createPost = useCreatePost();
 
@@ -61,33 +62,47 @@ const Feed = () => {
       cleanContent = cleanContent.replace(starPattern, '').trim();
     }
     
-    // Extract boycott info from content if it's a boycott post
+    // Match with real boycott data
     let boycottData = undefined;
     if (post.is_boycott) {
-      // Try to extract boycott details from content
       const lines = post.content.split('\n').filter(line => line.trim());
-      const titleMatch = lines[0]?.trim(); // Title is the first line
+      const titleMatch = lines[0]?.trim();
       const companyMatch = lines.find(line => line.startsWith('Target:'))?.replace('Target:', '').trim();
-      const subjectMatch = lines.find(line => line.startsWith('Subject:'))?.replace('Subject:', '').trim();
       
+      // Try to find matching boycott from real data
+      const matchedBoycott = allBoycotts.find(b => 
+        b.company === (companyMatch || post.company_name) && 
+        b.title === titleMatch
+      ) || allBoycotts.find(b => 
+        b.company === (companyMatch || post.company_name)
+      );
+
       boycottData = {
-        // Note: We don't have the real boycott ID linked to posts yet
-        // This would require a database schema change to link posts to boycotts
-        title: titleMatch || "Boycott Campaign",
-        company: companyMatch || post.company_name || "Unknown Company",
-        subject: subjectMatch || "Corporate accountability",
-        participants_count: 0,
-        category: post.company_category || 'General'
+        id: matchedBoycott?.id,
+        title: matchedBoycott?.title || titleMatch || "Boycott Campaign",
+        company: matchedBoycott?.company || companyMatch || post.company_name || "Unknown Company",
+        subject: matchedBoycott?.subject || "Corporate accountability",
+        participants_count: matchedBoycott?.participants_count || 0,
+        category: matchedBoycott?.categories?.name || post.company_category || 'General',
+        condition: matchedBoycott?.condition || null,
+        status: matchedBoycott?.status || 'active',
+        deactivation_reason: matchedBoycott?.deactivation_reason || null,
       };
       
-      // Clean the content to remove structured data - keep only the description part
+      // Clean the content
       const targetIndex = lines.findIndex(line => line.startsWith('Target:'));
       const subjectIndex = lines.findIndex(line => line.startsWith('Subject:'));
       const hashtagIndex = lines.findIndex(line => line.includes('#Boycott'));
       
-      // Extract description (lines after Subject line but before hashtags)
       if (subjectIndex >= 0) {
         const startIndex = subjectIndex + 1;
+        const endIndex = hashtagIndex >= 0 ? hashtagIndex : lines.length;
+        cleanContent = lines.slice(startIndex, endIndex)
+          .filter(line => line.trim())
+          .join('\n')
+          .trim();
+      } else if (targetIndex >= 0) {
+        const startIndex = targetIndex + 1;
         const endIndex = hashtagIndex >= 0 ? hashtagIndex : lines.length;
         cleanContent = lines.slice(startIndex, endIndex)
           .filter(line => line.trim())

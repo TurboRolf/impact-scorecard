@@ -33,6 +33,9 @@ interface PostCardProps {
     subject: string;
     participants_count: number;
     category?: string;
+    condition?: string | null;
+    status?: string | null;
+    deactivation_reason?: string | null;
   };
   isBoycott?: boolean;
   timestamp: string;
@@ -194,12 +197,25 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
 
         {/* Boycott card */}
         {boycott && (
-          <Card className="bg-muted/50 border-0 mb-3 md:mb-4">
+          <Card className={`border-0 mb-3 md:mb-4 ${boycott.status === 'deactivated' ? 'bg-green-50 dark:bg-green-950/30' : 'bg-muted/50'}`}>
             <CardContent className="p-2.5 md:p-4">
+              {/* Resolved banner */}
+              {boycott.status === 'deactivated' && (
+                <div className="flex items-center gap-1.5 mb-2 md:mb-3 p-1.5 md:p-2 rounded-md bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">
+                  <Check className="h-3.5 w-3.5 md:h-4 md:w-4 flex-shrink-0" />
+                  <span className="text-xs md:text-sm font-medium">
+                    Resolved{boycott.deactivation_reason ? `: ${boycott.deactivation_reason}` : ''}
+                  </span>
+                </div>
+              )}
               <div className="flex items-start justify-between gap-2 mb-2 md:mb-3">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2">
-                    <AlertTriangle className="h-3.5 w-3.5 md:h-4 md:w-4 text-destructive flex-shrink-0" />
+                    {boycott.status === 'deactivated' ? (
+                      <Check className="h-3.5 w-3.5 md:h-4 md:w-4 text-green-600 dark:text-green-400 flex-shrink-0" />
+                    ) : (
+                      <AlertTriangle className="h-3.5 w-3.5 md:h-4 md:w-4 text-destructive flex-shrink-0" />
+                    )}
                     <h4 className="font-semibold text-sm md:text-base line-clamp-2">{boycott.title}</h4>
                   </div>
                   <p className="text-xs md:text-sm text-muted-foreground mb-0.5 md:mb-1 truncate">Target: {boycott.company}</p>
@@ -213,7 +229,14 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
                 </div>
               </div>
               {content && <p className="text-foreground mt-2 pt-2 md:mt-3 md:pt-3 border-t text-sm md:text-base">{content}</p>}
-              {boycott.id && (
+              {/* Condition for removal */}
+              {boycott.condition && (
+                <div className="mt-2 pt-2 md:mt-3 md:pt-3 border-t">
+                  <p className="text-xs md:text-sm text-muted-foreground font-medium mb-0.5">Condition for removal:</p>
+                  <p className="text-xs md:text-sm text-foreground">{boycott.condition}</p>
+                </div>
+              )}
+              {boycott.id && boycott.status !== 'deactivated' && (
                 <div className="mt-2 pt-2 md:mt-3 md:pt-3 border-t">
                   {isJoined ? (
                     <Button variant="secondary" size="sm" onClick={handleLeaveBoycott} disabled={leaveBoycott.isPending} className="gap-1 px-3 md:px-4 h-7 md:h-8 text-xs md:text-sm">
