@@ -78,7 +78,7 @@ const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true, boyc
         </TabsContent>
         
         <TabsContent value="boycotts" className="mt-3 md:mt-6">
-          <UserBoycottsList userId={userId} />
+          <UserBoycottsList userId={userId} defaultTab={boycottSubTab} />
         </TabsContent>
       </Tabs>
     </div>

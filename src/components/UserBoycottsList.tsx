@@ -122,7 +122,7 @@ const UserBoycottsList = ({ userId, defaultTab = "joined" }: UserBoycottsListPro
   );
 
   return (
-    <Tabs defaultValue="joined" className="w-full">
+    <Tabs value={defaultTab} className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="joined" className="gap-1.5">
           <UserCheck className="h-3.5 w-3.5" />

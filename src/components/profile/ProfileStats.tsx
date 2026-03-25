@@ -44,7 +44,7 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined, onStatClic
       label: "Created", 
       fullLabel: "Boycotts Created",
       color: "text-destructive",
-      tab: "boycotts",
+      tab: "boycotts:created",
     },
     { 
       icon: Users, 
@@ -52,7 +52,7 @@ const ProfileStats = ({ stanceStats, boycottsCreated, boycottsJoined, onStatClic
       label: "Joined", 
       fullLabel: "Boycotts Joined",
       color: "text-destructive",
-      tab: "boycotts",
+      tab: "boycotts:joined",
     },
   ];
 
