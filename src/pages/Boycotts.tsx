@@ -212,9 +212,6 @@ const Boycotts = () => {
                     </div>
                     
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" className="text-xs sm:text-sm h-8 sm:h-9 flex-1 sm:flex-none">
-                        Learn More
-                      </Button>
                       {boycott.status === "active" && (
                         joinedBoycotts.includes(boycott.id) ? (
                           <Button 
