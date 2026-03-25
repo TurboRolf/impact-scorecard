@@ -34,7 +34,6 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     title: "",
     description: "",
     company: preselectedCompany || "",
-    subject: "",
     category_id: "",
     condition: "",
   });
