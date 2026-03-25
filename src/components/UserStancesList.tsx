@@ -70,7 +70,6 @@ const UserStancesList = ({ userId }: UserStancesListProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Stats Cards */}
       <div className="grid grid-cols-3 gap-4">
         <Card>
           <CardContent className="pt-6">
