@@ -10,9 +10,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface UserBoycottsListProps {
   userId?: string;
+  defaultTab?: string;
 }
 
-const UserBoycottsList = ({ userId }: UserBoycottsListProps) => {
+const UserBoycottsList = ({ userId, defaultTab = "joined" }: UserBoycottsListProps) => {
   const { data: boycotts = [], isLoading } = useBoycotts();
   const { data: joinedBoycottIds = [], isLoading: isLoadingJoined } = useUserBoycottParticipation(userId);
   const { user } = useAuth();
