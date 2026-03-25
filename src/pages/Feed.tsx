@@ -175,12 +175,61 @@ const Feed = () => {
                 onChange={(e) => setNewPost(e.target.value)}
                 className="min-h-20 md:min-h-24 resize-none border-0 focus-visible:ring-0 bg-transparent text-sm md:text-base"
               />
+              {/* Tagged company preview */}
+              {taggedCompany && (
+                <div className="flex items-center gap-2 mt-1 mb-1">
+                  <div className="flex items-center gap-1.5 bg-muted rounded-full px-3 py-1 text-xs">
+                    <Building2 className="h-3 w-3 text-muted-foreground" />
+                    <span className="font-medium">{taggedCompany.name}</span>
+                    {companyRating > 0 && (
+                      <span className="flex items-center gap-0.5 text-yellow-500">
+                        {Array.from({ length: companyRating }).map((_, i) => (
+                          <Star key={i} className="h-2.5 w-2.5 fill-current" />
+                        ))}
+                      </span>
+                    )}
+                    <button onClick={() => { setTaggedCompany(null); setCompanyRating(0); setShowCompanyTag(false); }} className="ml-1 text-muted-foreground hover:text-foreground">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Company tagging UI */}
+              {showCompanyTag && !taggedCompany && (
+                <div className="flex flex-col gap-2 mt-2 p-2 rounded-md bg-muted/50">
+                  <Select onValueChange={(val) => {
+                    const company = companies.find(c => c.id === val);
+                    if (company) setTaggedCompany({ name: company.name, category: company.category });
+                  }}>
+                    <SelectTrigger className="h-8 text-xs">
+                      <SelectValue placeholder="Välj företag..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {companies.map(c => (
+                        <SelectItem key={c.id} value={c.id} className="text-xs">{c.name}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-muted-foreground mr-1">Betyg:</span>
+                    {[1, 2, 3, 4, 5].map(n => (
+                      <button key={n} onClick={() => setCompanyRating(n)} className="p-0.5">
+                        <Star className={`h-4 w-4 ${n <= companyRating ? 'text-yellow-500 fill-yellow-500' : 'text-muted-foreground'}`} />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="flex items-center justify-between mt-2 pt-2 md:mt-3 md:pt-3 border-t">
                 <div className="flex gap-1 md:gap-2">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 md:h-9 md:w-auto md:px-3">
+                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 md:h-9 md:w-auto md:px-3"
+                    onClick={() => toast({ title: "Kommer snart", description: "Bilduppladdning är inte tillgänglig ännu." })}>
                     <Image className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   </Button>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 md:h-9 md:w-auto md:px-3">
+                  <Button variant="ghost" size="sm" className={`h-8 w-8 p-0 md:h-9 md:w-auto md:px-3 ${showCompanyTag || taggedCompany ? 'text-primary' : ''}`}
+                    onClick={() => setShowCompanyTag(!showCompanyTag)}>
                     <Building2 className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   </Button>
                 </div>
