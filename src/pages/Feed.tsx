@@ -9,11 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusCircle, Image, Building2 } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PlusCircle, Image, Building2, Star, X } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
 import { useBoycottByCompany } from "@/hooks/useBoycotts";
+import { useCompanies } from "@/hooks/useCompanyStances";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { useToast } from "@/hooks/use-toast";
 
 const Feed = () => {
   const [newPost, setNewPost] = useState("");
