@@ -95,7 +95,7 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
           title: formData.title,
           description: formData.description,
           company: formData.company,
-          subject: formData.subject,
+          subject: formData.title,
           category_id: formData.category_id,
           organizer_id: user.id,
           condition: formData.condition || null,
