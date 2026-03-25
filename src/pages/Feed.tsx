@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PlusCircle, Image, Building2, Star, X } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
-import { useBoycottByCompany } from "@/hooks/useBoycotts";
+import { useBoycottByCompany, useBoycotts } from "@/hooks/useBoycotts";
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
