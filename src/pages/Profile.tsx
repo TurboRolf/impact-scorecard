@@ -98,8 +98,9 @@ const Profile = () => {
         <div className="mb-3 md:mb-6">
           <ProfileStats
             stanceStats={stanceStats}
-            boycottsCreated={0}
-            boycottsJoined={0}
+            boycottsCreated={boycotts.filter(b => b.organizer_id === user?.id).length}
+            boycottsJoined={boycotts.filter(b => joinedBoycottIds.includes(b.id) && b.organizer_id !== user?.id).length}
+            onStatClick={(tab) => setActiveTab(tab)}
           />
         </div>
 
