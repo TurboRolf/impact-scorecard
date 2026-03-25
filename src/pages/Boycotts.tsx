@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +16,7 @@ import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 const Boycotts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
   const { user } = useAuth();
   
   useDocumentTitle("Boycotts");
@@ -175,7 +177,20 @@ const Boycotts = () => {
                         </Badge>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground">
-                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name} • Started by {boycott.profiles?.display_name || boycott.profiles?.username || 'Unknown'}
+                        <span className="font-medium">{boycott.company}</span> • {boycott.categories.name} • Started by{' '}
+                        <span
+                          className="font-medium hover:underline cursor-pointer text-foreground"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (boycott.organizer_id === user?.id) {
+                              navigate('/profile');
+                            } else {
+                              navigate(`/user/${boycott.organizer_id}`);
+                            }
+                          }}
+                        >
+                          {boycott.profiles?.display_name || boycott.profiles?.username || 'Unknown'}
+                        </span>
                       </p>
                     </div>
                     <BoycottManageMenu
