@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUserStances } from "@/hooks/useCompanyStances";
+import { useBoycotts, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useProfile } from "@/hooks/useProfile";
 import { useFollowerCount, useFollowingCount, usePostsCount } from "@/hooks/useFollowCounts";
 import { usePendingFollowRequests } from "@/hooks/useFollows";
@@ -34,6 +35,8 @@ const Profile = () => {
   useDocumentTitle("Profile");
 
   const { data: userStances = [] } = useUserStances(user?.id);
+  const { data: boycotts = [] } = useBoycotts();
+  const { data: joinedBoycottIds = [] } = useUserBoycottParticipation(user?.id);
   const { data: profile } = useProfile(user?.id);
   const { data: followerCount = 0 } = useFollowerCount(user?.id);
   const { data: followingCount = 0 } = useFollowingCount(user?.id);
@@ -95,8 +98,9 @@ const Profile = () => {
         <div className="mb-3 md:mb-6">
           <ProfileStats
             stanceStats={stanceStats}
-            boycottsCreated={0}
-            boycottsJoined={0}
+            boycottsCreated={boycotts.filter(b => b.organizer_id === user?.id).length}
+            boycottsJoined={boycotts.filter(b => joinedBoycottIds.includes(b.id) && b.organizer_id !== user?.id).length}
+            onStatClick={(tab) => setActiveTab(tab)}
           />
         </div>
 
