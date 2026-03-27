@@ -63,7 +63,8 @@ function CompanyCombobox({ companies, value, onChange }: { companies: { id: stri
   );
 }
 
-  export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOpenChange: externalOnOpenChange, preselectedCompany }: CreateBoycottDialogProps) => {
+export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOpenChange: externalOnOpenChange, preselectedCompany }: CreateBoycottDialogProps) => {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const { data: companies = [] } = useCompanies();
