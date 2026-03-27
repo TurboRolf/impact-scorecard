@@ -60,8 +60,13 @@ const ProfileHeader = ({
       </button>
       
       <div className="flex-1 min-w-0">
+        {profile?.display_name && (
+          <p className="text-sm md:text-lg font-semibold truncate mb-0.5">
+            {profile.display_name}
+          </p>
+        )}
         <div className="flex items-center gap-2 mb-1 md:mb-3">
-          <h1 className="text-base md:text-2xl font-bold truncate">
+          <h1 className="text-xs md:text-base text-muted-foreground truncate">
             @{profile?.username || 'username'}
           </h1>
           {profile?.profile_type === 'creator' && (
