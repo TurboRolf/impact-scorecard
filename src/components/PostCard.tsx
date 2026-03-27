@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, Send } from "lucide-react";
+import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send } from "lucide-react";
 import { useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 import { usePostLikes, useToggleLike, usePostComments, useCreateComment } from "@/hooks/usePostInteractions";
@@ -202,7 +202,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
               {/* Resolved banner */}
               {boycott.status === 'deactivated' && (
                 <div className="flex items-center gap-1.5 mb-2 md:mb-3 p-1.5 md:p-2 rounded-md bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">
-                  <Check className="h-3.5 w-3.5 md:h-4 md:w-4 flex-shrink-0" />
+                  <CheckCircle className="h-3.5 w-3.5 md:h-4 md:w-4 flex-shrink-0" />
                   <span className="text-xs md:text-sm font-medium">
                     Resolved{boycott.deactivation_reason ? `: ${boycott.deactivation_reason}` : ''}
                   </span>
