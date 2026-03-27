@@ -28,7 +28,41 @@ interface CreateBoycottDialogProps {
   preselectedCompany?: string;
 }
 
-export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOpenChange: externalOnOpenChange, preselectedCompany }: CreateBoycottDialogProps) => {
+function CompanyCombobox({ companies, value, onChange }: { companies: { id: string; name: string }[]; value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between font-normal">
+          {value || "Search for a company..."}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Search companies..." />
+          <CommandList>
+            <CommandEmpty>No company found.</CommandEmpty>
+            <CommandGroup>
+              {companies.map((company) => (
+                <CommandItem
+                  key={company.id}
+                  value={company.name}
+                  onSelect={() => { onChange(company.name); setOpen(false); }}
+                >
+                  <Check className={cn("mr-2 h-4 w-4", value === company.name ? "opacity-100" : "opacity-0")} />
+                  {company.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
   const [internalOpen, setInternalOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
