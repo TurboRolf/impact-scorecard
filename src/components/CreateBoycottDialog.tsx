@@ -1,15 +1,18 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useCompanies } from "@/hooks/useCompanyStances";
-import { Plus } from "lucide-react";
+import { Plus, ChevronsUpDown, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface Category {
   id: string;
@@ -23,6 +26,41 @@ interface CreateBoycottDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   preselectedCompany?: string;
+}
+
+function CompanyCombobox({ companies, value, onChange }: { companies: { id: string; name: string }[]; value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button variant="outline" role="combobox" aria-expanded={open} className="w-full justify-between font-normal">
+          {value || "Search for a company..."}
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[--radix-popover-trigger-width] p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Search companies..." />
+          <CommandList>
+            <CommandEmpty>No company found.</CommandEmpty>
+            <CommandGroup>
+              {companies.map((company) => (
+                <CommandItem
+                  key={company.id}
+                  value={company.name}
+                  onSelect={() => { onChange(company.name); setOpen(false); }}
+                >
+                  <Check className={cn("mr-2 h-4 w-4", value === company.name ? "opacity-100" : "opacity-0")} />
+                  {company.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
 }
 
 export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOpenChange: externalOnOpenChange, preselectedCompany }: CreateBoycottDialogProps) => {
@@ -191,22 +229,12 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="company">Target Company</Label>
-            <Select
+            <Label>Target Company</Label>
+            <CompanyCombobox
+              companies={companies}
               value={formData.company}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, company: value }))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a company" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies.map((company) => (
-                  <SelectItem key={company.id} value={company.name}>
-                    {company.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={(value) => setFormData(prev => ({ ...prev, company: value }))}
+            />
           </div>
 
 
