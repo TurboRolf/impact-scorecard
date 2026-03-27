@@ -194,22 +194,12 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="company">Target Company</Label>
-            <Select
+            <Label>Target Company</Label>
+            <CompanyCombobox
+              companies={companies}
               value={formData.company}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, company: value }))}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a company" />
-              </SelectTrigger>
-              <SelectContent>
-                {companies.map((company) => (
-                  <SelectItem key={company.id} value={company.name}>
-                    {company.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              onChange={(value) => setFormData(prev => ({ ...prev, company: value }))}
+            />
           </div>
 
 
