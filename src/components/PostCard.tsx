@@ -202,7 +202,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
               {/* Resolved banner */}
               {boycott.status === 'deactivated' && (
                 <div className="flex items-center gap-1.5 mb-2 md:mb-3 p-1.5 md:p-2 rounded-md bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400">
-                  <Check className="h-3.5 w-3.5 md:h-4 md:w-4 flex-shrink-0" />
+                  <CheckCircle className="h-3.5 w-3.5 md:h-4 md:w-4 flex-shrink-0" />
                   <span className="text-xs md:text-sm font-medium">
                     Resolved{boycott.deactivation_reason ? `: ${boycott.deactivation_reason}` : ''}
                   </span>
