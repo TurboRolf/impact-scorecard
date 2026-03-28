@@ -75,22 +75,15 @@ const CompanyCard = ({
             </div>
           </div>
           
-          <div 
-            className="flex items-center gap-0.5 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+          <Badge 
+            variant="secondary" 
+            className="flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity gap-1"
             onClick={(e) => { e.stopPropagation(); onReview?.(); }}
           >
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`h-3 w-3 ${
-                  i < overallRating ? "text-earth-orange fill-current" : "text-muted-foreground"
-                }`}
-              />
-            ))}
-            <span className="ml-0.5 font-semibold text-xs whitespace-nowrap">{overallRating}/5</span>
-            {trend === "up" && <TrendingUp className="h-2.5 w-2.5 text-green-500 ml-0.5" />}
-            {trend === "down" && <TrendingDown className="h-2.5 w-2.5 text-red-500 ml-0.5" />}
-          </div>
+            {overallRating} <Star className="h-3 w-3 text-earth-orange fill-current" />
+            {trend === "up" && <TrendingUp className="h-3 w-3 text-green-500" />}
+            {trend === "down" && <TrendingDown className="h-3 w-3 text-red-500" />}
+          </Badge>
         </div>
       </CardHeader>
       
