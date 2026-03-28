@@ -1,52 +1,40 @@
 
 
-# Ytterligare förbättringar för EthiCheck
+## Problem
+Stars rating row sits below the company name, which feels disconnected and wastes vertical space.
 
-Efter en djupare genomgång av hela kodbasen hittar jag följande förbättringsmöjligheter:
+## Proposed Alternatives
 
-## 1. Optimistiska uppdateringar för likes och follow
-`useToggleLike` och `useFollowUser`/`useUnfollowUser` väntar på serverrespons innan UI:t uppdateras. Optimistiska uppdateringar via React Query's `onMutate`/`onError`/`onSettled` skulle ge omedelbar feedback.
+Here are 3 layout options:
 
-## 2. Paginering/infinite scroll på Feed
-Alla inlägg laddas i ett enda anrop. Vid tillväxt blir detta långsamt. Implementera `useInfiniteQuery` med cursor-baserad paginering och en "Load more"-knapp eller infinite scroll.
+```text
+Option A: Rating to the right (recommended)
+┌──────────────────────────────────┐
+│ [Logo]  Company Name    ★★★★☆ 4/5
+│         Category           ↑
+│                                  │
 
-## 3. Saknad `useDocumentTitle` på UserProfile och Auth
-`UserProfile.tsx` och `Auth.tsx` sätter inte sidtitel trots att hooken redan finns. Bör läggas till för konsekvens.
+Option B: Compact inline after name
+┌──────────────────────────────────┐
+│ [Logo]  Company Name  ★★★★☆ 4/5 │
+│         Category                 │
 
-## 4. Förbättrad Auth-sida
-- Ingen lösenordsvalidering (minimikrav) vid registrering.
-- Saknar "glömt lösenord"-funktionalitet.
-- Delat state för `email`/`password` mellan Sign In och Sign Up-flikarna — att byta flik behåller formulärdata, vilket kan vara förvirrande.
+Option C: Rating as badge in top-right corner
+┌──────────────────────────────────┐
+│ [Logo]  Company Name     [4.0 ★] │
+│         Category                 │
+```
 
-## 5. Bättre empty states
-- Companies-sidan visar bara "No companies found matching your criteria" utan illustration eller uppmaning att rensa filter.
-- Creators-sidan saknar visuell illustration vid tomt resultat.
+**Option A** — Place the stars + score on the same row as the company name, pushed to the right using `flex justify-between`. The name/category stays left, rating aligns right. This keeps everything compact and visually balanced.
 
-## 6. Skeleton loading istället för spinner
-Alla sidor använder `LoadingScreen` (spinner). Skeleton-loaders som matchar layouten ger en bättre upplevd prestanda.
+## Plan (Option A)
 
-## 7. Bildoptimering
-Avatar-bilder från DiceBear laddas utan `loading="lazy"`. Company-logotyper i `CompanyCard` saknar också lazy loading.
+**File: `src/components/CompanyCard.tsx`**
+- Change the header from `flex-col gap-2` back to a single row
+- Use `flex items-start justify-between` for the outer wrapper
+- Left side: logo + name/category
+- Right side: stars + score + trend icon, aligned to the right
+- Stars use smaller size (`h-3 w-3`) to fit comfortably
 
----
-
-## Implementeringsplan
-
-### Steg 1: Lägg till `useDocumentTitle` på saknade sidor
-- `UserProfile.tsx`: `useDocumentTitle(profile?.display_name || profile?.username || "User Profile")`
-- `Auth.tsx`: `useDocumentTitle("Sign In")`
-
-### Steg 2: Separera formulärstate i Auth
-- Ge Sign In och Sign Up separata `email`/`password`-state så att byte av flik rensar formuläret.
-- Lägg till lösenordskrav-text (min 6 tecken) vid registrering.
-
-### Steg 3: Förbättra empty states
-- Lägg till en "Clear filters"-knapp i Companies-sidan vid tomt sökresultat.
-- Lägg till enkel illustration/ikon i tomma tillstånd.
-
-### Steg 4: Lazy loading på bilder
-- Lägg till `loading="lazy"` på alla `<img>`-element i `CompanyCard`, `Company.tsx` och avatar-bilder.
-
-### Steg 5: Optimistiska uppdateringar för likes
-- Uppdatera `useToggleLike` med `onMutate` för att direkt visa liked-state och räkna om likes-count, med rollback vid fel.
+This keeps the card header to one row and puts the rating where it's naturally expected — next to the company identity.
 
