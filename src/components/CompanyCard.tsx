@@ -57,7 +57,7 @@ const CompanyCard = ({
   return (
     <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col" onClick={() => navigate(`/company/${id}`)}>
       <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col gap-2">
           <div className="flex items-start gap-2 sm:gap-3">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-subtle rounded-lg flex items-center justify-center flex-shrink-0">
               {logo ? (
@@ -75,8 +75,8 @@ const CompanyCard = ({
             </div>
           </div>
           
-          <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-          <div 
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div 
               className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={(e) => { e.stopPropagation(); onReview?.(); }}
             >
