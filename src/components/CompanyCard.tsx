@@ -134,7 +134,7 @@ const CompanyCard = ({
           </div>
         </div>
         
-        <div className="flex gap-1.5 sm:gap-2 mt-auto">
+        <div className="flex gap-1.5 sm:gap-2">
           <Button 
             variant="default" 
             size="sm" 
