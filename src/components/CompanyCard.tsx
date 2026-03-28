@@ -57,8 +57,8 @@ const CompanyCard = ({
   return (
     <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col" onClick={() => navigate(`/company/${id}`)}>
       <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
-        <div className="flex flex-col gap-2">
-          <div className="flex items-start gap-2 sm:gap-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex items-start gap-2 sm:gap-3 min-w-0">
             <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-subtle rounded-lg flex items-center justify-center flex-shrink-0">
               {logo ? (
                 <img src={logo} alt={name} className="w-6 h-6 sm:w-8 sm:h-8 object-contain" loading="lazy" />
@@ -75,23 +75,21 @@ const CompanyCard = ({
             </div>
           </div>
           
-          <div className="flex items-center gap-1 sm:gap-2">
-            <div 
-              className="flex items-center gap-1 cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={(e) => { e.stopPropagation(); onReview?.(); }}
-            >
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-3.5 w-3.5 sm:h-4 sm:w-4 ${
-                    i < overallRating ? "text-earth-orange fill-current" : "text-muted-foreground"
-                  }`}
-                />
-              ))}
-              <span className="ml-1 font-semibold text-sm">{overallRating}/5</span>
-            </div>
-            {trend === "up" && <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-green-500" />}
-            {trend === "down" && <TrendingDown className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-red-500" />}
+          <div 
+            className="flex items-center gap-0.5 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={(e) => { e.stopPropagation(); onReview?.(); }}
+          >
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`h-3 w-3 ${
+                  i < overallRating ? "text-earth-orange fill-current" : "text-muted-foreground"
+                }`}
+              />
+            ))}
+            <span className="ml-0.5 font-semibold text-xs whitespace-nowrap">{overallRating}/5</span>
+            {trend === "up" && <TrendingUp className="h-2.5 w-2.5 text-green-500 ml-0.5" />}
+            {trend === "down" && <TrendingDown className="h-2.5 w-2.5 text-red-500 ml-0.5" />}
           </div>
         </div>
       </CardHeader>
