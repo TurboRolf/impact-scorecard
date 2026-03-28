@@ -87,7 +87,7 @@ const CompanyCard = ({
         </div>
       </CardHeader>
       
-      <CardContent className="p-4 sm:p-6 pt-0 flex-1 flex flex-col">
+      <CardContent className="p-4 sm:p-6 pt-0 flex-1 grid grid-rows-[auto_1fr_auto_auto_auto_auto]">
         <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
         
         <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4 mt-auto">
