@@ -27,6 +27,12 @@ const CompanyReviewDialog = ({
     rating: 3,
     review_text: ""
   });
+
+  // Sync company_name when dialog opens with a new companyName
+  useState(() => {});
+  if (open && companyName && formData.company_name !== companyName) {
+    setFormData(prev => ({ ...prev, company_name: companyName }));
+  }
   const [postToFeed, setPostToFeed] = useState(false);
 
   const { data: companies = [] } = useCompanies();
