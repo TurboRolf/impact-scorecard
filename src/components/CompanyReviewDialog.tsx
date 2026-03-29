@@ -14,6 +14,7 @@ interface CompanyReviewDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   companyName?: string;
+  defaultCategory?: ReviewCategory;
 }
 
 const CompanyReviewDialog = ({
