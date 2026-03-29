@@ -20,7 +20,8 @@ interface CompanyReviewDialogProps {
 const CompanyReviewDialog = ({
   open,
   onOpenChange,
-  companyName = ""
+  companyName = "",
+  defaultCategory
 }: CompanyReviewDialogProps) => {
   const [formData, setFormData] = useState({
     company_name: companyName,
