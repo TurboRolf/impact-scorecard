@@ -96,7 +96,7 @@ const CompanyCard = ({
               <div 
                 key={rating.label} 
                 className="text-center cursor-pointer hover:opacity-80 transition-opacity py-1"
-                onClick={(e) => { e.stopPropagation(); onReview?.(); }}
+                onClick={(e) => { e.stopPropagation(); onReview?.(rating.label.toLowerCase()); }}
               >
                 <div className={`text-sm sm:text-base font-bold ${rating.color}`}>{rating.value}/5</div>
                 <div className="text-xs text-muted-foreground leading-tight">{rating.label}</div>
