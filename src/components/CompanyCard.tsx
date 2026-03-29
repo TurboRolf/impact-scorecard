@@ -78,7 +78,7 @@ const CompanyCard = ({
           <Badge 
             variant="secondary" 
             className="flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity gap-1"
-            onClick={(e) => { e.stopPropagation(); onReview?.(); }}
+            onClick={(e) => { e.stopPropagation(); onReview?.('overall'); }}
           >
             {overallRating} <Star className="h-3 w-3 text-earth-orange fill-current" />
             {trend === "up" && <TrendingUp className="h-3 w-3 text-green-500" />}
