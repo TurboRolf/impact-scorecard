@@ -190,6 +190,7 @@ const Companies = () => {
         open={reviewDialog.isOpen}
         onOpenChange={(open) => !open && reviewDialog.closeDialog()}
         companyName={reviewDialog.data?.name}
+        defaultCategory={reviewDialog.data?.category as any}
       />
       
       <CreateBoycottDialog
