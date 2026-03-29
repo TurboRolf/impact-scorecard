@@ -14,12 +14,14 @@ interface CompanyReviewDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   companyName?: string;
+  defaultCategory?: ReviewCategory;
 }
 
 const CompanyReviewDialog = ({
   open,
   onOpenChange,
-  companyName = ""
+  companyName = "",
+  defaultCategory
 }: CompanyReviewDialogProps) => {
   const [formData, setFormData] = useState({
     company_name: companyName,
@@ -29,12 +31,15 @@ const CompanyReviewDialog = ({
   });
 
 
-  // Sync company_name when dialog opens with a new companyName
   useEffect(() => {
-    if (open && companyName) {
-      setFormData(prev => ({ ...prev, company_name: companyName }));
+    if (open) {
+      setFormData(prev => ({
+        ...prev,
+        company_name: companyName || prev.company_name,
+        category: defaultCategory || 'overall',
+      }));
     }
-  }, [open, companyName]);
+  }, [open, companyName, defaultCategory]);
   const [postToFeed, setPostToFeed] = useState(false);
 
   const { data: companies = [] } = useCompanies();

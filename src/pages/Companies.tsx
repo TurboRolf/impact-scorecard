@@ -161,7 +161,7 @@ const Companies = () => {
               neutralCount={company.neutral_count}
               discourageCount={company.discourage_count}
               onRate={() => stanceDialog.openDialog({ name: company.name, category: company.category })}
-              onReview={() => reviewDialog.openDialog({ name: company.name, category: company.category })}
+              onReview={(category) => reviewDialog.openDialog({ name: company.name, category: category || company.category })}
               onStartBoycott={() => boycottDialog.openDialog({ name: company.name, category: company.category })}
             />
           ))}
@@ -190,6 +190,7 @@ const Companies = () => {
         open={reviewDialog.isOpen}
         onOpenChange={(open) => !open && reviewDialog.closeDialog()}
         companyName={reviewDialog.data?.name}
+        defaultCategory={reviewDialog.data?.category as any}
       />
       
       <CreateBoycottDialog
