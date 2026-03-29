@@ -87,73 +87,75 @@ const CompanyCard = ({
         </div>
       </CardHeader>
       
-      <CardContent className="p-4 sm:p-6 pt-0 flex-1 grid grid-rows-[auto_1fr_auto_auto_auto_auto]">
+      <CardContent className="p-4 sm:p-6 pt-0 flex-1 flex flex-col">
         <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
         
-        <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4">
-          {ratings.map((rating) => (
-            <div 
-              key={rating.label} 
-              className="text-center cursor-pointer hover:opacity-80 transition-opacity py-1"
-              onClick={(e) => { e.stopPropagation(); onReview?.(); }}
-            >
-              <div className={`text-sm sm:text-base font-bold ${rating.color}`}>{rating.value}/5</div>
-              <div className="text-xs text-muted-foreground leading-tight">{rating.label}</div>
+        <div className="mt-auto">
+          <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4">
+            {ratings.map((rating) => (
+              <div 
+                key={rating.label} 
+                className="text-center cursor-pointer hover:opacity-80 transition-opacity py-1"
+                onClick={(e) => { e.stopPropagation(); onReview?.(); }}
+              >
+                <div className={`text-sm sm:text-base font-bold ${rating.color}`}>{rating.value}/5</div>
+                <div className="text-xs text-muted-foreground leading-tight">{rating.label}</div>
+              </div>
+            ))}
+          </div>
+          
+          {activeBoycotts > 0 ? (
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+              <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
+              <span className="text-xs sm:text-sm text-destructive font-medium">
+                {activeBoycotts} active boycott{activeBoycotts > 1 ? 's' : ''}
+              </span>
             </div>
-          ))}
-        </div>
-        
-        {activeBoycotts > 0 ? (
-          <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-            <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
-            <span className="text-xs sm:text-sm text-destructive font-medium">
-              {activeBoycotts} active boycott{activeBoycotts > 1 ? 's' : ''}
-            </span>
+          ) : (
+            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
+              <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+                0 active boycotts
+              </span>
+            </div>
+          )}
+          
+          {/* User Stance Distribution */}
+          <div className="flex items-center gap-1 sm:gap-2 mb-3 sm:mb-4">
+            <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+              <ThumbsUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-recommend" />
+              <span className="text-xs sm:text-sm text-recommend font-medium">{recommendCount}</span>
+            </div>
+            <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+              <Minus className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-neutral" />
+              <span className="text-xs sm:text-sm text-neutral font-medium">{neutralCount}</span>
+            </div>
+            <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+              <ThumbsDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-discourage" />
+              <span className="text-xs sm:text-sm text-discourage font-medium">{discourageCount}</span>
+            </div>
           </div>
-        ) : (
-          <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-            <span className="text-xs sm:text-sm text-muted-foreground font-medium">
-              0 active boycotts
-            </span>
+          
+          <div className="flex gap-1.5 sm:gap-2">
+            <Button 
+              variant="default" 
+              size="sm" 
+              className="flex-1 gap-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
+              onClick={(e) => { e.stopPropagation(); onRate?.(); }}
+            >
+              <MessageSquare className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              <span className="hidden sm:inline">Add Stance</span>
+              <span className="sm:hidden">Stance</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="flex-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
+              onClick={(e) => { e.stopPropagation(); onStartBoycott?.(); }}
+            >
+              <span className="hidden sm:inline">Start Boycott</span>
+              <span className="sm:hidden">Boycott</span>
+            </Button>
           </div>
-        )}
-        
-        {/* User Stance Distribution */}
-        <div className="flex items-center gap-1 sm:gap-2 mb-3 sm:mb-4">
-          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
-            <ThumbsUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-recommend" />
-            <span className="text-xs sm:text-sm text-recommend font-medium">{recommendCount}</span>
-          </div>
-          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
-            <Minus className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-neutral" />
-            <span className="text-xs sm:text-sm text-neutral font-medium">{neutralCount}</span>
-          </div>
-          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
-            <ThumbsDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-discourage" />
-            <span className="text-xs sm:text-sm text-discourage font-medium">{discourageCount}</span>
-          </div>
-        </div>
-        
-        <div className="flex gap-1.5 sm:gap-2">
-          <Button 
-            variant="default" 
-            size="sm" 
-            className="flex-1 gap-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
-            onClick={(e) => { e.stopPropagation(); onRate?.(); }}
-          >
-            <MessageSquare className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-            <span className="hidden sm:inline">Add Stance</span>
-            <span className="sm:hidden">Stance</span>
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="flex-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
-            onClick={(e) => { e.stopPropagation(); onStartBoycott?.(); }}
-          >
-            <span className="hidden sm:inline">Start Boycott</span>
-            <span className="sm:hidden">Boycott</span>
-          </Button>
         </div>
       </CardContent>
     </Card>
