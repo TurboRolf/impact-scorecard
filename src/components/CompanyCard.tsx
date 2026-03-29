@@ -22,7 +22,7 @@ interface CompanyCardProps {
   neutralCount?: number;
   discourageCount?: number;
   onRate?: () => void;
-  onReview?: () => void;
+  onReview?: (category?: string) => void;
   onStartBoycott?: () => void;
 }
 
