@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -27,6 +27,14 @@ const CompanyReviewDialog = ({
     rating: 3,
     review_text: ""
   });
+
+
+  // Sync company_name when dialog opens with a new companyName
+  useEffect(() => {
+    if (open && companyName) {
+      setFormData(prev => ({ ...prev, company_name: companyName }));
+    }
+  }, [open, companyName]);
   const [postToFeed, setPostToFeed] = useState(false);
 
   const { data: companies = [] } = useCompanies();
