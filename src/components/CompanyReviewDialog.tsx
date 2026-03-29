@@ -77,10 +77,10 @@ const CompanyReviewDialog = ({
   };
 
   const reviewCategories = [
-    { value: 'environment' as ReviewCategory, label: 'Environment', description: 'Environmental practices and sustainability' },
+    { value: 'overall' as ReviewCategory, label: 'Overall', description: 'General impression and recommendation' },
     { value: 'ethics' as ReviewCategory, label: 'Ethics', description: 'Business ethics and social responsibility' },
     { value: 'politics' as ReviewCategory, label: 'Politics', description: 'Political positions and contributions' },
-    { value: 'overall' as ReviewCategory, label: 'Overall', description: 'General impression and recommendation' },
+    { value: 'environment' as ReviewCategory, label: 'Environment', description: 'Environmental practices and sustainability' },
   ];
 
   const renderStarRating = (rating: number, onChange: (rating: number) => void) => (
