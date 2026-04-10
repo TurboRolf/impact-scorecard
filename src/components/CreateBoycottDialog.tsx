@@ -212,7 +212,7 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[525px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Create New Boycott</DialogTitle>
         </DialogHeader>
