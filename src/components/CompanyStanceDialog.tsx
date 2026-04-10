@@ -88,14 +88,14 @@ const CompanyStanceDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {existingStance ? "Update Company Stance" : "Add Company Stance"}
           </DialogTitle>
-          <p className="text-sm text-muted-foreground">
+          <DialogDescription>
             Set your general stance on this company. For detailed category-specific reviews, use the Review feature.
-          </p>
+          </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
