@@ -29,8 +29,8 @@ const Companies = () => {
   useDocumentTitle("Companies");
   
   const categories = [
-    "all", "Technology", "Fashion", "Food & Beverage", "Automotive", 
-    "Energy", "Financial", "Retail", "Healthcare", "Entertainment"
+    "all", "Technology", "Media & Entertainment", "Food & Retail",
+    "Finance", "Industry", "Healthcare", "Fashion"
   ];
 
   const filteredCompanies = companies.filter(company => 
