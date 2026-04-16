@@ -127,12 +127,13 @@ const Companies = () => {
             </div>
           </div>
           
-          <div className="flex gap-1.5 sm:gap-2 flex-wrap" role="group" aria-label="Filter by category">
+          {/* Desktop: inline category pills */}
+          <div className="hidden sm:flex gap-2 flex-wrap" role="group" aria-label="Filter by category">
             {categories.map((category) => (
               <button
                 key={category}
                 className={cn(
-                  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs sm:text-sm font-semibold transition-colors capitalize cursor-pointer",
+                  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-sm font-semibold transition-colors capitalize cursor-pointer",
                   selectedCategory === category
                     ? "border-transparent bg-primary text-primary-foreground"
                     : "text-foreground border-border hover:bg-accent"
@@ -143,6 +144,35 @@ const Companies = () => {
                 {category}
               </button>
             ))}
+          </div>
+
+          {/* Mobile: dropdown trigger */}
+          <div className="sm:hidden">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="w-full justify-between gap-2">
+                  <span className="flex items-center gap-2 capitalize">
+                    <Filter className="h-3.5 w-3.5" />
+                    {selectedCategory === "all" ? "All categories" : selectedCategory}
+                  </span>
+                  <ChevronDown className="h-4 w-4 opacity-60" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-[calc(100vw-2rem)] max-w-sm bg-background z-50">
+                {categories.map((category) => (
+                  <DropdownMenuItem
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={cn(
+                      "capitalize cursor-pointer",
+                      selectedCategory === category && "bg-accent font-semibold"
+                    )}
+                  >
+                    {category === "all" ? "All categories" : category}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
