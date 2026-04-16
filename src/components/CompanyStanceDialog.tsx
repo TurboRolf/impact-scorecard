@@ -81,8 +81,8 @@ const CompanyStanceDialog = ({
   ];
 
   const categories = [
-    "Technology", "Fashion", "Food & Beverage", "Automotive", 
-    "Energy", "Financial", "Retail", "Healthcare", "Entertainment"
+    "Technology", "Media & Entertainment", "Food & Retail",
+    "Finance", "Industry", "Healthcare", "Fashion"
   ];
 
 
