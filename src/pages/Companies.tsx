@@ -9,7 +9,13 @@ import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Globe, Users, Plus, Star } from "lucide-react";
+import { Search, Globe, Users, Plus, Star, ChevronDown, Filter } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useDialogState } from "@/hooks/useDialogState";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
