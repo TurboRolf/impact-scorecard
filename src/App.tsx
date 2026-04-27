@@ -1,21 +1,18 @@
-import { lazy, Suspense } from "react";
+import Feed from "./pages/Feed";
+import Profile from "./pages/Profile";
+import UserProfile from "./pages/UserProfile";
+import Companies from "./pages/Companies";
+import Company from "./pages/Company";
+import Boycotts from "./pages/Boycotts";
+import Creators from "./pages/Creators";
+import Auth from "./pages/Auth";
+import NotFound from "./pages/NotFound";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
-
-// Lazy load pages for better performance
-const Feed = lazy(() => import("./pages/Feed"));
-const Profile = lazy(() => import("./pages/Profile"));
-const UserProfile = lazy(() => import("./pages/UserProfile"));
-const Companies = lazy(() => import("./pages/Companies"));
-const Company = lazy(() => import("./pages/Company"));
-const Boycotts = lazy(() => import("./pages/Boycotts"));
-const Creators = lazy(() => import("./pages/Creators"));
-const Auth = lazy(() => import("./pages/Auth"));
-const NotFound = lazy(() => import("./pages/NotFound"));
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -27,24 +24,18 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Suspense fallback={
-            <div className="flex items-center justify-center min-h-screen">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
-          }>
-            <Routes>
-              <Route path="/" element={<Feed />} />
-              <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-              <Route path="/user/:userId" element={<UserProfile />} />
-              <Route path="/companies" element={<Companies />} />
-              <Route path="/company/:id" element={<Company />} />
-              <Route path="/boycotts" element={<Boycotts />} />
-              <Route path="/creators" element={<Creators />} />
-              <Route path="/auth" element={<Auth />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
+          <Routes>
+            <Route path="/" element={<Feed />} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/user/:userId" element={<UserProfile />} />
+            <Route path="/companies" element={<Companies />} />
+            <Route path="/company/:id" element={<Company />} />
+            <Route path="/boycotts" element={<Boycotts />} />
+            <Route path="/creators" element={<Creators />} />
+            <Route path="/auth" element={<Auth />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
