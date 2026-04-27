@@ -26,18 +26,6 @@ const ProfileSettingsDialog = ({
   const updateProfile = useUpdateProfile();
   const { toast } = useToast();
 
-  const COOLDOWN_DAYS = 30;
-  const usernameChangedAt = (profile as any)?.username_changed_at
-    ? new Date((profile as any).username_changed_at)
-    : null;
-  const nextAllowedDate = usernameChangedAt
-    ? new Date(usernameChangedAt.getTime() + COOLDOWN_DAYS * 24 * 60 * 60 * 1000)
-    : null;
-  const usernameLocked = !!(nextAllowedDate && nextAllowedDate.getTime() > Date.now());
-  const daysRemaining = nextAllowedDate
-    ? Math.ceil((nextAllowedDate.getTime() - Date.now()) / (24 * 60 * 60 * 1000))
-    : 0;
-
   const [formData, setFormData] = useState({
     display_name: profile?.display_name || "",
     username: profile?.username || "",
@@ -65,24 +53,12 @@ const ProfileSettingsDialog = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const usernameChanged = formData.username !== (profile?.username || "");
-    const payload = usernameChanged && usernameLocked
-      ? { ...formData, username: profile?.username || "" }
-      : formData;
-    try {
-      await updateProfile.mutateAsync(payload);
-      toast({
-        title: "Profile updated",
-        description: "Your changes have been saved."
-      });
-      onOpenChange(false);
-    } catch (err: any) {
-      toast({
-        title: "Could not update profile",
-        description: err?.message || "Please try again.",
-        variant: "destructive"
-      });
-    }
+    await updateProfile.mutateAsync(formData);
+    toast({
+      title: "Profile updated",
+      description: "Your changes have been saved."
+    });
+    onOpenChange(false);
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
@@ -170,17 +146,7 @@ const ProfileSettingsDialog = ({
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     placeholder="@username"
-                    disabled={usernameLocked}
                   />
-                  {usernameLocked ? (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      Username can be changed again in {daysRemaining} day{daysRemaining === 1 ? "" : "s"} (on {nextAllowedDate?.toLocaleDateString()}).
-                    </p>
-                  ) : (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      You can change your username once every {COOLDOWN_DAYS} days.
-                    </p>
-                  )}
                 </div>
               </div>
 
