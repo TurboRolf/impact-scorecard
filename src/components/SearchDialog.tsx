@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Search, Building2, Users, AlertTriangle, User } from "lucide-react";
 import { useCompanies } from "@/hooks/useCompanyStances";
-import { useCreators } from "@/hooks/useProfile";
+import { useAllProfiles } from "@/hooks/useProfile";
 import { useBoycotts } from "@/hooks/useBoycotts";
+import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 interface SearchDialogProps {
@@ -17,9 +18,10 @@ interface SearchDialogProps {
 const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
-  
+  const { user } = useAuth();
+
   const { data: companies } = useCompanies();
-  const { data: creators } = useCreators();
+  const { data: profiles } = useAllProfiles();
   const { data: boycotts } = useBoycotts();
 
   const filteredCompanies = companies?.filter(company =>
@@ -27,10 +29,10 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
     company.category.toLowerCase().includes(query.toLowerCase())
   ).slice(0, 5) || [];
 
-  const filteredCreators = creators?.filter(creator =>
-    creator.display_name?.toLowerCase().includes(query.toLowerCase()) ||
-    creator.username?.toLowerCase().includes(query.toLowerCase())
-  ).slice(0, 5) || [];
+  const filteredUsers = profiles?.filter(profile =>
+    profile.display_name?.toLowerCase().includes(query.toLowerCase()) ||
+    profile.username?.toLowerCase().includes(query.toLowerCase())
+  ).slice(0, 8) || [];
 
   const filteredBoycotts = boycotts?.filter(boycott =>
     boycott.title.toLowerCase().includes(query.toLowerCase()) ||
@@ -43,8 +45,12 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
     setQuery("");
   };
 
-  const handleCreatorClick = () => {
-    navigate("/creators");
+  const handleUserClick = (profileUserId: string) => {
+    if (user?.id === profileUserId) {
+      navigate("/profile");
+    } else {
+      navigate(`/user/${profileUserId}`);
+    }
     onOpenChange(false);
     setQuery("");
   };
@@ -68,7 +74,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Input
-              placeholder="Search companies, creators, or boycotts..."
+              placeholder="Search companies, users, or boycotts..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="flex-1"
@@ -116,28 +122,37 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
                 </div>
               )}
 
-              {/* Creators */}
-              {filteredCreators.length > 0 && (
+              {/* Users */}
+              {filteredUsers.length > 0 && (
                 <div>
                   <h3 className="font-semibold text-sm text-muted-foreground mb-2 flex items-center gap-2">
                     <Users className="h-4 w-4" />
-                    Creators
+                    Users
                   </h3>
                   <div className="space-y-2">
-                    {filteredCreators.map((creator) => (
+                    {filteredUsers.map((profile) => (
                       <Card 
-                        key={creator.id}
+                        key={profile.id}
                         className="cursor-pointer hover:bg-muted/50 transition-colors"
-                        onClick={handleCreatorClick}
+                        onClick={() => handleUserClick(profile.user_id)}
                       >
                         <CardContent className="p-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-gradient-subtle rounded-full flex items-center justify-center">
-                              <User className="h-4 w-4" />
+                            <div className="w-8 h-8 bg-gradient-subtle rounded-full flex items-center justify-center overflow-hidden">
+                              {profile.avatar_url ? (
+                                <img src={profile.avatar_url} alt={profile.username || ""} className="w-full h-full object-cover" />
+                              ) : (
+                                <User className="h-4 w-4" />
+                              )}
                             </div>
                             <div>
-                              <div className="font-medium">{creator.display_name || creator.username}</div>
-                              <div className="text-sm text-muted-foreground">@{creator.username}</div>
+                              <div className="font-medium flex items-center gap-2">
+                                {profile.display_name || profile.username}
+                                {profile.profile_type === "creator" && (
+                                  <span className="text-[10px] uppercase tracking-wide bg-primary/10 text-primary px-1.5 py-0.5 rounded">Creator</span>
+                                )}
+                              </div>
+                              <div className="text-sm text-muted-foreground">@{profile.username}</div>
                             </div>
                           </div>
                         </CardContent>
@@ -171,7 +186,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
                 </div>
               )}
 
-              {filteredCompanies.length === 0 && filteredCreators.length === 0 && filteredBoycotts.length === 0 && (
+              {filteredCompanies.length === 0 && filteredUsers.length === 0 && filteredBoycotts.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
                   No results found for "{query}"
                 </div>
@@ -181,7 +196,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
           
           {!query && (
             <div className="text-center py-8 text-muted-foreground">
-              Start typing to search for companies, creators, or boycotts
+              Start typing to search for companies, users, or boycotts
             </div>
           )}
         </div>
