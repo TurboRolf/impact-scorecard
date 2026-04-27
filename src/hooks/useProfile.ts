@@ -49,6 +49,21 @@ export const useCreators = () => {
   });
 };
 
+export const useAllProfiles = () => {
+  return useQuery({
+    queryKey: ["all-profiles"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data as Profile[];
+    }
+  });
+};
+
 export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
