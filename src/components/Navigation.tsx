@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
-import logo from "@/assets/ethisay-logo.svg";
+import logo from "@/assets/ethisay-logo.png";
 
 const Navigation = () => {
   const location = useLocation();
@@ -41,7 +41,7 @@ const Navigation = () => {
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center" aria-label="Ethisay home">
-              <img src={logo} alt="Ethisay" className="h-12 md:h-16 w-auto -my-3" />
+              <img src={logo} alt="Ethisay" className="h-12 md:h-16 w-auto -my-3 text-lg" />
             </Link>
             
             <div className="hidden md:flex items-center space-x-1">
