@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
-import logo from "@/assets/ethisay-logo-v2.png";
+import logo from "@/assets/ethisay-logo-v3.png";
 
 const Navigation = () => {
   const location = useLocation();
