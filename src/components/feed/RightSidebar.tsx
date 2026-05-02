@@ -63,7 +63,7 @@ const RightSidebar = () => {
         <div className="flex flex-wrap gap-x-2 gap-y-0.5">
           <span className="hover:underline cursor-pointer">About</span>
           <Link to="/privacy" className="hover:underline">Privacy</Link>
-          <span className="hover:underline cursor-pointer">Terms</span>
+          <Link to="/terms" className="hover:underline">Terms</Link>
           <Link to="/contact" className="hover:underline">Contact</Link>
         </div>
         <p>© 2026 Ethisay</p>
