@@ -264,9 +264,9 @@ const Feed = () => {
         ) : (
           <Card className="mb-4 md:mb-6">
             <CardContent className="p-3 md:p-4 text-center">
-              <p className="text-muted-foreground mb-2 md:mb-3 text-sm md:text-base">Join EthiCheck to share your thoughts</p>
+              <p className="text-muted-foreground mb-2 md:mb-3 text-sm md:text-base">Join Ethisay to share your thoughts</p>
               <Button onClick={() => navigate("/auth")} variant="earth" size="sm" className="text-xs md:text-sm">
-                Join EthiCheck
+                Join Ethisay
               </Button>
             </CardContent>
           </Card>

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
+import logo from "@/assets/ethisay-logo.svg";
 
 const Navigation = () => {
   const location = useLocation();
@@ -39,8 +40,8 @@ const Navigation = () => {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
-            <Link to="/" className="text-xl md:text-2xl font-bold bg-gradient-brand bg-clip-text text-transparent">
-              EthiCheck
+            <Link to="/" className="flex items-center gap-2" aria-label="Ethisay home">
+              <img src={logo} alt="Ethisay" className="h-7 md:h-8 w-auto" />
             </Link>
             
             <div className="hidden md:flex items-center space-x-1">
@@ -80,7 +81,7 @@ const Navigation = () => {
               ) : (
                 <Link to="/auth">
                   <Button variant="default" size="sm" className="text-xs sm:text-sm px-2 sm:px-4">
-                    <span className="hidden sm:inline">Join EthiCheck</span>
+                    <span className="hidden sm:inline">Join Ethisay</span>
                     <span className="sm:hidden">Join</span>
                   </Button>
                 </Link>

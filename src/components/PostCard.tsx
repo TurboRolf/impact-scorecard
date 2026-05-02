@@ -93,7 +93,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
     const text = `Check out this post by @${user.username}`;
     if (navigator.share) {
       try {
-        await navigator.share({ title: "EthiCheck Post", text, url });
+        await navigator.share({ title: "Ethisay Post", text, url });
       } catch { /* user cancelled */ }
     } else {
       await navigator.clipboard.writeText(`${text} - ${url}`);
