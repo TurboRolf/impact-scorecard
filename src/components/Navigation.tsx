@@ -41,7 +41,7 @@ const Navigation = () => {
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center" aria-label="Ethisay home">
-              <img src={logo} alt="Ethisay" className="h-9 md:h-12 w-auto -my-2" />
+              <img src={logo} alt="Ethisay" className="h-7 md:h-9 w-auto -my-1" />
             </Link>
             
             <div className="hidden md:flex items-center space-x-1">
