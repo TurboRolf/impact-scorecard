@@ -40,7 +40,7 @@ const Navigation = () => {
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to="/" className="text-xl md:text-2xl font-bold bg-gradient-brand bg-clip-text text-transparent">
-              EthiCheck
+              Ethisay
             </Link>
             
             <div className="hidden md:flex items-center space-x-1">
@@ -80,7 +80,7 @@ const Navigation = () => {
               ) : (
                 <Link to="/auth">
                   <Button variant="default" size="sm" className="text-xs sm:text-sm px-2 sm:px-4">
-                    <span className="hidden sm:inline">Join EthiCheck</span>
+                    <span className="hidden sm:inline">Join Ethisay</span>
                     <span className="sm:hidden">Join</span>
                   </Button>
                 </Link>

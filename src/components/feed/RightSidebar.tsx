@@ -66,7 +66,7 @@ const RightSidebar = () => {
           <span className="hover:underline cursor-pointer">Terms</span>
           <span className="hover:underline cursor-pointer">Contact</span>
         </div>
-        <p>© 2026 EthiCheck</p>
+        <p>© 2026 Ethisay</p>
       </div>
     </div>
   );

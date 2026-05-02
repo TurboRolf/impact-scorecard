@@ -67,7 +67,7 @@ const SearchDialog = ({ open, onOpenChange }: SearchDialogProps) => {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
-            Search EthiCheck
+            Search Ethisay
           </DialogTitle>
         </DialogHeader>
         

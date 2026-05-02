@@ -113,7 +113,7 @@ const Auth = () => {
             <div className="flex-1" />
           </div>
           <CardTitle className="text-2xl font-bold bg-gradient-brand bg-clip-text text-transparent">
-            Welcome to EthiCheck
+            Welcome to Ethisay
           </CardTitle>
         </CardHeader>
         <CardContent>

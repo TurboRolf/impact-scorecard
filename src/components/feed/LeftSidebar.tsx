@@ -65,7 +65,7 @@ const LeftSidebar = () => {
       {!user && (
         <Card>
           <CardContent className="p-4 text-center">
-            <p className="text-sm text-muted-foreground mb-3">Join EthiCheck and make your voice heard</p>
+            <p className="text-sm text-muted-foreground mb-3">Join Ethisay and make your voice heard</p>
             <Link to="/auth">
               <Button className="w-full bg-gradient-brand text-primary-foreground" size="sm">
                 Create Account
