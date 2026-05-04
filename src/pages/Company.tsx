@@ -100,9 +100,13 @@ const Company = () => {
   }
 
   const ratings = [
-    { label: "Ethics", value: Number(company.avg_ethics_rating || 0), color: "text-earth-blue" },
     { label: "Environment", value: Number(company.avg_environment_rating || 0), color: "text-earth-green" },
-    { label: "Politics", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange" },
+    { label: "Labor & Human Rights", value: Number(company.avg_labor_rating || 0), color: "text-earth-blue" },
+    { label: "Ethics & Integrity", value: Number(company.avg_ethics_rating || 0), color: "text-earth-orange" },
+    { label: "Politics & Lobbying", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange" },
+    { label: "Transparency", value: Number(company.avg_transparency_rating || 0), color: "text-earth-blue" },
+    { label: "Animal Welfare", value: Number(company.avg_animal_welfare_rating || 0), color: "text-earth-green" },
+    { label: "Data & Privacy", value: Number(company.avg_data_privacy_rating || 0), color: "text-earth-blue" },
   ];
 
     return (
