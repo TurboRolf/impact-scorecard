@@ -12,9 +12,13 @@ interface CompanyCardProps {
   logo?: string;
   country?: string | null;
   overallRating: number;
-  ethicsRating: number;
   environmentRating: number;
+  laborRating: number;
+  ethicsRating: number;
   politicsRating: number;
+  transparencyRating: number;
+  animalWelfareRating: number;
+  dataPrivacyRating: number;
   activeBoycotts: number;
   trend: "up" | "down" | "stable";
   description: string;
@@ -33,9 +37,13 @@ const CompanyCard = ({
   logo,
   country,
   overallRating,
-  ethicsRating,
   environmentRating,
+  laborRating,
+  ethicsRating,
   politicsRating,
+  transparencyRating,
+  animalWelfareRating,
+  dataPrivacyRating,
   activeBoycotts,
   trend,
   description,
@@ -49,9 +57,13 @@ const CompanyCard = ({
   const navigate = useNavigate();
   const flag = countryCodeToFlag(country);
   const ratings = [
-    { label: "Ethics", value: ethicsRating, color: "text-earth-blue" },
-    { label: "Environment", value: environmentRating, color: "text-earth-green" },
-    { label: "Politics", value: politicsRating, color: "text-earth-orange" },
+    { key: "environment", label: "Environment", value: environmentRating, color: "text-earth-green" },
+    { key: "labor_human_rights", label: "Labor", value: laborRating, color: "text-earth-blue" },
+    { key: "ethics_integrity", label: "Ethics", value: ethicsRating, color: "text-earth-orange" },
+    { key: "politics_lobbying", label: "Politics", value: politicsRating, color: "text-earth-orange" },
+    { key: "transparency", label: "Transparency", value: transparencyRating, color: "text-earth-blue" },
+    { key: "animal_welfare", label: "Animals", value: animalWelfareRating, color: "text-earth-green" },
+    { key: "data_privacy", label: "Privacy", value: dataPrivacyRating, color: "text-earth-blue" },
   ];
 
   return (
@@ -78,9 +90,9 @@ const CompanyCard = ({
           <Badge 
             variant="secondary" 
             className="flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity gap-1"
-            onClick={(e) => { e.stopPropagation(); onReview?.('overall'); }}
+            onClick={(e) => { e.stopPropagation(); onReview?.(); }}
           >
-            {overallRating} <Star className="h-3 w-3 text-earth-orange fill-current" />
+            {overallRating.toFixed ? overallRating.toFixed(1) : overallRating} <Star className="h-3 w-3 text-earth-orange fill-current" />
             {trend === "up" && <TrendingUp className="h-3 w-3 text-green-500" />}
             {trend === "down" && <TrendingDown className="h-3 w-3 text-red-500" />}
           </Badge>
@@ -91,15 +103,15 @@ const CompanyCard = ({
         <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
         
         <div className="mt-auto">
-          <div className="grid grid-cols-3 gap-1 sm:gap-2 mb-3 sm:mb-4">
+          <div className="grid grid-cols-4 sm:grid-cols-7 gap-1 sm:gap-2 mb-3 sm:mb-4">
             {ratings.map((rating) => (
               <div 
                 key={rating.label} 
                 className="text-center cursor-pointer hover:opacity-80 transition-opacity py-1"
-                onClick={(e) => { e.stopPropagation(); onReview?.(rating.label.toLowerCase()); }}
+                onClick={(e) => { e.stopPropagation(); onReview?.(rating.key); }}
               >
-                <div className={`text-sm sm:text-base font-bold ${rating.color}`}>{rating.value}/5</div>
-                <div className="text-xs text-muted-foreground leading-tight">{rating.label}</div>
+                <div className={`text-xs sm:text-sm font-bold ${rating.color}`}>{rating.value.toFixed(1)}</div>
+                <div className="text-[10px] sm:text-xs text-muted-foreground leading-tight truncate">{rating.label}</div>
               </div>
             ))}
           </div>
