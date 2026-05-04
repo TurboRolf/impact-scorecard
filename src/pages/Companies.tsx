@@ -194,6 +194,7 @@ const Companies = () => {
               transparencyRating={Number(company.avg_transparency_rating || 0)}
               animalWelfareRating={Number(company.avg_animal_welfare_rating || 0)}
               dataPrivacyRating={Number(company.avg_data_privacy_rating || 0)}
+              supplyChainRating={Number(company.avg_supply_chain_rating || 0)}
               activeBoycotts={company.active_boycotts_count}
               trend="stable"
               description={company.description || ""}

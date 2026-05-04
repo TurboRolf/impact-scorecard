@@ -475,6 +475,7 @@ export type Database = {
           avg_labor_rating: number | null
           avg_overall_rating: number | null
           avg_politics_rating: number | null
+          avg_supply_chain_rating: number | null
           avg_transparency_rating: number | null
           category: string | null
           country: string | null
