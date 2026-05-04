@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Star, Search, Building2, Calendar, Trash2, Edit } from "lucide-react";
-import { useUserReviews } from "@/hooks/useCompanyReviews";
+import { useUserReviews, REVIEW_CATEGORY_LABELS, ReviewCategory } from "@/hooks/useCompanyReviews";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -152,7 +152,7 @@ const UserReviewsList = ({ userId }: UserReviewsListProps) => {
                   size="sm"
                   onClick={() => setSelectedCategory(category)}
                 >
-                  {category}
+                  {REVIEW_CATEGORY_LABELS[category as ReviewCategory] || category}
                 </Button>
               ))}
             </div>
@@ -180,7 +180,7 @@ const UserReviewsList = ({ userId }: UserReviewsListProps) => {
                     <div className="flex items-center gap-3 mb-2">
                       <Building2 className="h-5 w-5 text-muted-foreground" />
                       <h3 className="font-semibold text-lg">{review.company_name}</h3>
-                      <Badge variant="outline">{review.category}</Badge>
+                      <Badge variant="outline">{REVIEW_CATEGORY_LABELS[review.category as ReviewCategory] || review.category}</Badge>
                     </div>
                     
                     <div className="mb-3">
