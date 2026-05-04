@@ -107,6 +107,7 @@ const Company = () => {
     { label: "Transparency", value: Number(company.avg_transparency_rating || 0), color: "text-earth-blue" },
     { label: "Animal Welfare", value: Number(company.avg_animal_welfare_rating || 0), color: "text-earth-green" },
     { label: "Data & Privacy", value: Number(company.avg_data_privacy_rating || 0), color: "text-earth-blue" },
+    { label: "Supply Chain", value: Number(company.avg_supply_chain_rating || 0), color: "text-earth-orange" },
   ];
 
     return (
