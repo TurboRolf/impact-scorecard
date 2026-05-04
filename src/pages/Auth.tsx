@@ -192,7 +192,26 @@ const Auth = () => {
                   />
                   <p className="text-xs text-muted-foreground mt-1">Minimum 6 characters</p>
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <div className="flex items-start gap-2">
+                  <Checkbox
+                    id="accept-terms"
+                    checked={acceptedTerms}
+                    onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                    className="mt-0.5"
+                  />
+                  <Label htmlFor="accept-terms" className="text-xs font-normal leading-relaxed cursor-pointer">
+                    I accept the{" "}
+                    <Link to="/terms" target="_blank" className="underline hover:text-primary">
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/privacy" target="_blank" className="underline hover:text-primary">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </Label>
+                </div>
+                <Button type="submit" className="w-full" disabled={loading || !acceptedTerms}>
                   {loading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>
