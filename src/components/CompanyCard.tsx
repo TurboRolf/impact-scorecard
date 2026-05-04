@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, MessageSquare } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, MessageSquare, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { countryCodeToFlag } from "@/lib/countryFlag";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -140,30 +140,34 @@ const CompanyCard = ({
           </div>
         </TooltipProvider>
 
-        {/* Stance distribution as a single segmented bar */}
-        <div className="space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
-            <span>{totalStances} {totalStances === 1 ? "stance" : "stances"}</span>
-            {activeBoycotts > 0 && (
-              <span className="flex items-center gap-1 text-destructive font-medium">
-                <AlertTriangle className="h-3 w-3" />
-                {activeBoycotts} active boycott{activeBoycotts > 1 ? "s" : ""}
-              </span>
-            )}
+        {activeBoycotts > 0 ? (
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
+            <span className="text-xs sm:text-sm text-destructive font-medium">
+              {activeBoycotts} active boycott{activeBoycotts > 1 ? 's' : ''}
+            </span>
           </div>
-          <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-muted">
-            {totalStances > 0 ? (
-              <>
-                <div className="bg-recommend" style={{ width: `${pct(recommendCount)}%` }} />
-                <div className="bg-neutral" style={{ width: `${pct(neutralCount)}%` }} />
-                <div className="bg-discourage" style={{ width: `${pct(discourageCount)}%` }} />
-              </>
-            ) : null}
+        ) : (
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <span className="text-xs sm:text-sm text-muted-foreground font-medium">
+              0 active boycotts
+            </span>
           </div>
-          <div className="flex items-center justify-between text-[11px] tabular-nums">
-            <span className="text-recommend font-medium">{recommendCount}</span>
-            <span className="text-neutral font-medium">{neutralCount}</span>
-            <span className="text-discourage font-medium">{discourageCount}</span>
+        )}
+
+        {/* User Stance Distribution */}
+        <div className="flex items-center gap-1 sm:gap-2">
+          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+            <ThumbsUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-recommend" />
+            <span className="text-xs sm:text-sm text-recommend font-medium">{recommendCount}</span>
+          </div>
+          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+            <Minus className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-neutral" />
+            <span className="text-xs sm:text-sm text-neutral font-medium">{neutralCount}</span>
+          </div>
+          <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
+            <ThumbsDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-discourage" />
+            <span className="text-xs sm:text-sm text-discourage font-medium">{discourageCount}</span>
           </div>
         </div>
 
