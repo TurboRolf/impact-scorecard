@@ -19,6 +19,7 @@ interface CompanyCardProps {
   transparencyRating: number;
   animalWelfareRating: number;
   dataPrivacyRating: number;
+  supplyChainRating: number;
   activeBoycotts: number;
   trend: "up" | "down" | "stable";
   description: string;
@@ -44,6 +45,7 @@ const CompanyCard = ({
   transparencyRating,
   animalWelfareRating,
   dataPrivacyRating,
+  supplyChainRating,
   activeBoycotts,
   trend,
   description,
@@ -64,6 +66,7 @@ const CompanyCard = ({
     { key: "transparency", label: "Transparency", value: transparencyRating, color: "text-earth-blue" },
     { key: "animal_welfare", label: "Animals", value: animalWelfareRating, color: "text-earth-green" },
     { key: "data_privacy", label: "Privacy", value: dataPrivacyRating, color: "text-earth-blue" },
+    { key: "supply_chain", label: "Supply", value: supplyChainRating, color: "text-earth-orange" },
   ];
 
   return (
@@ -103,7 +106,7 @@ const CompanyCard = ({
         <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
         
         <div className="mt-auto">
-          <div className="grid grid-cols-4 sm:grid-cols-7 gap-1 sm:gap-2 mb-3 sm:mb-4">
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 sm:gap-2 mb-3 sm:mb-4">
             {ratings.map((rating) => (
               <div 
                 key={rating.label} 
