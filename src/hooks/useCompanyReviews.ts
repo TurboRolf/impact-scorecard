@@ -2,7 +2,29 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-export type ReviewCategory = 'ethics' | 'environment' | 'politics' | 'overall';
+export type ReviewCategory =
+  | 'environment'
+  | 'labor_human_rights'
+  | 'ethics_integrity'
+  | 'politics_lobbying'
+  | 'transparency'
+  | 'animal_welfare'
+  | 'data_privacy';
+
+export const REVIEW_CATEGORIES: { value: ReviewCategory; label: string; description: string }[] = [
+  { value: 'environment', label: 'Environment', description: 'Emissions, waste, climate impact' },
+  { value: 'labor_human_rights', label: 'Labor & Human Rights', description: 'Working conditions, wages, child labor, supply chains' },
+  { value: 'ethics_integrity', label: 'Ethics & Integrity', description: 'Corruption, tax evasion, misleading marketing' },
+  { value: 'politics_lobbying', label: 'Politics & Lobbying', description: 'Political donations, lobbying, influence on legislation' },
+  { value: 'transparency', label: 'Transparency', description: 'How open they are about operations and reporting' },
+  { value: 'animal_welfare', label: 'Animal Welfare', description: 'Animal testing, animal husbandry' },
+  { value: 'data_privacy', label: 'Data & Privacy', description: 'How they handle user data' },
+];
+
+export const REVIEW_CATEGORY_LABELS: Record<ReviewCategory, string> = REVIEW_CATEGORIES.reduce(
+  (acc, c) => ({ ...acc, [c.value]: c.label }),
+  {} as Record<ReviewCategory, string>,
+);
 
 export interface CompanyReviewData {
   id: string;
