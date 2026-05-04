@@ -5,16 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { Link } from "react-router-dom";
 
 const Auth = () => {
   const [signInEmail, setSignInEmail] = useState("");
   const [signInPassword, setSignInPassword] = useState("");
   const [signUpEmail, setSignUpEmail] = useState("");
   const [signUpPassword, setSignUpPassword] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -34,6 +37,16 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
+    if (!acceptedTerms) {
+      toast({
+        title: "Acceptance required",
+        description: "You must accept the Terms of Service and Privacy Policy to create an account.",
+        variant: "destructive"
+      });
+      setLoading(false);
+      return;
+    }
 
     if (signUpPassword.length < 6) {
       toast({
@@ -179,7 +192,26 @@ const Auth = () => {
                   />
                   <p className="text-xs text-muted-foreground mt-1">Minimum 6 characters</p>
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <div className="flex items-start gap-2">
+                  <Checkbox
+                    id="accept-terms"
+                    checked={acceptedTerms}
+                    onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                    className="mt-0.5"
+                  />
+                  <Label htmlFor="accept-terms" className="text-xs font-normal leading-relaxed cursor-pointer">
+                    I accept the{" "}
+                    <Link to="/terms" target="_blank" className="underline hover:text-primary">
+                      Terms of Service
+                    </Link>{" "}
+                    and{" "}
+                    <Link to="/privacy" target="_blank" className="underline hover:text-primary">
+                      Privacy Policy
+                    </Link>
+                    .
+                  </Label>
+                </div>
+                <Button type="submit" className="w-full" disabled={loading || !acceptedTerms}>
                   {loading ? "Creating account..." : "Create Account"}
                 </Button>
               </form>
