@@ -1,9 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, MessageSquare } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { countryCodeToFlag } from "@/lib/countryFlag";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface CompanyCardProps {
   id: string;
@@ -59,118 +60,131 @@ const CompanyCard = ({
   const navigate = useNavigate();
   const flag = countryCodeToFlag(country);
   const ratings = [
-    { key: "environment", label: "Environment", value: environmentRating, color: "text-earth-green" },
-    { key: "labor_human_rights", label: "Labor", value: laborRating, color: "text-earth-blue" },
-    { key: "ethics_integrity", label: "Ethics", value: ethicsRating, color: "text-earth-orange" },
-    { key: "politics_lobbying", label: "Politics", value: politicsRating, color: "text-earth-orange" },
-    { key: "transparency", label: "Transparency", value: transparencyRating, color: "text-earth-blue" },
-    { key: "animal_welfare", label: "Animals", value: animalWelfareRating, color: "text-earth-green" },
-    { key: "data_privacy", label: "Privacy", value: dataPrivacyRating, color: "text-earth-blue" },
-    { key: "supply_chain", label: "Supply", value: supplyChainRating, color: "text-earth-orange" },
+    { key: "environment", label: "Environment", short: "Env", value: environmentRating },
+    { key: "labor_human_rights", label: "Labor & Human Rights", short: "Lab", value: laborRating },
+    { key: "ethics_integrity", label: "Ethics & Integrity", short: "Eth", value: ethicsRating },
+    { key: "politics_lobbying", label: "Politics & Lobbying", short: "Pol", value: politicsRating },
+    { key: "transparency", label: "Transparency", short: "Tra", value: transparencyRating },
+    { key: "animal_welfare", label: "Animal Welfare", short: "Ani", value: animalWelfareRating },
+    { key: "data_privacy", label: "Data & Privacy", short: "Dat", value: dataPrivacyRating },
+    { key: "supply_chain", label: "Supply Chain", short: "Sup", value: supplyChainRating },
   ];
 
+  const dotColor = (v: number) => {
+    if (v <= 0) return "bg-muted";
+    if (v < 2) return "bg-discourage";
+    if (v < 3.5) return "bg-neutral";
+    return "bg-recommend";
+  };
+
+  const totalStances = recommendCount + neutralCount + discourageCount;
+  const pct = (n: number) => (totalStances > 0 ? (n / totalStances) * 100 : 0);
+
   return (
-    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col" onClick={() => navigate(`/company/${id}`)}>
-      <CardHeader className="pb-3 sm:pb-4 p-4 sm:p-6">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-start gap-2 sm:gap-3 min-w-0">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-subtle rounded-lg flex items-center justify-center flex-shrink-0">
+    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col group" onClick={() => navigate(`/company/${id}`)}>
+      <CardHeader className="pb-3 p-4 sm:p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-start gap-3 min-w-0">
+            <div className="w-11 h-11 bg-gradient-subtle rounded-lg flex items-center justify-center flex-shrink-0 border">
               {logo ? (
-                <img src={logo} alt={name} className="w-6 h-6 sm:w-8 sm:h-8 object-contain" loading="lazy" />
+                <img src={logo} alt={name} className="w-7 h-7 object-contain" loading="lazy" />
               ) : (
-                <span className="text-sm sm:text-lg font-bold">{name.charAt(0)}</span>
+                <span className="text-base font-bold">{name.charAt(0)}</span>
               )}
             </div>
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-sm sm:text-base truncate">
+              <CardTitle className="text-sm sm:text-base truncate leading-tight">
                 {flag && <span className="mr-1.5">{flag}</span>}
                 {name}
               </CardTitle>
-              <p className="text-xs sm:text-sm text-muted-foreground truncate">{category}</p>
+              <p className="text-xs text-muted-foreground truncate mt-0.5">{category}</p>
             </div>
           </div>
-          
-          <Badge 
-            variant="secondary" 
-            className="flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity gap-1"
+
+          <Badge
+            variant="secondary"
+            className="flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity gap-1 px-2 py-1"
             onClick={(e) => { e.stopPropagation(); onReview?.(); }}
           >
-            {overallRating.toFixed ? overallRating.toFixed(1) : overallRating} <Star className="h-3 w-3 text-earth-orange fill-current" />
+            <span className="font-semibold tabular-nums">{(overallRating ?? 0).toFixed(1)}</span>
+            <Star className="h-3 w-3 text-earth-orange fill-current" />
             {trend === "up" && <TrendingUp className="h-3 w-3 text-green-500" />}
             {trend === "down" && <TrendingDown className="h-3 w-3 text-red-500" />}
           </Badge>
         </div>
       </CardHeader>
-      
-      <CardContent className="p-4 sm:p-6 pt-0 flex-1 flex flex-col">
-        <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4 line-clamp-2">{description}</p>
-        
-        <div className="mt-auto">
-          <div className="grid grid-cols-4 sm:grid-cols-8 gap-1 sm:gap-2 mb-3 sm:mb-4">
-            {ratings.map((rating) => (
-              <div 
-                key={rating.label} 
-                className="text-center cursor-pointer hover:opacity-80 transition-opacity py-1"
-                onClick={(e) => { e.stopPropagation(); onReview?.(rating.key); }}
-              >
-                <div className={`text-xs sm:text-sm font-bold ${rating.color}`}>{rating.value.toFixed(1)}</div>
-                <div className="text-[10px] sm:text-xs text-muted-foreground leading-tight truncate">{rating.label}</div>
-              </div>
+
+      <CardContent className="p-4 sm:p-5 pt-0 flex-1 flex flex-col gap-3">
+        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 min-h-[2.5em]">{description}</p>
+
+        {/* Category dots — compact 8-rating overview */}
+        <TooltipProvider delayDuration={150}>
+          <div className="flex items-center justify-between gap-1">
+            {ratings.map((r) => (
+              <Tooltip key={r.key}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onReview?.(r.key); }}
+                    className="flex flex-col items-center gap-1 flex-1 group/dot py-1"
+                    aria-label={`${r.label}: ${r.value.toFixed(1)}`}
+                  >
+                    <span className={`h-2 w-full rounded-full ${dotColor(r.value)} opacity-80 group-hover/dot:opacity-100 transition-opacity`} />
+                    <span className="text-[10px] text-muted-foreground tabular-nums">{r.value > 0 ? r.value.toFixed(1) : "–"}</span>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="text-xs">
+                  {r.label}: {r.value > 0 ? r.value.toFixed(1) : "Not rated"}
+                </TooltipContent>
+              </Tooltip>
             ))}
           </div>
-          
-          {activeBoycotts > 0 ? (
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-              <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-destructive" />
-              <span className="text-xs sm:text-sm text-destructive font-medium">
-                {activeBoycotts} active boycott{activeBoycotts > 1 ? 's' : ''}
+        </TooltipProvider>
+
+        {/* Stance distribution as a single segmented bar */}
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+            <span>{totalStances} {totalStances === 1 ? "stance" : "stances"}</span>
+            {activeBoycotts > 0 && (
+              <span className="flex items-center gap-1 text-destructive font-medium">
+                <AlertTriangle className="h-3 w-3" />
+                {activeBoycotts} active boycott{activeBoycotts > 1 ? "s" : ""}
               </span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 sm:gap-2 mb-3 sm:mb-4">
-              <span className="text-xs sm:text-sm text-muted-foreground font-medium">
-                0 active boycotts
-              </span>
-            </div>
-          )}
-          
-          {/* User Stance Distribution */}
-          <div className="flex items-center gap-1 sm:gap-2 mb-3 sm:mb-4">
-            <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
-              <ThumbsUp className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-recommend" />
-              <span className="text-xs sm:text-sm text-recommend font-medium">{recommendCount}</span>
-            </div>
-            <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
-              <Minus className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-neutral" />
-              <span className="text-xs sm:text-sm text-neutral font-medium">{neutralCount}</span>
-            </div>
-            <div className="flex items-center gap-0.5 sm:gap-1 flex-1 justify-center">
-              <ThumbsDown className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-discourage" />
-              <span className="text-xs sm:text-sm text-discourage font-medium">{discourageCount}</span>
-            </div>
+            )}
           </div>
-          
-          <div className="flex gap-1.5 sm:gap-2">
-            <Button 
-              variant="default" 
-              size="sm" 
-              className="flex-1 gap-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
-              onClick={(e) => { e.stopPropagation(); onRate?.(); }}
-            >
-              <MessageSquare className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
-              <span className="hidden sm:inline">Add Stance</span>
-              <span className="sm:hidden">Stance</span>
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1 h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3" 
-              onClick={(e) => { e.stopPropagation(); onStartBoycott?.(); }}
-            >
-              <span className="hidden sm:inline">Start Boycott</span>
-              <span className="sm:hidden">Boycott</span>
-            </Button>
+          <div className="flex h-1.5 w-full overflow-hidden rounded-full bg-muted">
+            {totalStances > 0 ? (
+              <>
+                <div className="bg-recommend" style={{ width: `${pct(recommendCount)}%` }} />
+                <div className="bg-neutral" style={{ width: `${pct(neutralCount)}%` }} />
+                <div className="bg-discourage" style={{ width: `${pct(discourageCount)}%` }} />
+              </>
+            ) : null}
           </div>
+          <div className="flex items-center justify-between text-[11px] tabular-nums">
+            <span className="text-recommend font-medium">{recommendCount}</span>
+            <span className="text-neutral font-medium">{neutralCount}</span>
+            <span className="text-discourage font-medium">{discourageCount}</span>
+          </div>
+        </div>
+
+        <div className="flex gap-2 mt-auto pt-1">
+          <Button
+            variant="default"
+            size="sm"
+            className="flex-1 gap-1.5 h-8 text-xs"
+            onClick={(e) => { e.stopPropagation(); onRate?.(); }}
+          >
+            <MessageSquare className="h-3.5 w-3.5" />
+            Stance
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 h-8 text-xs"
+            onClick={(e) => { e.stopPropagation(); onStartBoycott?.(); }}
+          >
+            Boycott
+          </Button>
         </div>
       </CardContent>
     </Card>
