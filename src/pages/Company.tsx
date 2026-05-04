@@ -100,9 +100,13 @@ const Company = () => {
   }
 
   const ratings = [
-    { label: "Ethics", value: Number(company.avg_ethics_rating || 0), color: "text-earth-blue" },
     { label: "Environment", value: Number(company.avg_environment_rating || 0), color: "text-earth-green" },
-    { label: "Politics", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange" },
+    { label: "Labor & Human Rights", value: Number(company.avg_labor_rating || 0), color: "text-earth-blue" },
+    { label: "Ethics & Integrity", value: Number(company.avg_ethics_rating || 0), color: "text-earth-orange" },
+    { label: "Politics & Lobbying", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange" },
+    { label: "Transparency", value: Number(company.avg_transparency_rating || 0), color: "text-earth-blue" },
+    { label: "Animal Welfare", value: Number(company.avg_animal_welfare_rating || 0), color: "text-earth-green" },
+    { label: "Data & Privacy", value: Number(company.avg_data_privacy_rating || 0), color: "text-earth-blue" },
   ];
 
     return (
@@ -168,7 +172,7 @@ const Company = () => {
             </div>
           
             {/* Rating Categories */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
             {ratings.map((rating) => (
               <Card key={rating.label}>
                 <CardContent className="text-center py-4">

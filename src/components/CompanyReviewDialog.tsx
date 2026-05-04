@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Star } from "lucide-react";
-import { useCreateOrUpdateReview, ReviewCategory } from "@/hooks/useCompanyReviews";
+import { useCreateOrUpdateReview, ReviewCategory, REVIEW_CATEGORIES } from "@/hooks/useCompanyReviews";
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useCreatePost } from "@/hooks/usePosts";
 
@@ -36,7 +36,7 @@ const CompanyReviewDialog = ({
       setFormData(prev => ({
         ...prev,
         company_name: companyName || prev.company_name,
-        category: defaultCategory || 'overall',
+        category: defaultCategory || 'environment',
       }));
     }
   }, [open, companyName, defaultCategory]);
@@ -55,9 +55,6 @@ const CompanyReviewDialog = ({
       
       // Create post if option is selected
       if (postToFeed && formData.review_text.trim()) {
-        const categoryText = formData.category === 'overall' ? '' : ` (${formData.category})`;
-        const starRating = '★'.repeat(formData.rating) + '☆'.repeat(5 - formData.rating);
-        
         const postContent = formData.review_text;
         
         await createPost.mutateAsync({
@@ -81,12 +78,7 @@ const CompanyReviewDialog = ({
     }
   };
 
-  const reviewCategories = [
-    { value: 'overall' as ReviewCategory, label: 'Overall', description: 'General impression and recommendation' },
-    { value: 'ethics' as ReviewCategory, label: 'Ethics', description: 'Business ethics and social responsibility' },
-    { value: 'politics' as ReviewCategory, label: 'Politics', description: 'Political positions and contributions' },
-    { value: 'environment' as ReviewCategory, label: 'Environment', description: 'Environmental practices and sustainability' },
-  ];
+  const reviewCategories = REVIEW_CATEGORIES;
 
   const renderStarRating = (rating: number, onChange: (rating: number) => void) => (
     <div className="flex gap-1">
@@ -136,7 +128,7 @@ const CompanyReviewDialog = ({
 
           <div>
             <Label>Review Category *</Label>
-            <div className="grid grid-cols-2 gap-3 mt-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
               {reviewCategories.map((category) => (
                 <button
                   key={category.value}
