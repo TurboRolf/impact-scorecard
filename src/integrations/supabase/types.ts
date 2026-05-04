@@ -468,10 +468,14 @@ export type Database = {
       company_ratings_view: {
         Row: {
           active_boycotts_count: number | null
+          avg_animal_welfare_rating: number | null
+          avg_data_privacy_rating: number | null
           avg_environment_rating: number | null
           avg_ethics_rating: number | null
+          avg_labor_rating: number | null
           avg_overall_rating: number | null
           avg_politics_rating: number | null
+          avg_transparency_rating: number | null
           category: string | null
           country: string | null
           description: string | null
