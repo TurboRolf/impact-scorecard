@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, ArrowLeft, ExternalLink } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, ArrowLeft, ExternalLink, Leaf, Users, Scale, Landmark, Eye, PawPrint, Lock, Truck } from "lucide-react";
 import CompanyStanceDialog from "@/components/CompanyStanceDialog";
 import CompanyReviewDialog from "@/components/CompanyReviewDialog";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
@@ -100,14 +100,14 @@ const Company = () => {
   }
 
   const ratings = [
-    { label: "Environment", value: Number(company.avg_environment_rating || 0), color: "text-earth-green" },
-    { label: "Labor & Human Rights", value: Number(company.avg_labor_rating || 0), color: "text-earth-blue" },
-    { label: "Ethics & Integrity", value: Number(company.avg_ethics_rating || 0), color: "text-earth-orange" },
-    { label: "Politics & Lobbying", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange" },
-    { label: "Transparency", value: Number(company.avg_transparency_rating || 0), color: "text-earth-blue" },
-    { label: "Animal Welfare", value: Number(company.avg_animal_welfare_rating || 0), color: "text-earth-green" },
-    { label: "Data & Privacy", value: Number(company.avg_data_privacy_rating || 0), color: "text-earth-blue" },
-    { label: "Supply Chain", value: Number(company.avg_supply_chain_rating || 0), color: "text-earth-orange" },
+    { label: "Environment", value: Number(company.avg_environment_rating || 0), color: "text-earth-green", Icon: Leaf },
+    { label: "Labor & Human Rights", value: Number(company.avg_labor_rating || 0), color: "text-earth-blue", Icon: Users },
+    { label: "Ethics & Integrity", value: Number(company.avg_ethics_rating || 0), color: "text-earth-orange", Icon: Scale },
+    { label: "Politics & Lobbying", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange", Icon: Landmark },
+    { label: "Transparency", value: Number(company.avg_transparency_rating || 0), color: "text-earth-blue", Icon: Eye },
+    { label: "Animal Welfare", value: Number(company.avg_animal_welfare_rating || 0), color: "text-earth-green", Icon: PawPrint },
+    { label: "Data & Privacy", value: Number(company.avg_data_privacy_rating || 0), color: "text-earth-blue", Icon: Lock },
+    { label: "Supply Chain", value: Number(company.avg_supply_chain_rating || 0), color: "text-earth-orange", Icon: Truck },
   ];
 
     return (
@@ -177,6 +177,7 @@ const Company = () => {
             {ratings.map((rating) => (
               <Card key={rating.label}>
                 <CardContent className="text-center py-4">
+                  <rating.Icon className={`h-6 w-6 mx-auto mb-1 ${rating.color}`} />
                   <div className={`text-2xl font-bold ${rating.color}`}>{rating.value.toFixed(1)}</div>
                   <div className="text-sm text-muted-foreground">{rating.label}</div>
                 </CardContent>
