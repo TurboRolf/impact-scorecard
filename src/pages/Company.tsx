@@ -193,27 +193,27 @@ const Company = () => {
               <CardTitle>Community Stance</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                <div className="flex items-center justify-center sm:block sm:text-center">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <ThumbsUp className="h-5 w-5 text-recommend" />
-                    <span className="text-2xl font-bold text-recommend">{company.recommend_count}</span>
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                <div className="flex flex-col items-center text-center gap-1">
+                  <div className="flex items-center gap-1.5 text-recommend">
+                    <ThumbsUp className="h-5 w-5" />
+                    <span className="text-2xl font-bold leading-none">{company.recommend_count}</span>
                   </div>
-                  <div className="text-sm sm:text-xs text-muted-foreground">Recommend</div>
+                  <div className="text-xs text-muted-foreground">Recommend</div>
                 </div>
-                <div className="flex items-center justify-center sm:block sm:text-center">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <Minus className="h-5 w-5 text-neutral" />
-                    <span className="text-2xl font-bold text-neutral">{company.neutral_count}</span>
+                <div className="flex flex-col items-center text-center gap-1">
+                  <div className="flex items-center gap-1.5 text-neutral">
+                    <Minus className="h-5 w-5" />
+                    <span className="text-2xl font-bold leading-none">{company.neutral_count}</span>
                   </div>
-                  <div className="text-sm sm:text-xs text-muted-foreground">Neutral</div>
+                  <div className="text-xs text-muted-foreground">Neutral</div>
                 </div>
-                <div className="flex items-center justify-center sm:block sm:text-center">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <ThumbsDown className="h-5 w-5 text-discourage" />
-                    <span className="text-2xl font-bold text-discourage">{company.discourage_count}</span>
+                <div className="flex flex-col items-center text-center gap-1">
+                  <div className="flex items-center gap-1.5 text-discourage">
+                    <ThumbsDown className="h-5 w-5" />
+                    <span className="text-2xl font-bold leading-none">{company.discourage_count}</span>
                   </div>
-                  <div className="text-sm sm:text-xs text-muted-foreground">Discourage</div>
+                  <div className="text-xs text-muted-foreground">Discourage</div>
                 </div>
               </div>
               
