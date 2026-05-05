@@ -177,8 +177,10 @@ const Company = () => {
             {ratings.map((rating) => (
               <Card key={rating.label}>
                 <CardContent className="text-center py-4">
-                  <rating.Icon className={`h-6 w-6 mx-auto mb-1 ${rating.color}`} />
-                  <div className={`text-2xl font-bold ${rating.color}`}>{rating.value.toFixed(1)}</div>
+                  <div className={`flex items-center justify-center gap-1.5 ${rating.color}`}>
+                    <rating.Icon className="h-5 w-5" />
+                    <span className="text-2xl font-bold">{rating.value.toFixed(1)}</span>
+                  </div>
                   <div className="text-sm text-muted-foreground">{rating.label}</div>
                 </CardContent>
               </Card>
