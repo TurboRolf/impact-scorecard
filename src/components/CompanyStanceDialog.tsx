@@ -99,46 +99,30 @@ const CompanyStanceDialog = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="company_name">Company Name *</Label>
-              <Select 
-                value={formData.company_name} 
-                onValueChange={(value) => {
-                  const selectedCompany = companies.find(c => c.name === value);
-                  setFormData({ 
-                    ...formData, 
-                    company_name: value,
-                    company_category: selectedCompany?.category || ""
-                  });
-                }}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a company" />
-                </SelectTrigger>
-                <SelectContent>
-                  {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.name}>
-                      {company.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label htmlFor="company_category">Category</Label>
-              <select
-                id="company_category"
-                value={formData.company_category}
-                onChange={(e) => setFormData({ ...formData, company_category: e.target.value })}
-                className="w-full h-10 px-3 rounded-md border border-input bg-background text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                <option value="">Select category</option>
-                {categories.map((category) => (
-                  <option key={category} value={category}>{category}</option>
+          <div>
+            <Label htmlFor="company_name">Company Name *</Label>
+            <Select 
+              value={formData.company_name} 
+              onValueChange={(value) => {
+                const selectedCompany = companies.find(c => c.name === value);
+                setFormData({ 
+                  ...formData, 
+                  company_name: value,
+                  company_category: selectedCompany?.category || ""
+                });
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a company" />
+              </SelectTrigger>
+              <SelectContent>
+                {companies.map((company) => (
+                  <SelectItem key={company.id} value={company.name}>
+                    {company.name}
+                  </SelectItem>
                 ))}
-              </select>
-            </div>
+              </SelectContent>
+            </Select>
           </div>
 
           <div>
