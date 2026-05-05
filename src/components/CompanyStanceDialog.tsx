@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -36,6 +36,17 @@ const CompanyStanceDialog = ({
   const [postToFeed, setPostToFeed] = useState(false);
 
   const { data: companies = [] } = useCompanies();
+
+  useEffect(() => {
+    if (open) {
+      setFormData({
+        company_name: companyName || "",
+        company_category: companyCategory || "",
+        stance: existingStance?.stance || 'neutral',
+        notes: existingStance?.notes || "",
+      });
+    }
+  }, [open, companyName, companyCategory, existingStance]);
   const createOrUpdateStance = useCreateOrUpdateStance();
   const createPost = useCreatePost();
 
