@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, MessageSquare, ThumbsUp, Minus, ThumbsDown } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, MessageSquare, ThumbsUp, Minus, ThumbsDown, Leaf, Users, Scale, Landmark, Eye, PawPrint, Lock, Truck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { countryCodeToFlag } from "@/lib/countryFlag";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -60,21 +60,21 @@ const CompanyCard = ({
   const navigate = useNavigate();
   const flag = countryCodeToFlag(country);
   const ratings = [
-    { key: "environment", label: "Environment", short: "Env", value: environmentRating },
-    { key: "labor_human_rights", label: "Labor & Human Rights", short: "Lab", value: laborRating },
-    { key: "ethics_integrity", label: "Ethics & Integrity", short: "Eth", value: ethicsRating },
-    { key: "politics_lobbying", label: "Politics & Lobbying", short: "Pol", value: politicsRating },
-    { key: "transparency", label: "Transparency", short: "Tra", value: transparencyRating },
-    { key: "animal_welfare", label: "Animal Welfare", short: "Ani", value: animalWelfareRating },
-    { key: "data_privacy", label: "Data & Privacy", short: "Dat", value: dataPrivacyRating },
-    { key: "supply_chain", label: "Supply Chain", short: "Sup", value: supplyChainRating },
+    { key: "environment", label: "Environment", short: "Env", value: environmentRating, Icon: Leaf },
+    { key: "labor_human_rights", label: "Labor & Human Rights", short: "Lab", value: laborRating, Icon: Users },
+    { key: "ethics_integrity", label: "Ethics & Integrity", short: "Eth", value: ethicsRating, Icon: Scale },
+    { key: "politics_lobbying", label: "Politics & Lobbying", short: "Pol", value: politicsRating, Icon: Landmark },
+    { key: "transparency", label: "Transparency", short: "Tra", value: transparencyRating, Icon: Eye },
+    { key: "animal_welfare", label: "Animal Welfare", short: "Ani", value: animalWelfareRating, Icon: PawPrint },
+    { key: "data_privacy", label: "Data & Privacy", short: "Dat", value: dataPrivacyRating, Icon: Lock },
+    { key: "supply_chain", label: "Supply Chain", short: "Sup", value: supplyChainRating, Icon: Truck },
   ];
 
-  const dotColor = (v: number) => {
-    if (v <= 0) return "bg-muted";
-    if (v < 2) return "bg-discourage";
-    if (v < 3.5) return "bg-neutral";
-    return "bg-recommend";
+  const iconColor = (v: number) => {
+    if (v <= 0) return "text-muted-foreground/50";
+    if (v < 2) return "text-discourage";
+    if (v < 3.5) return "text-neutral";
+    return "text-recommend";
   };
 
   const totalStances = recommendCount + neutralCount + discourageCount;
@@ -117,7 +117,7 @@ const CompanyCard = ({
       <CardContent className="p-4 sm:p-5 pt-0 flex-1 flex flex-col gap-3">
         <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 min-h-[2.5em]">{description}</p>
 
-        {/* Category dots — compact 8-rating overview */}
+        {/* Category icons — compact 8-rating overview */}
         <TooltipProvider delayDuration={150}>
           <div className="flex items-center justify-between gap-1">
             {ratings.map((r) => (
@@ -128,7 +128,7 @@ const CompanyCard = ({
                     className="flex flex-col items-center gap-1 flex-1 group/dot py-1"
                     aria-label={`${r.label}: ${r.value.toFixed(1)}`}
                   >
-                    <span className={`h-2 w-full rounded-full ${dotColor(r.value)} opacity-80 group-hover/dot:opacity-100 transition-opacity`} />
+                    <r.Icon className={`h-4 w-4 ${iconColor(r.value)} transition-colors`} />
                     <span className="text-[10px] text-muted-foreground tabular-nums">{r.value > 0 ? r.value.toFixed(1) : "–"}</span>
                   </button>
                 </TooltipTrigger>
