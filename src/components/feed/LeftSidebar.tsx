@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Home, User, Building2, AlertTriangle, Users, TrendingUp, Bookmark } from "lucide-react";
+import { Home, User, Building2, AlertTriangle, Users, TrendingUp, Bookmark, Info } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
 import { useLocation } from "react-router-dom";
@@ -18,6 +18,7 @@ const LeftSidebar = () => {
     { path: "/boycotts", icon: AlertTriangle, label: "Boycotts" },
     { path: "/creators", icon: Users, label: "Creators" },
     { path: "/profile", icon: User, label: "Profile" },
+    { path: "/about", icon: Info, label: "About" },
   ];
 
   return (
