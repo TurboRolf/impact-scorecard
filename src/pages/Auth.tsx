@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { Link } from "react-router-dom";
+import MobileFooterLinks from "@/components/MobileFooterLinks";
 
 const Auth = () => {
   const [signInEmail, setSignInEmail] = useState("");
