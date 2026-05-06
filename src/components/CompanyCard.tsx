@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, MessageSquare, ThumbsUp, Minus, ThumbsDown, Leaf, Users, Scale, Landmark, Eye, PawPrint, Lock, Truck } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, Flag, ThumbsUp, Minus, ThumbsDown, Leaf, Users, Scale, Landmark, Eye, PawPrint, Lock, Truck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { countryCodeToFlag } from "@/lib/countryFlag";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -178,7 +178,7 @@ const CompanyCard = ({
             className="flex-1 gap-1.5 h-8 text-xs"
             onClick={(e) => { e.stopPropagation(); onRate?.(); }}
           >
-            <MessageSquare className="h-3.5 w-3.5" />
+            <Flag className="h-3.5 w-3.5" />
             Stance
           </Button>
           <Button
