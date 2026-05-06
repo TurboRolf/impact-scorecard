@@ -2,14 +2,16 @@ import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Home, User, Building2, AlertTriangle, Users, TrendingUp, Bookmark, Info } from "lucide-react";
+import { Home, User, Building2, AlertTriangle, Users, TrendingUp, Bookmark, Info, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
+import { useUserRoles } from "@/hooks/useUserRole";
 import { useLocation } from "react-router-dom";
 
 const LeftSidebar = () => {
   const { user } = useAuth();
   const { data: profile } = useProfile(user?.id);
+  const { isAdmin } = useUserRoles();
   const location = useLocation();
 
   const navItems = [
@@ -19,6 +21,7 @@ const LeftSidebar = () => {
     { path: "/creators", icon: Users, label: "Creators" },
     { path: "/profile", icon: User, label: "Profile" },
     { path: "/about", icon: Info, label: "About" },
+    ...(isAdmin ? [{ path: "/admin/reports", icon: Shield, label: "Admin" }] : []),
   ];
 
   return (
