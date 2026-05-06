@@ -86,6 +86,9 @@ const Terms = () => {
               <li>Is the subject of a credible complaint from a third party</li>
               <li>We deem harmful to the Service or its users</li>
             </ul>
+            <p className="text-sm leading-relaxed mt-2">
+              In addition, we reserve the right to remove any User Content at our sole discretion, at any time, and without obligation to provide a reason. This broad discretion exists primarily to protect the integrity and credibility of the platform — ensuring that Ethisay remains a space for meaningful, good-faith engagement with issues of genuine public concern. It is not intended to suppress legitimate criticism or political viewpoints, but to allow us to act swiftly when content threatens the trust and purpose that the platform is built on.
+            </p>
           </section>
 
           <section className="mb-6">
