@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { Link } from "react-router-dom";
+import MobileFooterLinks from "@/components/MobileFooterLinks";
 
 const Auth = () => {
   const [signInEmail, setSignInEmail] = useState("");
@@ -111,7 +112,7 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-subtle flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-subtle flex flex-col items-center justify-center p-4 gap-2">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex items-center justify-between mb-2">
@@ -219,6 +220,7 @@ const Auth = () => {
           </Tabs>
         </CardContent>
       </Card>
+      <MobileFooterLinks always className="mt-2" />
     </div>
   );
 };

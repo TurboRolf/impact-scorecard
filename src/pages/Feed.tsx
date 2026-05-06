@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
-import { Link } from "react-router-dom";
+import MobileFooterLinks from "@/components/MobileFooterLinks";
 import PostCard from "@/components/PostCard";
 import LoadingScreen from "@/components/LoadingScreen";
 import LeftSidebar from "@/components/feed/LeftSidebar";
@@ -332,16 +332,7 @@ const Feed = () => {
           </aside>
         </div>
 
-        {/* Mobile/tablet footer — sidebar links not visible on small screens */}
-        <footer className="xl:hidden mt-6 px-2 text-[11px] text-muted-foreground text-center space-y-1">
-          <div className="flex flex-wrap justify-center gap-x-3 gap-y-1">
-            <Link to="/about" className="hover:underline">About</Link>
-            <Link to="/privacy" className="hover:underline">Privacy</Link>
-            <Link to="/terms" className="hover:underline">Terms</Link>
-            <Link to="/contact" className="hover:underline">Contact</Link>
-          </div>
-          <p>© 2026 Ethisay</p>
-        </footer>
+        <MobileFooterLinks />
       </div>
     </div>
   );
