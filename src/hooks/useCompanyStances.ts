@@ -30,7 +30,7 @@ export interface CompanyData {
   avg_ethics_rating: number | null;
   avg_politics_rating: number | null;
   avg_transparency_rating: number | null;
-  avg_animal_welfare_rating: number | null;
+  avg_marketing_advertising_rating: number | null;
   avg_data_privacy_rating: number | null;
   avg_supply_chain_rating: number | null;
   recommend_count: number;

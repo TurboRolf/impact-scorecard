@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, ArrowLeft, ExternalLink, Leaf, Users, Scale, Landmark, Eye, PawPrint, Lock, Truck } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, ArrowLeft, ExternalLink, Leaf, Users, Scale, Landmark, Eye, Megaphone, Lock, Truck } from "lucide-react";
 import CompanyStanceDialog from "@/components/CompanyStanceDialog";
 import CompanyReviewDialog from "@/components/CompanyReviewDialog";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
@@ -105,7 +105,7 @@ const Company = () => {
     { label: "Ethics & Integrity", value: Number(company.avg_ethics_rating || 0), color: "text-earth-orange", Icon: Scale },
     { label: "Politics & Lobbying", value: Number(company.avg_politics_rating || 0), color: "text-earth-orange", Icon: Landmark },
     { label: "Transparency", value: Number(company.avg_transparency_rating || 0), color: "text-earth-blue", Icon: Eye },
-    { label: "Animal Welfare", value: Number(company.avg_animal_welfare_rating || 0), color: "text-earth-green", Icon: PawPrint },
+    { label: "Marketing & Advertising", value: Number(company.avg_marketing_advertising_rating || 0), color: "text-earth-orange", Icon: Megaphone },
     { label: "Data & Privacy", value: Number(company.avg_data_privacy_rating || 0), color: "text-earth-blue", Icon: Lock },
     { label: "Supply Chain", value: Number(company.avg_supply_chain_rating || 0), color: "text-earth-orange", Icon: Truck },
   ];

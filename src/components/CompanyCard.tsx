@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, TrendingDown, TrendingUp, AlertTriangle, Flag, ThumbsUp, Minus, ThumbsDown, Leaf, Users, Scale, Landmark, Eye, PawPrint, Lock, Truck } from "lucide-react";
+import { Star, TrendingDown, TrendingUp, AlertTriangle, Flag, ThumbsUp, Minus, ThumbsDown, Leaf, Users, Scale, Landmark, Eye, Megaphone, Lock, Truck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { countryCodeToFlag } from "@/lib/countryFlag";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -18,7 +18,7 @@ interface CompanyCardProps {
   ethicsRating: number;
   politicsRating: number;
   transparencyRating: number;
-  animalWelfareRating: number;
+  marketingAdvertisingRating: number;
   dataPrivacyRating: number;
   supplyChainRating: number;
   activeBoycotts: number;
@@ -44,7 +44,7 @@ const CompanyCard = ({
   ethicsRating,
   politicsRating,
   transparencyRating,
-  animalWelfareRating,
+  marketingAdvertisingRating,
   dataPrivacyRating,
   supplyChainRating,
   activeBoycotts,
@@ -65,7 +65,7 @@ const CompanyCard = ({
     { key: "ethics_integrity", label: "Ethics & Integrity", short: "Eth", value: ethicsRating, Icon: Scale },
     { key: "politics_lobbying", label: "Politics & Lobbying", short: "Pol", value: politicsRating, Icon: Landmark },
     { key: "transparency", label: "Transparency", short: "Tra", value: transparencyRating, Icon: Eye },
-    { key: "animal_welfare", label: "Animal Welfare", short: "Ani", value: animalWelfareRating, Icon: PawPrint },
+    { key: "marketing_advertising", label: "Marketing & Advertising", short: "Mkt", value: marketingAdvertisingRating, Icon: Megaphone },
     { key: "data_privacy", label: "Data & Privacy", short: "Dat", value: dataPrivacyRating, Icon: Lock },
     { key: "supply_chain", label: "Supply Chain", short: "Sup", value: supplyChainRating, Icon: Truck },
   ];

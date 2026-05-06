@@ -8,7 +8,7 @@ export type ReviewCategory =
   | 'ethics_integrity'
   | 'politics_lobbying'
   | 'transparency'
-  | 'animal_welfare'
+  | 'marketing_advertising'
   | 'data_privacy'
   | 'supply_chain';
 
@@ -18,7 +18,7 @@ export const REVIEW_CATEGORIES: { value: ReviewCategory; label: string; descript
   { value: 'ethics_integrity', label: 'Ethics & Integrity', description: 'Corruption, tax practices, and honest business conduct.' },
   { value: 'politics_lobbying', label: 'Politics & Lobbying', description: 'Political donations, lobbying activity, and regulatory influence.' },
   { value: 'transparency', label: 'Transparency', description: 'Openness about operations, finances, and decision-making.' },
-  { value: 'animal_welfare', label: 'Animal Welfare', description: 'Treatment of animals in production and testing.' },
+  { value: 'marketing_advertising', label: 'Marketing & Advertising', description: 'Honesty, ethics, and impact of marketing and advertising practices.' },
   { value: 'data_privacy', label: 'Data & Privacy', description: 'How user data is collected, stored, and used.' },
   { value: 'supply_chain', label: 'Supply Chain', description: 'Sourcing practices and supplier accountability.' },
 ];
