@@ -162,6 +162,10 @@ const Profile = () => {
         onOpenChange={setRequestsOpen}
         userId={user?.id}
       />
+
+      <div className="max-w-4xl mx-auto px-3 md:px-4">
+        <MobileFooterLinks />
+      </div>
     </div>
   );
 };
