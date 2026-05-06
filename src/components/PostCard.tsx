@@ -5,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send } from "lucide-react";
+import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send, MoreHorizontal, Flag } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import ReportPostDialog from "@/components/ReportPostDialog";
 import { useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 import { usePostLikes, useToggleLike, usePostComments, useCreateComment } from "@/hooks/usePostInteractions";
@@ -47,6 +49,7 @@ interface PostCardProps {
 const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId }: PostCardProps) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [reportOpen, setReportOpen] = useState(false);
   const navigate = useNavigate();
 
   const joinBoycott = useJoinBoycott();
@@ -167,6 +170,20 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
                 <><UserPlus className="h-3 w-3 md:h-4 md:w-4" /><span className="hidden sm:inline">Follow</span></>
               )}
             </Button>
+          )}
+          {currentUserId && postId && !isOwnPost && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-7 w-7 md:h-8 md:w-8 p-0 flex-shrink-0" aria-label="Post options">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setReportOpen(true)} className="text-destructive focus:text-destructive">
+                  <Flag className="h-4 w-4 mr-2" /> Report post
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
         </div>
       </CardHeader>
@@ -325,6 +342,9 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
           </div>
         )}
       </CardContent>
+      {postId && (
+        <ReportPostDialog postId={postId} open={reportOpen} onOpenChange={setReportOpen} />
+      )}
     </Card>
   );
 };
