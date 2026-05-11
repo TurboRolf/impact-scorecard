@@ -14,6 +14,9 @@ export interface PostData {
   comments_count: number;
   created_at: string;
   updated_at: string;
+  removed_at?: string | null;
+  removed_reason?: string | null;
+  removed_by?: string | null;
   profiles?: {
     display_name: string | null;
     username: string | null;
