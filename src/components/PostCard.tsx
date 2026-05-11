@@ -44,9 +44,10 @@ interface PostCardProps {
   likes: number;
   comments: number;
   currentUserId?: string;
+  removed?: { reason: string | null };
 }
 
-const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId }: PostCardProps) => {
+const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId, removed }: PostCardProps) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
@@ -129,6 +130,28 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
     if (!user.id || !currentUserId) return;
     if (isFollowing) { unfollowUser.mutate(user.id); } else { followUser.mutate({ followingId: user.id, isPrivate: false }); }
   };
+
+  if (removed) {
+    return (
+      <Card className="border-destructive/40 bg-destructive/5">
+        <CardContent className="p-4 space-y-1.5">
+          <div className="flex items-center gap-2 text-destructive">
+            <AlertTriangle className="h-4 w-4" />
+            <span className="text-sm font-semibold">Post removed by moderators</span>
+          </div>
+          <p className="text-xs md:text-sm text-muted-foreground">
+            {isOwnPost
+              ? "Your post was removed for violating Ethisay's community guidelines."
+              : "This post is no longer available."}
+          </p>
+          {isOwnPost && removed.reason && (
+            <p className="text-xs md:text-sm"><span className="font-medium">Reason:</span> {removed.reason}</p>
+          )}
+          <p className="text-[11px] text-muted-foreground pt-1">Posted {timestamp}</p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="hover:shadow-card transition-all duration-300">

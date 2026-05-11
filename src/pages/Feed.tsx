@@ -54,7 +54,8 @@ const Feed = () => {
   };
 
   // Transform posts data for PostCard component
-  const transformedPosts = posts.map((post: PostData) => {
+  const visiblePosts = posts.filter((post: PostData) => !post.removed_at || post.user_id === user?.id);
+  const transformedPosts = visiblePosts.map((post: PostData) => {
     // Remove duplicate company info from content if it exists
     let cleanContent = post.content;
     if (post.company_name && post.company_rating) {
@@ -133,7 +134,8 @@ const Feed = () => {
       isBoycott: post.is_boycott,
       timestamp: formatTimestamp(post.created_at),
       likes: post.likes_count,
-      comments: post.comments_count
+      comments: post.comments_count,
+      removed: post.removed_at ? { reason: post.removed_reason ?? null } : undefined,
     };
   });
 

@@ -370,6 +370,9 @@ export type Database = {
           id: string
           is_boycott: boolean | null
           likes_count: number | null
+          removed_at: string | null
+          removed_by: string | null
+          removed_reason: string | null
           updated_at: string
           user_id: string
         }
@@ -383,6 +386,9 @@ export type Database = {
           id?: string
           is_boycott?: boolean | null
           likes_count?: number | null
+          removed_at?: string | null
+          removed_by?: string | null
+          removed_reason?: string | null
           updated_at?: string
           user_id: string
         }
@@ -396,6 +402,9 @@ export type Database = {
           id?: string
           is_boycott?: boolean | null
           likes_count?: number | null
+          removed_at?: string | null
+          removed_by?: string | null
+          removed_reason?: string | null
           updated_at?: string
           user_id?: string
         }

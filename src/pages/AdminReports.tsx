@@ -114,9 +114,20 @@ const AdminReports = () => {
   };
 
   const removePost = async (postId: string) => {
-    if (!confirm("Permanently delete this post? This cannot be undone.")) return;
+    const reason = prompt(
+      "Reason shown to the author (e.g. 'Spam', 'Hate speech'). The post will be hidden from the feed but kept for the author with this reason."
+    );
+    if (reason === null) return;
+    const trimmed = reason.trim();
+    if (!trimmed) {
+      toast({ title: "Reason required", description: "Please provide a reason.", variant: "destructive" });
+      return;
+    }
     setBusyId(postId);
-    const { error } = await supabase.from("posts").delete().eq("id", postId);
+    const { error } = await supabase
+      .from("posts")
+      .update({ removed_at: new Date().toISOString(), removed_reason: trimmed, removed_by: user.id })
+      .eq("id", postId);
     if (!error) {
       await supabase
         .from("post_reports")
@@ -125,7 +136,7 @@ const AdminReports = () => {
     }
     setBusyId(null);
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return; }
-    toast({ title: "Post removed", description: "The post was deleted." });
+    toast({ title: "Post removed", description: "The author will see a removal notice with your reason." });
     refresh();
   };
 
