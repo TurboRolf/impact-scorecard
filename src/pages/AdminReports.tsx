@@ -99,6 +99,7 @@ const AdminReports = () => {
   const refresh = () => {
     qc.invalidateQueries({ queryKey: ["admin_reports"] });
     qc.invalidateQueries({ queryKey: ["admin_reports_posts"] });
+    qc.invalidateQueries({ queryKey: ["posts"] });
   };
 
   const updateStatus = async (postId: string, status: string) => {
