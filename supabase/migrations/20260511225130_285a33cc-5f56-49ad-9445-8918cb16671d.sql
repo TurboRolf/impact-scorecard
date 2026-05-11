@@ -1,0 +1,1 @@
+CREATE POLICY "Admins can update posts" ON public.posts FOR UPDATE USING (has_role(auth.uid(), 'admin'::app_role));
