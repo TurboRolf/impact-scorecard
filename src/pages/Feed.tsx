@@ -54,7 +54,8 @@ const Feed = () => {
   };
 
   // Transform posts data for PostCard component
-  const visiblePosts = posts.filter((post: PostData) => !post.removed_at || post.user_id === user?.id);
+  // Removed posts are hidden from all feeds; the author is notified via the notification center.
+  const visiblePosts = posts.filter((post: PostData) => !post.removed_at);
   const transformedPosts = visiblePosts.map((post: PostData) => {
     // Remove duplicate company info from content if it exists
     let cleanContent = post.content;
