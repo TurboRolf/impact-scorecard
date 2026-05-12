@@ -249,7 +249,7 @@ const UserProfile = () => {
               userId={userId}
               activeTab={activeTab}
               onTabChange={setActiveTab}
-              showPosts={false}
+              showPosts={true}
             />
           </>
         ) : (
