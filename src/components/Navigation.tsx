@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
+import NotificationBell from "./NotificationBell";
 import logo from "@/assets/ethisay-logo-v4.png";
 
 const Navigation = () => {
@@ -73,6 +74,7 @@ const Navigation = () => {
               <Button variant="ghost" size="sm" className="sm:hidden p-2" onClick={() => setSearchOpen(true)}>
                 <Search className="h-4 w-4" />
               </Button>
+              {user && <NotificationBell />}
               {user ? (
                 <Button variant="outline" size="sm" onClick={signOut} className="gap-1 text-xs sm:text-sm px-2 sm:px-3">
                   <LogOut className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
