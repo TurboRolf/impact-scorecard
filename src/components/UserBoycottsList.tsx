@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Users, Clock, Target, Ban, Megaphone, UserCheck } from "lucide-react";
@@ -14,6 +14,7 @@ interface UserBoycottsListProps {
 }
 
 const UserBoycottsList = ({ userId, defaultTab = "joined" }: UserBoycottsListProps) => {
+  const [tab, setTab] = useState(defaultTab);
   const { data: boycotts = [], isLoading } = useBoycotts();
   const { data: joinedBoycottIds = [], isLoading: isLoadingJoined } = useUserBoycottParticipation(userId);
   const { user } = useAuth();
@@ -122,7 +123,7 @@ const UserBoycottsList = ({ userId, defaultTab = "joined" }: UserBoycottsListPro
   );
 
   return (
-    <Tabs value={defaultTab} className="w-full">
+    <Tabs value={tab} onValueChange={setTab} className="w-full">
       <TabsList className="grid w-full grid-cols-2">
         <TabsTrigger value="joined" className="gap-1.5">
           <UserCheck className="h-3.5 w-3.5" />
