@@ -52,7 +52,7 @@ const AdminReports = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("posts")
-        .select("id, content, user_id, created_at, is_boycott, company_name")
+        .select("id, content, user_id, created_at, is_boycott, company_name, removed_at, removed_reason")
         .in("id", postIds);
       if (error) throw error;
       const map: Record<string, any> = {};
@@ -159,8 +159,12 @@ const AdminReports = () => {
             const author = post && (profilesMap as any)[post.user_id];
             const allStatuses = new Set(list.map((r) => r.status));
             const statusBadge = allStatuses.has("pending") ? "pending" : Array.from(allStatuses)[0];
+            const isRemoved = !!post?.removed_at || statusBadge === "removed";
+            const isDismissed = statusBadge === "dismissed";
+            const isReviewed = statusBadge === "reviewed";
+            const badgeVariant = statusBadge === "pending" ? "destructive" : isRemoved ? "default" : "secondary";
             return (
-              <Card key={postId}>
+              <Card key={postId} className={isRemoved ? "border-destructive/40 bg-destructive/5" : isDismissed ? "opacity-70" : ""}>
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-3 flex-wrap">
                     <div className="min-w-0">
@@ -172,19 +176,22 @@ const AdminReports = () => {
                         )}
                       </CardTitle>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {list.length} report{list.length > 1 ? "s" : ""} · status: <Badge variant={statusBadge === "pending" ? "destructive" : "secondary"}>{statusBadge}</Badge>
+                        {list.length} report{list.length > 1 ? "s" : ""} · status: <Badge variant={badgeVariant}>{statusBadge}</Badge>
                       </p>
+                      {isRemoved && post?.removed_reason && (
+                        <p className="text-xs text-destructive mt-1">Removed reason: {post.removed_reason}</p>
+                      )}
                     </div>
                     <div className="flex gap-2 flex-wrap">
-                      <Button size="sm" variant="outline" disabled={busyId === postId} onClick={() => updateStatus(postId, "reviewed")}>
+                      <Button size="sm" variant="outline" disabled={busyId === postId || isReviewed} onClick={() => updateStatus(postId, "reviewed")}>
                         <CheckCircle2 className="h-4 w-4 mr-1" /> Reviewed
                       </Button>
-                      <Button size="sm" variant="outline" disabled={busyId === postId} onClick={() => updateStatus(postId, "dismissed")}>
+                      <Button size="sm" variant="outline" disabled={busyId === postId || isDismissed} onClick={() => updateStatus(postId, "dismissed")}>
                         <X className="h-4 w-4 mr-1" /> Dismiss
                       </Button>
                       {post && (
-                        <Button size="sm" variant="destructive" disabled={busyId === postId} onClick={() => removePost(postId)}>
-                          <Trash2 className="h-4 w-4 mr-1" /> Remove post
+                        <Button size="sm" variant="destructive" disabled={busyId === postId || isRemoved} onClick={() => removePost(postId)}>
+                          <Trash2 className="h-4 w-4 mr-1" /> {isRemoved ? "Removed" : "Remove post"}
                         </Button>
                       )}
                     </div>
