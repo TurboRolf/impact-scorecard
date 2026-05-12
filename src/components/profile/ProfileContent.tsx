@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import UserStancesList from "@/components/UserStancesList";
 import UserReviewsList from "@/components/UserReviewsList";
 import UserBoycottsList from "@/components/UserBoycottsList";
+import UserPostsList from "@/components/UserPostsList";
 
 interface ProfileContentProps {
   userId?: string;
@@ -60,16 +61,7 @@ const ProfileContent = ({ userId, activeTab, onTabChange, showPosts = true, boyc
 
         {showPosts && (
           <TabsContent value="posts" className="mt-3 md:mt-6">
-            <Card>
-              <CardContent className="p-4 md:p-8 text-center">
-                <p className="text-sm text-muted-foreground mb-3">
-                  No posts yet. Share your thoughts to get started!
-                </p>
-                <Button onClick={() => navigate('/')} variant="earth" size="sm">
-                  Create Your First Post
-                </Button>
-              </CardContent>
-            </Card>
+            <UserPostsList userId={userId} />
           </TabsContent>
         )}
         
