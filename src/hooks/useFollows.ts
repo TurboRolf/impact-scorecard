@@ -128,6 +128,10 @@ export const useFollowUser = () => {
       queryClient.invalidateQueries({ queryKey: ["followStatus"] });
       queryClient.invalidateQueries({ queryKey: ["followerCount"] });
       queryClient.invalidateQueries({ queryKey: ["isAcceptedFollower"] });
+      queryClient.invalidateQueries({ queryKey: ["followingCount"] });
+      queryClient.invalidateQueries({ queryKey: ["followers"] });
+      queryClient.invalidateQueries({ queryKey: ["following"] });
+      queryClient.invalidateQueries({ queryKey: ["pendingFollowRequests"] });
       if (status === "pending") {
         toast({
           title: "Följförfrågan skickad",
@@ -172,6 +176,9 @@ export const useUnfollowUser = () => {
       queryClient.invalidateQueries({ queryKey: ["followStatus"] });
       queryClient.invalidateQueries({ queryKey: ["followerCount"] });
       queryClient.invalidateQueries({ queryKey: ["isAcceptedFollower"] });
+      queryClient.invalidateQueries({ queryKey: ["followingCount"] });
+      queryClient.invalidateQueries({ queryKey: ["followers"] });
+      queryClient.invalidateQueries({ queryKey: ["following"] });
       toast({
         title: "Avföljd",
         description: "Du följer inte längre denna användare.",
@@ -206,6 +213,9 @@ export const useAcceptFollowRequest = () => {
       queryClient.invalidateQueries({ queryKey: ["followerCount"] });
       queryClient.invalidateQueries({ queryKey: ["followers"] });
       queryClient.invalidateQueries({ queryKey: ["isAcceptedFollower"] });
+      queryClient.invalidateQueries({ queryKey: ["followingCount"] });
+      queryClient.invalidateQueries({ queryKey: ["following"] });
+      queryClient.invalidateQueries({ queryKey: ["followStatus"] });
       toast({ title: "Godkänd", description: "Följförfrågan godkänd." });
     },
   });
