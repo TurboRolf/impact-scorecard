@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, User, Building2, AlertTriangle, Users, Search, LogOut, Sun, Moon } from "lucide-react";
+import { Home, User, Building2, AlertTriangle, Users, Search, LogOut, Sun, Moon, HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { useAuth } from "@/hooks/useAuth";
