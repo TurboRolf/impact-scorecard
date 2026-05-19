@@ -62,6 +62,7 @@ const RightSidebar = () => {
       <div className="px-2 text-[11px] text-muted-foreground space-y-1">
         <div className="flex flex-wrap gap-x-2 gap-y-0.5">
           <Link to="/about" className="hover:underline">About</Link>
+          <Link to="/help" className="hover:underline">Help</Link>
           <Link to="/privacy" className="hover:underline">Privacy</Link>
           <Link to="/terms" className="hover:underline">Terms</Link>
           <Link to="/contact" className="hover:underline">Contact</Link>
