@@ -64,6 +64,11 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
+              <Link to="/help" aria-label="Help">
+                <Button variant="ghost" size="sm" className="p-2">
+                  <HelpCircle className="h-4 w-4" />
+                </Button>
+              </Link>
               <Button variant="ghost" size="sm" className="p-2" onClick={toggleTheme} aria-label="Toggle dark mode">
                 {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               </Button>
