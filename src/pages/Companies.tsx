@@ -9,7 +9,7 @@ import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Globe, Users, Plus, Star, ChevronDown, Filter } from "lucide-react";
+import { Search, Plus, Star, ChevronDown, Filter } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,7 +25,6 @@ type CompanyInfo = { name: string; category: string };
 const Companies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [viewType, setViewType] = useState<"global" | "following">("global");
   
   const stanceDialog = useDialogState<CompanyInfo>();
   const reviewDialog = useDialogState<CompanyInfo>();
@@ -105,26 +104,6 @@ const Companies = () => {
               />
             </div>
             
-            <div className="flex gap-1 sm:gap-2">
-              <Button
-                variant={viewType === "global" ? "default" : "outline"}
-                onClick={() => setViewType("global")}
-                className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
-                size="sm"
-              >
-                <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Global</span>
-              </Button>
-              <Button
-                variant={viewType === "following" ? "default" : "outline"}
-                onClick={() => setViewType("following")}
-                className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-3"
-                size="sm"
-              >
-                <Users className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                <span className="hidden sm:inline">Following</span>
-              </Button>
-            </div>
           </div>
           
           {/* Desktop: inline category pills */}
