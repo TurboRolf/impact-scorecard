@@ -85,9 +85,38 @@ const CompanyCard = ({
       <CardHeader className="pb-3 p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0">
-            <div className="w-11 h-11 bg-white rounded-lg flex items-center justify-center flex-shrink-0 border">
+            <div className="w-11 h-11 bg-white rounded-lg flex items-center justify-center flex-shrink-0 border overflow-hidden">
               {logo ? (
-                <img src={logo} alt={name} className="w-7 h-7 object-contain" loading="lazy" />
+                <img
+                  src={logo}
+                  alt={name}
+                  className="w-9 h-9 object-contain"
+                  loading="lazy"
+                  onError={(e) => {
+                    const img = e.currentTarget;
+                    const tryDomain = (() => {
+                      try {
+                        const m = logo.match(/(?:logo\.clearbit\.com\/|domain=)([^&\s/]+)/);
+                        return m?.[1];
+                      } catch { return null; }
+                    })();
+                    if (img.dataset.fallback !== 'google' && tryDomain) {
+                      img.dataset.fallback = 'google';
+                      img.src = `https://www.google.com/s2/favicons?domain=${tryDomain}&sz=128`;
+                    } else if (img.dataset.fallback !== 'letter') {
+                      img.dataset.fallback = 'letter';
+                      img.style.display = 'none';
+                      const parent = img.parentElement;
+                      if (parent && !parent.querySelector('[data-letter]')) {
+                        const span = document.createElement('span');
+                        span.dataset.letter = 'true';
+                        span.className = 'text-base font-bold text-foreground';
+                        span.textContent = name.charAt(0);
+                        parent.appendChild(span);
+                      }
+                    }
+                  }}
+                />
               ) : (
                 <span className="text-base font-bold">{name.charAt(0)}</span>
               )}
