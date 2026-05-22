@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 import NotificationBell from "./NotificationBell";
 import logo from "@/assets/ethisay-logo-v4.png";
+import logoDark from "@/assets/ethisay-logo-v4-dark.png";
 
 const Navigation = () => {
   const location = useLocation();
@@ -42,7 +43,8 @@ const Navigation = () => {
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center" aria-label="Ethisay home">
-              <img src={logo} alt="Ethisay" className="h-6 md:h-7 w-auto -my-1" />
+              <img src={logo} alt="Ethisay" className="h-6 md:h-7 w-auto -my-1 block dark:hidden" />
+              <img src={logoDark} alt="Ethisay" className="h-6 md:h-7 w-auto -my-1 hidden dark:block" />
             </Link>
             
             <div className="hidden md:flex items-center space-x-1">
