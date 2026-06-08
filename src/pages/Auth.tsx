@@ -83,9 +83,11 @@ const Auth = () => {
       }
     } else {
       toast({
-        title: "Account created!",
-        description: "You can now sign in with your credentials"
+        title: "Check your email",
+        description: "We sent you a confirmation link. Please verify your email before signing in."
       });
+      setSignUpEmail("");
+      setSignUpPassword("");
     }
     setLoading(false);
   };
