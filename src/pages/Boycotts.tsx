@@ -85,13 +85,37 @@ const Boycotts = () => {
   const handleShareBoycott = async (boycott: { id: string; title: string; company: string }) => {
     const url = `${window.location.origin}/boycotts`;
     const text = `Check out this boycott on Ethisay: "${boycott.title}" against ${boycott.company}`;
-    if (navigator.share) {
+    const shareData = { title: boycott.title, text, url };
+    const payload = `${text} - ${url}`;
+
+    // Try Web Share API (mobile/secure contexts). Often blocked in iframes.
+    if (typeof navigator !== "undefined" && navigator.share) {
       try {
-        await navigator.share({ title: boycott.title, text, url });
-      } catch { /* user cancelled */ }
-    } else {
-      await navigator.clipboard.writeText(`${text} - ${url}`);
+        await navigator.share(shareData);
+        return;
+      } catch (err: any) {
+        if (err?.name === "AbortError") return; // user cancelled
+        // fall through to clipboard fallback
+      }
+    }
+
+    // Clipboard fallback
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(payload);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = payload;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
       toast({ title: "Link copied", description: "Boycott link copied to clipboard" });
+    } catch {
+      toast({ title: "Could not share", description: payload, variant: "destructive" });
     }
   };
 
