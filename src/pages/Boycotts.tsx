@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Users, Calendar, Search, Check, CheckCircle } from "lucide-react";
+import { AlertTriangle, Users, Calendar, Search, Check, CheckCircle, Share } from "lucide-react";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { BoycottManageMenu } from "@/components/BoycottManageMenu";
 import { useBoycotts, useBoycottStats, useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
@@ -79,6 +79,19 @@ const Boycotts = () => {
         description: error.message,
         variant: "destructive"
       });
+    }
+  };
+
+  const handleShareBoycott = async (boycott: { id: string; title: string; company: string }) => {
+    const url = `${window.location.origin}/boycotts`;
+    const text = `Check out this boycott on Ethisay: "${boycott.title}" against ${boycott.company}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: boycott.title, text, url });
+      } catch { /* user cancelled */ }
+    } else {
+      await navigator.clipboard.writeText(`${text} - ${url}`);
+      toast({ title: "Link copied", description: "Boycott link copied to clipboard" });
     }
   };
 
