@@ -95,13 +95,33 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
   const handleShare = async () => {
     const url = window.location.origin;
     const text = `Check out this post by @${user.username}`;
-    if (navigator.share) {
+    const payload = `${text} - ${url}`;
+
+    if (typeof navigator !== "undefined" && navigator.share) {
       try {
         await navigator.share({ title: "Ethisay Post", text, url });
-      } catch { /* user cancelled */ }
-    } else {
-      await navigator.clipboard.writeText(`${text} - ${url}`);
+        return;
+      } catch (err: any) {
+        if (err?.name === "AbortError") return;
+      }
+    }
+
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(payload);
+      } else {
+        const ta = document.createElement("textarea");
+        ta.value = payload;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+      }
       toast({ title: "Link copied", description: "Post link copied to clipboard" });
+    } catch {
+      toast({ title: "Could not share", description: payload, variant: "destructive" });
     }
   };
 
