@@ -401,6 +401,7 @@ export type Database = {
           content: string
           created_at: string
           id: string
+          image_url: string | null
           is_boycott: boolean | null
           likes_count: number | null
           removed_at: string | null
@@ -417,6 +418,7 @@ export type Database = {
           content: string
           created_at?: string
           id?: string
+          image_url?: string | null
           is_boycott?: boolean | null
           likes_count?: number | null
           removed_at?: string | null
@@ -433,6 +435,7 @@ export type Database = {
           content?: string
           created_at?: string
           id?: string
+          image_url?: string | null
           is_boycott?: boolean | null
           likes_count?: number | null
           removed_at?: string | null
