@@ -402,6 +402,7 @@ export type Database = {
           created_at: string
           id: string
           image_url: string | null
+          image_urls: string[]
           is_boycott: boolean | null
           likes_count: number | null
           removed_at: string | null
@@ -419,6 +420,7 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          image_urls?: string[]
           is_boycott?: boolean | null
           likes_count?: number | null
           removed_at?: string | null
@@ -436,6 +438,7 @@ export type Database = {
           created_at?: string
           id?: string
           image_url?: string | null
+          image_urls?: string[]
           is_boycott?: boolean | null
           likes_count?: number | null
           removed_at?: string | null

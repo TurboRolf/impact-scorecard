@@ -26,8 +26,8 @@ const Feed = () => {
   const [taggedCompany, setTaggedCompany] = useState<{ name: string; category: string } | null>(null);
   const [companyRating, setCompanyRating] = useState<number>(0);
   const [showCompanyTag, setShowCompanyTag] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -43,18 +43,23 @@ const Feed = () => {
   const handleCreatePost = async () => {
     if (!newPost.trim() || !user) return;
 
-    let uploadedUrl: string | null = null;
-    if (imageFile) {
+    let uploadedUrls: string[] = [];
+    if (imageFiles.length > 0) {
       try {
         setUploadingImage(true);
-        const ext = imageFile.name.split(".").pop() || "jpg";
-        const path = `${user.id}/${Date.now()}.${ext}`;
-        const { error: upErr } = await supabase.storage
-          .from("post-images")
-          .upload(path, imageFile, { cacheControl: "3600", upsert: false });
-        if (upErr) throw upErr;
-        const { data } = supabase.storage.from("post-images").getPublicUrl(path);
-        uploadedUrl = data.publicUrl;
+        const uploads = await Promise.all(
+          imageFiles.map(async (file, idx) => {
+            const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+            const path = `${user.id}/${Date.now()}-${idx}.${ext}`;
+            const { error: upErr } = await supabase.storage
+              .from("post-images")
+              .upload(path, file, { cacheControl: "3600", upsert: false });
+            if (upErr) throw upErr;
+            const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+            return data.publicUrl;
+          })
+        );
+        uploadedUrls = uploads;
       } catch (err: any) {
         toast({ title: "Image upload failed", description: err.message, variant: "destructive" });
         setUploadingImage(false);
@@ -66,7 +71,8 @@ const Feed = () => {
 
     await createPost.mutateAsync({
       content: newPost.trim(),
-      image_url: uploadedUrl,
+      image_url: uploadedUrls[0] ?? null,
+      image_urls: uploadedUrls,
       ...(taggedCompany && companyRating > 0 ? {
         company_name: taggedCompany.name,
         company_category: taggedCompany.category,
@@ -78,32 +84,45 @@ const Feed = () => {
     setTaggedCompany(null);
     setCompanyRating(0);
     setShowCompanyTag(false);
-    setImageFile(null);
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-    setImagePreview(null);
+    setImageFiles([]);
+    imagePreviews.forEach((u) => URL.revokeObjectURL(u));
+    setImagePreviews([]);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handlePickImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast({ title: "Invalid file", description: "Please pick an image.", variant: "destructive" });
+    const picked = Array.from(e.target.files ?? []);
+    if (picked.length === 0) return;
+    const remaining = 4 - imageFiles.length;
+    if (remaining <= 0) {
+      toast({ title: "Max 4 images", description: "You can attach up to 4 images per post.", variant: "destructive" });
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: "Image too large", description: "Max 5 MB.", variant: "destructive" });
-      return;
+    const accepted: File[] = [];
+    for (const file of picked.slice(0, remaining)) {
+      if (!file.type.startsWith("image/")) {
+        toast({ title: "Invalid file", description: `${file.name} is not an image.`, variant: "destructive" });
+        continue;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast({ title: "Image too large", description: `${file.name} exceeds 5 MB.`, variant: "destructive" });
+        continue;
+      }
+      accepted.push(file);
     }
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    if (accepted.length === 0) return;
+    setImageFiles((prev) => [...prev, ...accepted]);
+    setImagePreviews((prev) => [...prev, ...accepted.map((f) => URL.createObjectURL(f))]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const clearImage = () => {
-    setImageFile(null);
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-    setImagePreview(null);
+  const removeImageAt = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setImagePreviews((prev) => {
+      const url = prev[index];
+      if (url) URL.revokeObjectURL(url);
+      return prev.filter((_, i) => i !== index);
+    });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -181,6 +200,7 @@ const Feed = () => {
       },
       content: cleanContent,
       imageUrl: post.image_url ?? null,
+      imageUrls: post.image_urls ?? null,
       company: post.company_name && post.company_rating ? {
         name: post.company_name,
         rating: post.company_rating,
@@ -296,22 +316,26 @@ const Feed = () => {
                 </div>
               )}
 
-              {/* Image preview */}
-              {imagePreview && (
-                <div className="relative mt-2 inline-block">
-                  <img
-                    src={imagePreview}
-                    alt="Selected image preview"
-                    className="max-h-48 rounded-md border object-contain"
-                  />
-                  <button
-                    type="button"
-                    onClick={clearImage}
-                    aria-label="Remove image"
-                    className="absolute top-1 right-1 rounded-full bg-background/90 border p-1 hover:bg-background"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
+              {/* Image previews (up to 4) */}
+              {imagePreviews.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {imagePreviews.map((src, i) => (
+                    <div key={src} className="relative">
+                      <img
+                        src={src}
+                        alt={`Selected image ${i + 1}`}
+                        className="h-20 w-20 md:h-24 md:w-24 rounded-md border object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImageAt(i)}
+                        aria-label={`Remove image ${i + 1}`}
+                        className="absolute -top-1.5 -right-1.5 rounded-full bg-background border p-0.5 shadow hover:bg-muted"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -321,6 +345,7 @@ const Feed = () => {
                     ref={fileInputRef}
                     type="file"
                     accept="image/*"
+                    multiple
                     className="hidden"
                     onChange={handlePickImage}
                   />
@@ -328,7 +353,8 @@ const Feed = () => {
                     variant="ghost"
                     size="sm"
                     aria-label="Attach image"
-                    className={`h-8 w-8 p-0 md:h-9 md:w-auto md:px-3 ${imagePreview ? 'text-primary' : ''}`}
+                    disabled={imageFiles.length >= 4}
+                    className={`h-8 w-8 p-0 md:h-9 md:w-auto md:px-3 ${imagePreviews.length > 0 ? 'text-primary' : ''}`}
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <Image className="h-3.5 w-3.5 md:h-4 md:w-4" />

@@ -10,6 +10,7 @@ export interface PostData {
   company_category?: string;
   company_rating?: number;
   image_url?: string | null;
+  image_urls?: string[] | null;
   is_boycott: boolean;
   likes_count: number;
   comments_count: number;
@@ -32,6 +33,7 @@ export interface CreatePostData {
   company_category?: string;
   company_rating?: number;
   image_url?: string | null;
+  image_urls?: string[] | null;
   is_boycott?: boolean;
 }
 
@@ -110,6 +112,7 @@ export const useCreatePost = () => {
           company_category: postData.company_category,
           company_rating: postData.company_rating,
           image_url: postData.image_url ?? null,
+          image_urls: postData.image_urls ?? [],
           is_boycott: postData.is_boycott || false,
         })
         .select(`
