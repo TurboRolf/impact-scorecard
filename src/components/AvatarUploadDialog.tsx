@@ -3,6 +3,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
+import { Slider } from "@/components/ui/slider";
+import Cropper, { Area } from "react-easy-crop";
 import { Camera, Upload, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -29,6 +31,9 @@ const AvatarUploadDialog = ({
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -60,17 +65,38 @@ const AvatarUploadDialog = ({
 
     setSelectedFile(file);
     setPreviewUrl(URL.createObjectURL(file));
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+  };
+
+  const getCroppedBlob = async (imageSrc: string, area: Area): Promise<Blob> => {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = imageSrc;
+    });
+    const canvas = document.createElement("canvas");
+    const size = Math.min(area.width, area.height);
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d")!;
+    ctx.drawImage(image, area.x, area.y, area.width, area.height, 0, 0, size, size);
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Canvas empty"))), "image/jpeg", 0.92);
+    });
   };
 
   const handleUpload = async () => {
-    if (!selectedFile || !userId) return;
+    if (!selectedFile || !userId || !previewUrl || !croppedAreaPixels) return;
 
     setIsUploading(true);
     setUploadProgress(10);
 
     try {
-      const fileExt = selectedFile.name.split('.').pop();
-      const fileName = `${userId}/avatar-${Date.now()}.${fileExt}`;
+      const croppedBlob = await getCroppedBlob(previewUrl, croppedAreaPixels);
+      const fileName = `${userId}/avatar-${Date.now()}.jpg`;
 
       setUploadProgress(30);
 
@@ -85,9 +111,10 @@ const AvatarUploadDialog = ({
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(fileName, selectedFile, {
+        .upload(fileName, croppedBlob, {
           cacheControl: '3600',
-          upsert: true
+          upsert: true,
+          contentType: 'image/jpeg',
         });
 
       if (uploadError) throw uploadError;
@@ -134,6 +161,9 @@ const AvatarUploadDialog = ({
     setSelectedFile(null);
     setPreviewUrl(null);
     setUploadProgress(0);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setCroppedAreaPixels(null);
     onOpenChange(false);
   };
 
@@ -160,25 +190,50 @@ const AvatarUploadDialog = ({
         </DialogHeader>
 
         <div className="flex flex-col items-center gap-6 py-4">
-          <div className="relative">
+          {previewUrl ? (
+            <div className="w-full space-y-3">
+              <div className="relative w-full h-64 bg-muted rounded-lg overflow-hidden">
+                <Cropper
+                  image={previewUrl}
+                  crop={crop}
+                  zoom={zoom}
+                  aspect={1}
+                  cropShape="round"
+                  showGrid={false}
+                  onCropChange={setCrop}
+                  onZoomChange={setZoom}
+                  onCropComplete={(_, areaPixels) => setCroppedAreaPixels(areaPixels)}
+                />
+                <button
+                  onClick={() => {
+                    setSelectedFile(null);
+                    setPreviewUrl(null);
+                  }}
+                  className="absolute top-2 right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors z-10"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <div className="flex items-center gap-3 px-1">
+                <span className="text-xs text-muted-foreground">Zoom</span>
+                <Slider
+                  value={[zoom]}
+                  min={1}
+                  max={3}
+                  step={0.01}
+                  onValueChange={(v) => setZoom(v[0])}
+                  disabled={isUploading}
+                />
+              </div>
+            </div>
+          ) : (
             <Avatar className="h-32 w-32 border-4 border-muted">
               <AvatarImage src={displayUrl} />
               <AvatarFallback className="text-3xl">
                 {displayName?.charAt(0) || username?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
-            {previewUrl && (
-              <button
-                onClick={() => {
-                  setSelectedFile(null);
-                  setPreviewUrl(null);
-                }}
-                className="absolute -top-2 -right-2 p-1 bg-destructive text-destructive-foreground rounded-full hover:bg-destructive/90 transition-colors"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            )}
-          </div>
+          )}
 
           <input
             ref={fileInputRef}
