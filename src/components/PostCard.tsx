@@ -44,10 +44,11 @@ interface PostCardProps {
   likes: number;
   comments: number;
   currentUserId?: string;
+  imageUrl?: string | null;
   removed?: { reason: string | null };
 }
 
-const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId, removed }: PostCardProps) => {
+const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId, imageUrl, removed }: PostCardProps) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
@@ -233,7 +234,18 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
       
       <CardContent className="pt-0">
         {!company && !boycott && <p className="text-foreground mb-3 md:mb-4 text-sm md:text-base">{content}</p>}
-        
+
+        {imageUrl && (
+          <div className="mb-3 md:mb-4 rounded-lg overflow-hidden border bg-muted">
+            <img
+              src={imageUrl}
+              alt="Post image"
+              loading="lazy"
+              className="w-full max-h-[500px] object-contain"
+            />
+          </div>
+        )}
+
         {/* Company review card */}
         {company && (
           <Card className="bg-muted/50 border-0 mb-3 md:mb-4">
