@@ -37,12 +37,21 @@ const PostImageGrid = ({ images }: PostImageGridProps) => {
 
   let grid: JSX.Element;
   if (count === 1) {
-    // Preserve original aspect ratio (like X.com): never distort, cap height,
-    // letterbox on muted background if the image is very tall or very wide.
+    // Preserve original aspect ratio (like X.com): never distort, cap height.
     grid = (
-      <div className="w-full max-h-[80vh] md:max-h-[32rem] flex items-center justify-center bg-muted">
-        <Img src={images[0]} alt="Post image" fit="contain" />
-      </div>
+      <button
+        type="button"
+        onClick={() => open(0)}
+        className="block w-full bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
+        aria-label="Open image"
+      >
+        <img
+          src={images[0]}
+          alt="Post image"
+          loading="lazy"
+          className="w-full h-auto max-h-[80vh] md:max-h-[32rem] object-contain mx-auto hover:opacity-95 transition-opacity"
+        />
+      </button>
     );
   } else if (count === 2) {
     grid = (
