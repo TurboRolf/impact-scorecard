@@ -26,8 +26,8 @@ const Feed = () => {
   const [taggedCompany, setTaggedCompany] = useState<{ name: string; category: string } | null>(null);
   const [companyRating, setCompanyRating] = useState<number>(0);
   const [showCompanyTag, setShowCompanyTag] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
@@ -43,18 +43,23 @@ const Feed = () => {
   const handleCreatePost = async () => {
     if (!newPost.trim() || !user) return;
 
-    let uploadedUrl: string | null = null;
-    if (imageFile) {
+    let uploadedUrls: string[] = [];
+    if (imageFiles.length > 0) {
       try {
         setUploadingImage(true);
-        const ext = imageFile.name.split(".").pop() || "jpg";
-        const path = `${user.id}/${Date.now()}.${ext}`;
-        const { error: upErr } = await supabase.storage
-          .from("post-images")
-          .upload(path, imageFile, { cacheControl: "3600", upsert: false });
-        if (upErr) throw upErr;
-        const { data } = supabase.storage.from("post-images").getPublicUrl(path);
-        uploadedUrl = data.publicUrl;
+        const uploads = await Promise.all(
+          imageFiles.map(async (file, idx) => {
+            const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+            const path = `${user.id}/${Date.now()}-${idx}.${ext}`;
+            const { error: upErr } = await supabase.storage
+              .from("post-images")
+              .upload(path, file, { cacheControl: "3600", upsert: false });
+            if (upErr) throw upErr;
+            const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+            return data.publicUrl;
+          })
+        );
+        uploadedUrls = uploads;
       } catch (err: any) {
         toast({ title: "Image upload failed", description: err.message, variant: "destructive" });
         setUploadingImage(false);
@@ -66,7 +71,8 @@ const Feed = () => {
 
     await createPost.mutateAsync({
       content: newPost.trim(),
-      image_url: uploadedUrl,
+      image_url: uploadedUrls[0] ?? null,
+      image_urls: uploadedUrls,
       ...(taggedCompany && companyRating > 0 ? {
         company_name: taggedCompany.name,
         company_category: taggedCompany.category,
@@ -78,32 +84,45 @@ const Feed = () => {
     setTaggedCompany(null);
     setCompanyRating(0);
     setShowCompanyTag(false);
-    setImageFile(null);
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-    setImagePreview(null);
+    setImageFiles([]);
+    imagePreviews.forEach((u) => URL.revokeObjectURL(u));
+    setImagePreviews([]);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handlePickImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      toast({ title: "Invalid file", description: "Please pick an image.", variant: "destructive" });
+    const picked = Array.from(e.target.files ?? []);
+    if (picked.length === 0) return;
+    const remaining = 4 - imageFiles.length;
+    if (remaining <= 0) {
+      toast({ title: "Max 4 images", description: "You can attach up to 4 images per post.", variant: "destructive" });
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      toast({ title: "Image too large", description: "Max 5 MB.", variant: "destructive" });
-      return;
+    const accepted: File[] = [];
+    for (const file of picked.slice(0, remaining)) {
+      if (!file.type.startsWith("image/")) {
+        toast({ title: "Invalid file", description: `${file.name} is not an image.`, variant: "destructive" });
+        continue;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast({ title: "Image too large", description: `${file.name} exceeds 5 MB.`, variant: "destructive" });
+        continue;
+      }
+      accepted.push(file);
     }
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
+    if (accepted.length === 0) return;
+    setImageFiles((prev) => [...prev, ...accepted]);
+    setImagePreviews((prev) => [...prev, ...accepted.map((f) => URL.createObjectURL(f))]);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const clearImage = () => {
-    setImageFile(null);
-    if (imagePreview) URL.revokeObjectURL(imagePreview);
-    setImagePreview(null);
+  const removeImageAt = (index: number) => {
+    setImageFiles((prev) => prev.filter((_, i) => i !== index));
+    setImagePreviews((prev) => {
+      const url = prev[index];
+      if (url) URL.revokeObjectURL(url);
+      return prev.filter((_, i) => i !== index);
+    });
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
