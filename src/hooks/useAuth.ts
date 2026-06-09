@@ -36,7 +36,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      // 'local' scope only revokes the client token — avoids 403s when the
+      // server-side session has already expired or been invalidated elsewhere.
+      await supabase.auth.signOut({ scope: "local" });
+    } catch (err) {
+      console.warn("signOut server call failed, clearing local state anyway", err);
+    } finally {
+      setSession(null);
+      setUser(null);
+    }
   };
 
   const value = useMemo(() => ({ user, session, isLoading, signOut }), [user, session, isLoading]);
