@@ -315,22 +315,26 @@ const Feed = () => {
                 </div>
               )}
 
-              {/* Image preview */}
-              {imagePreview && (
-                <div className="relative mt-2 inline-block">
-                  <img
-                    src={imagePreview}
-                    alt="Selected image preview"
-                    className="max-h-48 rounded-md border object-contain"
-                  />
-                  <button
-                    type="button"
-                    onClick={clearImage}
-                    aria-label="Remove image"
-                    className="absolute top-1 right-1 rounded-full bg-background/90 border p-1 hover:bg-background"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
+              {/* Image previews (up to 4) */}
+              {imagePreviews.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {imagePreviews.map((src, i) => (
+                    <div key={src} className="relative">
+                      <img
+                        src={src}
+                        alt={`Selected image ${i + 1}`}
+                        className="h-20 w-20 md:h-24 md:w-24 rounded-md border object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeImageAt(i)}
+                        aria-label={`Remove image ${i + 1}`}
+                        className="absolute -top-1.5 -right-1.5 rounded-full bg-background border p-0.5 shadow hover:bg-muted"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -340,6 +344,7 @@ const Feed = () => {
                     ref={fileInputRef}
                     type="file"
                     accept="image/*"
+                    multiple
                     className="hidden"
                     onChange={handlePickImage}
                   />
@@ -347,7 +352,8 @@ const Feed = () => {
                     variant="ghost"
                     size="sm"
                     aria-label="Attach image"
-                    className={`h-8 w-8 p-0 md:h-9 md:w-auto md:px-3 ${imagePreview ? 'text-primary' : ''}`}
+                    disabled={imageFiles.length >= 4}
+                    className={`h-8 w-8 p-0 md:h-9 md:w-auto md:px-3 ${imagePreviews.length > 0 ? 'text-primary' : ''}`}
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <Image className="h-3.5 w-3.5 md:h-4 md:w-4" />
