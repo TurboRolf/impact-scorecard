@@ -202,7 +202,7 @@ const CompanyCard = ({
 
         <div className="flex gap-2 mt-auto pt-1">
           <Button
-            variant="default"
+            variant="outline"
             size="sm"
             className="flex-1 gap-1.5 h-8 text-xs"
             onClick={(e) => { e.stopPropagation(); onRate?.(); }}
