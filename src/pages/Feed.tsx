@@ -200,6 +200,7 @@ const Feed = () => {
       },
       content: cleanContent,
       imageUrl: post.image_url ?? null,
+      imageUrls: post.image_urls ?? null,
       company: post.company_name && post.company_rating ? {
         name: post.company_name,
         rating: post.company_rating,
