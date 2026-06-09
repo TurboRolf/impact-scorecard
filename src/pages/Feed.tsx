@@ -296,10 +296,41 @@ const Feed = () => {
                 </div>
               )}
 
+              {/* Image preview */}
+              {imagePreview && (
+                <div className="relative mt-2 inline-block">
+                  <img
+                    src={imagePreview}
+                    alt="Selected image preview"
+                    className="max-h-48 rounded-md border object-contain"
+                  />
+                  <button
+                    type="button"
+                    onClick={clearImage}
+                    aria-label="Remove image"
+                    className="absolute top-1 right-1 rounded-full bg-background/90 border p-1 hover:bg-background"
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
+
               <div className="flex items-center justify-between mt-2 pt-2 md:mt-3 md:pt-3 border-t">
                 <div className="flex gap-1 md:gap-2">
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 md:h-9 md:w-auto md:px-3"
-                    onClick={() => toast({ title: "Kommer snart", description: "Bilduppladdning är inte tillgänglig ännu." })}>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handlePickImage}
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label="Attach image"
+                    className={`h-8 w-8 p-0 md:h-9 md:w-auto md:px-3 ${imagePreview ? 'text-primary' : ''}`}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
                     <Image className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   </Button>
                   <Button variant="ghost" size="sm" className={`h-8 w-8 p-0 md:h-9 md:w-auto md:px-3 ${showCompanyTag || taggedCompany ? 'text-primary' : ''}`}
@@ -310,12 +341,16 @@ const Feed = () => {
                 <Button 
                   variant="earth" 
                   size="sm" 
-                  disabled={!newPost.trim() || createPost.isPending}
+                  disabled={!newPost.trim() || createPost.isPending || uploadingImage}
                   onClick={handleCreatePost}
                   className="h-8 text-xs md:h-9 md:text-sm"
                 >
-                  <PlusCircle className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1 md:mr-2" />
-                  {createPost.isPending ? "Posting..." : "Post"}
+                  {uploadingImage || createPost.isPending ? (
+                    <Loader2 className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1 md:mr-2 animate-spin" />
+                  ) : (
+                    <PlusCircle className="h-3.5 w-3.5 md:h-4 md:w-4 mr-1 md:mr-2" />
+                  )}
+                  {uploadingImage ? "Uploading..." : createPost.isPending ? "Posting..." : "Post"}
                 </Button>
               </div>
             </CardContent>
