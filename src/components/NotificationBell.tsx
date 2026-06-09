@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Bell, Check, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -11,6 +12,49 @@ import { cn } from "@/lib/utils";
 interface Props {
   variant?: "desktop" | "mobile";
 }
+
+const ACTOR_KEYS = ["follower_id", "liker_id", "commenter_id", "following_id"] as const;
+const ACTION_PHRASES = [
+  " wants to follow you",
+  " started following you",
+  " accepted your follow request",
+  " liked your post",
+  " commented on your post",
+];
+
+const renderBody = (body: string, data: Record<string, unknown> | null, onNavigate: () => void) => {
+  if (!data) return body;
+  let actorId: string | undefined;
+  for (const key of ACTOR_KEYS) {
+    const v = data[key];
+    if (typeof v === "string") {
+      actorId = v;
+      break;
+    }
+  }
+  if (!actorId) return body;
+
+  for (const phrase of ACTION_PHRASES) {
+    const idx = body.indexOf(phrase);
+    if (idx > 0) {
+      const name = body.slice(0, idx);
+      const rest = body.slice(idx);
+      return (
+        <>
+          <Link
+            to={`/user/${actorId}`}
+            onClick={onNavigate}
+            className="font-medium text-foreground hover:underline"
+          >
+            {name}
+          </Link>
+          {rest}
+        </>
+      );
+    }
+  }
+  return body;
+};
 
 const NotificationBell = ({ variant = "desktop" }: Props) => {
   const [open, setOpen] = useState(false);
@@ -73,7 +117,9 @@ const NotificationBell = ({ variant = "desktop" }: Props) => {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium leading-tight">{n.title}</p>
                     {n.body && (
-                      <p className="text-xs text-muted-foreground mt-0.5 break-words">{n.body}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5 break-words">
+                        {renderBody(n.body, n.data, () => setOpen(false))}
+                      </p>
                     )}
                     <p className="text-[11px] text-muted-foreground mt-1">
                       {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
