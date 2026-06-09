@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import MobileFooterLinks from "@/components/MobileFooterLinks";
@@ -11,13 +11,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PlusCircle, Image, Building2, Star, X } from "lucide-react";
+import { PlusCircle, Image, Building2, Star, X, Loader2 } from "lucide-react";
 import { usePosts, useCreatePost, PostData } from "@/hooks/usePosts";
 import { useBoycottByCompany, useBoycotts } from "@/hooks/useBoycotts";
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Feed = () => {
   const [newPost, setNewPost] = useState("");
@@ -25,6 +26,10 @@ const Feed = () => {
   const [taggedCompany, setTaggedCompany] = useState<{ name: string; category: string } | null>(null);
   const [companyRating, setCompanyRating] = useState<number>(0);
   const [showCompanyTag, setShowCompanyTag] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
   
@@ -38,8 +43,30 @@ const Feed = () => {
   const handleCreatePost = async () => {
     if (!newPost.trim() || !user) return;
 
+    let uploadedUrl: string | null = null;
+    if (imageFile) {
+      try {
+        setUploadingImage(true);
+        const ext = imageFile.name.split(".").pop() || "jpg";
+        const path = `${user.id}/${Date.now()}.${ext}`;
+        const { error: upErr } = await supabase.storage
+          .from("post-images")
+          .upload(path, imageFile, { cacheControl: "3600", upsert: false });
+        if (upErr) throw upErr;
+        const { data } = supabase.storage.from("post-images").getPublicUrl(path);
+        uploadedUrl = data.publicUrl;
+      } catch (err: any) {
+        toast({ title: "Image upload failed", description: err.message, variant: "destructive" });
+        setUploadingImage(false);
+        return;
+      } finally {
+        setUploadingImage(false);
+      }
+    }
+
     await createPost.mutateAsync({
       content: newPost.trim(),
+      image_url: uploadedUrl,
       ...(taggedCompany && companyRating > 0 ? {
         company_name: taggedCompany.name,
         company_category: taggedCompany.category,
@@ -51,6 +78,33 @@ const Feed = () => {
     setTaggedCompany(null);
     setCompanyRating(0);
     setShowCompanyTag(false);
+    setImageFile(null);
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handlePickImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast({ title: "Invalid file", description: "Please pick an image.", variant: "destructive" });
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast({ title: "Image too large", description: "Max 5 MB.", variant: "destructive" });
+      return;
+    }
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+  };
+
+  const clearImage = () => {
+    setImageFile(null);
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   // Transform posts data for PostCard component
@@ -126,6 +180,7 @@ const Feed = () => {
         isCreator: post.profiles?.profile_type === 'creator'
       },
       content: cleanContent,
+      imageUrl: post.image_url ?? null,
       company: post.company_name && post.company_rating ? {
         name: post.company_name,
         rating: post.company_rating,
