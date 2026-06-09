@@ -5,13 +5,24 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send, MoreHorizontal, Flag } from "lucide-react";
+import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send, MoreHorizontal, Flag, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import ReportPostDialog from "@/components/ReportPostDialog";
 import PostImageGrid from "@/components/PostImageGrid";
 import { useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 import { usePostLikes, useToggleLike, usePostComments, useCreateComment } from "@/hooks/usePostInteractions";
+import { useDeletePost } from "@/hooks/usePosts";
 import { useToast } from "@/hooks/use-toast";
 
 interface PostCardProps {
@@ -54,6 +65,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const navigate = useNavigate();
 
   const joinBoycott = useJoinBoycott();
@@ -69,6 +81,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
   const toggleLike = useToggleLike();
   const { data: postComments = [] } = usePostComments(showComments ? postId : undefined);
   const createComment = useCreateComment();
+  const deletePost = useDeletePost();
 
   const isLiked = postId ? likedPosts.includes(postId) : false;
   const isFollowing = user.id ? following.includes(user.id) : false;
@@ -217,7 +230,7 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
               )}
             </Button>
           )}
-          {currentUserId && postId && !isOwnPost && (
+          {currentUserId && postId && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="h-7 w-7 md:h-8 md:w-8 p-0 flex-shrink-0" aria-label="Post options">
@@ -225,9 +238,15 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setReportOpen(true)} className="text-destructive focus:text-destructive">
-                  <Flag className="h-4 w-4 mr-2" /> Report post
-                </DropdownMenuItem>
+                {isOwnPost ? (
+                  <DropdownMenuItem onClick={() => setDeleteOpen(true)} className="text-destructive focus:text-destructive">
+                    <Trash2 className="h-4 w-4 mr-2" /> Delete post
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onClick={() => setReportOpen(true)} className="text-destructive focus:text-destructive">
+                    <Flag className="h-4 w-4 mr-2" /> Report post
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           )}
@@ -397,6 +416,31 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
       </CardContent>
       {postId && (
         <ReportPostDialog postId={postId} open={reportOpen} onOpenChange={setReportOpen} />
+      )}
+      {postId && isOwnPost && (
+        <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete this post?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. Your post will be permanently removed.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={(e) => {
+                  e.preventDefault();
+                  deletePost.mutate(postId, { onSuccess: () => setDeleteOpen(false) });
+                }}
+                disabled={deletePost.isPending}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                {deletePost.isPending ? "Deleting..." : "Delete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
     </Card>
   );
