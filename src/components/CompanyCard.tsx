@@ -211,7 +211,7 @@ const CompanyCard = ({
             Stance
           </Button>
           <Button
-            variant="outline"
+            variant="boycott"
             size="sm"
             className="flex-1 h-8 text-xs"
             onClick={(e) => { e.stopPropagation(); onStartBoycott?.(); }}
