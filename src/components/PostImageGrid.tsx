@@ -17,25 +17,41 @@ const PostImageGrid = ({ images }: PostImageGridProps) => {
   const prev = () => setLightboxIndex((i) => (i === null ? null : (i - 1 + count) % count));
   const next = () => setLightboxIndex((i) => (i === null ? null : (i + 1) % count));
 
-  const Img = ({ src, alt, className }: { src: string; alt: string; className?: string }) => (
+  const Img = ({ src, alt, className, fit = "cover" }: { src: string; alt: string; className?: string; fit?: "cover" | "contain" }) => (
     <button
       type="button"
       onClick={() => open(images.indexOf(src))}
       className={`block w-full h-full overflow-hidden bg-muted focus:outline-none focus:ring-2 focus:ring-ring ${className ?? ""}`}
       aria-label="Open image"
     >
-      <img src={src} alt={alt} loading="lazy" className="w-full h-full object-cover hover:opacity-95 transition-opacity" />
+      <img
+        src={src}
+        alt={alt}
+        loading="lazy"
+        className={`w-full h-full ${fit === "contain" ? "object-contain" : "object-cover"} hover:opacity-95 transition-opacity`}
+      />
     </button>
   );
 
-  const HEIGHT = "h-64 md:h-80"; // ~256 / 320 px
+  const HEIGHT = "h-64 md:h-80"; // used for multi-image grids
 
   let grid: JSX.Element;
   if (count === 1) {
+    // Preserve original aspect ratio (like X.com): never distort, cap height.
     grid = (
-      <div className={`${HEIGHT} w-full`}>
-        <Img src={images[0]} alt="Post image" />
-      </div>
+      <button
+        type="button"
+        onClick={() => open(0)}
+        className="block w-full bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
+        aria-label="Open image"
+      >
+        <img
+          src={images[0]}
+          alt="Post image"
+          loading="lazy"
+          className="w-full h-auto max-h-[80vh] md:max-h-[32rem] object-contain mx-auto hover:opacity-95 transition-opacity"
+        />
+      </button>
     );
   } else if (count === 2) {
     grid = (
