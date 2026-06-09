@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send, MoreHorizontal, Flag } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import ReportPostDialog from "@/components/ReportPostDialog";
+import PostImageGrid from "@/components/PostImageGrid";
 import { useJoinBoycott, useLeaveBoycott, useUserBoycottParticipation } from "@/hooks/useBoycotts";
 import { useFollows, useFollowUser, useUnfollowUser } from "@/hooks/useFollows";
 import { usePostLikes, useToggleLike, usePostComments, useCreateComment } from "@/hooks/usePostInteractions";
@@ -45,10 +46,11 @@ interface PostCardProps {
   comments: number;
   currentUserId?: string;
   imageUrl?: string | null;
+  imageUrls?: string[] | null;
   removed?: { reason: string | null };
 }
 
-const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId, imageUrl, removed }: PostCardProps) => {
+const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestamp, likes, comments, currentUserId, imageUrl, imageUrls, removed }: PostCardProps) => {
   const [showComments, setShowComments] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [reportOpen, setReportOpen] = useState(false);
@@ -235,16 +237,12 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
       <CardContent className="pt-0">
         {!company && !boycott && <p className="text-foreground mb-3 md:mb-4 text-sm md:text-base">{content}</p>}
 
-        {imageUrl && (
-          <div className="mb-3 md:mb-4 rounded-lg overflow-hidden border bg-muted">
-            <img
-              src={imageUrl}
-              alt="Post image"
-              loading="lazy"
-              className="w-full max-h-[500px] object-contain"
-            />
-          </div>
-        )}
+        {(() => {
+          const imgs = (imageUrls && imageUrls.length > 0)
+            ? imageUrls.slice(0, 4)
+            : (imageUrl ? [imageUrl] : []);
+          return imgs.length > 0 ? <PostImageGrid images={imgs} /> : null;
+        })()}
 
         {/* Company review card */}
         {company && (
