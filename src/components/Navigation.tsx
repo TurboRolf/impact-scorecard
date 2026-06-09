@@ -14,6 +14,38 @@ const Navigation = () => {
   const { user, signOut } = useAuth();
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const [highlightHelp, setHighlightHelp] = useState(false);
+
+  // Highlight the Help button for a short window after a user creates an account,
+  // until they click it or the timeout elapses.
+  useEffect(() => {
+    const HIGHLIGHT_KEY = "ethisay_highlight_help";
+    const MAX_AGE_MS = 10 * 60 * 1000; // 10 minutes
+    const raw = localStorage.getItem(HIGHLIGHT_KEY);
+    if (!raw) return;
+    const ts = Number(raw);
+    if (!ts || Number.isNaN(ts)) {
+      localStorage.removeItem(HIGHLIGHT_KEY);
+      return;
+    }
+    const remaining = ts + MAX_AGE_MS - Date.now();
+    if (remaining <= 0) {
+      localStorage.removeItem(HIGHLIGHT_KEY);
+      return;
+    }
+    setHighlightHelp(true);
+    const timer = window.setTimeout(() => {
+      setHighlightHelp(false);
+      localStorage.removeItem(HIGHLIGHT_KEY);
+    }, remaining);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const dismissHelpHighlight = () => {
+    if (!highlightHelp) return;
+    setHighlightHelp(false);
+    localStorage.removeItem("ethisay_highlight_help");
+  };
 
   // Keyboard shortcut for search
   useEffect(() => {
@@ -66,8 +98,16 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
-              <Link to="/help" aria-label="Help">
-                <Button variant="ghost" size="sm" className="p-2">
+              <Link to="/help" aria-label="Help" onClick={dismissHelpHighlight}>
+                <Button
+                  variant={highlightHelp ? "default" : "ghost"}
+                  size="sm"
+                  className={
+                    highlightHelp
+                      ? "p-2 animate-pulse ring-2 ring-primary ring-offset-2 ring-offset-background"
+                      : "p-2"
+                  }
+                >
                   <HelpCircle className="h-4 w-4" />
                 </Button>
               </Link>

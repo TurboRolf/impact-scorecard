@@ -86,6 +86,8 @@ const Auth = () => {
         title: "Check your email",
         description: "We sent you a confirmation link. Please verify your email before signing in."
       });
+      // Highlight the Help button after account creation so new users can find guidance
+      localStorage.setItem("ethisay_highlight_help", String(Date.now()));
       setSignUpEmail("");
       setSignUpPassword("");
     }
