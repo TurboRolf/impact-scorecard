@@ -91,15 +91,6 @@ const PostImageGrid = ({ images }: PostImageGridProps) => {
                 alt={`Image ${lightboxIndex + 1} of ${count}`}
                 className="max-h-[85vh] w-auto mx-auto object-contain"
               />
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={close}
-                aria-label="Close"
-                className="absolute top-2 right-2 bg-background/80 hover:bg-background"
-              >
-                <X className="h-4 w-4" />
-              </Button>
               {count > 1 && (
                 <>
                   <Button
