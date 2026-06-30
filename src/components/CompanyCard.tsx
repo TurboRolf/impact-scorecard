@@ -96,7 +96,7 @@ const CompanyCard = ({
                     const img = e.currentTarget;
                     const tryDomain = (() => {
                       try {
-                        const m = logo.match(/(?:logo\.clearbit\.com\/|domain=)([^&\s/]+)/);
+                        const m = logo.match(/(?:logo\.clearbit\.com\/|domain=)([^&\s/?]+)/);
                         return m?.[1];
                       } catch { return null; }
                     })();
