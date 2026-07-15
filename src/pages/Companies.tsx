@@ -241,6 +241,7 @@ const Companies = () => {
               onRate={() => stanceDialog.openDialog({ name: company.name, category: company.category })}
               onReview={(category) => reviewDialog.openDialog({ name: company.name, category: category || company.category })}
               onStartBoycott={() => boycottDialog.openDialog({ name: company.name, category: company.category })}
+              onBeforeNavigate={saveListState}
             />
           ))}
         </div>
