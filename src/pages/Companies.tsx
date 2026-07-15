@@ -80,22 +80,39 @@ const Companies = () => {
       return;
     }
 
+    hasRestored.current = true;
+
     try {
       const parsed = JSON.parse(saved);
       if (parsed.searchTerm !== undefined) setSearchTerm(parsed.searchTerm);
       if (parsed.selectedCategory !== undefined) setSelectedCategory(parsed.selectedCategory);
 
-      requestAnimationFrame(() => {
-        if (parsed.scrollY && parsed.scrollY > 0) {
-          window.scrollTo({ top: parsed.scrollY, behavior: "auto" });
-        }
+      const targetY = Number(parsed.scrollY) || 0;
+      if (targetY > 0) {
+        // Prevent the browser's own scroll-restoration from fighting us.
+        const prevRestoration = window.history.scrollRestoration;
+        window.history.scrollRestoration = "manual";
+
+        let attempts = 0;
+        const maxAttempts = 60; // ~1s at 60fps
+        const tryScroll = () => {
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          if (maxScroll >= targetY - 2 || attempts >= maxAttempts) {
+            window.scrollTo(0, targetY);
+            sessionStorage.removeItem(COMPANIES_LIST_STATE_KEY);
+            window.history.scrollRestoration = prevRestoration;
+            return;
+          }
+          attempts += 1;
+          requestAnimationFrame(tryScroll);
+        };
+        requestAnimationFrame(tryScroll);
+      } else {
         sessionStorage.removeItem(COMPANIES_LIST_STATE_KEY);
-      });
+      }
     } catch {
       sessionStorage.removeItem(COMPANIES_LIST_STATE_KEY);
     }
-
-    hasRestored.current = true;
   }, [isLoading]);
   
   const categories = [
