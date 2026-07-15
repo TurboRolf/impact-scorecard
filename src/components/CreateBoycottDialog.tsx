@@ -115,6 +115,24 @@ export const CreateBoycottDialog = ({ onBoycottCreated, open: externalOpen, onOp
     setLoading(true);
 
     try {
+      // Validate required fields with clear, user-friendly messages
+      const missing: string[] = [];
+      if (!formData.title.trim()) missing.push("Boycott Title");
+      if (!formData.company.trim()) missing.push("Target Company");
+      if (!formData.category_id) missing.push("Category");
+      if (!formData.description.trim()) missing.push("Description");
+      if (!formData.condition.trim()) missing.push("Condition for resolution");
+
+      if (missing.length > 0) {
+        toast({
+          title: "Please fill in all required fields",
+          description: `Missing: ${missing.join(", ")}`,
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       // Check if user is authenticated
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
