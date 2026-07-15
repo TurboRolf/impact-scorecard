@@ -28,6 +28,7 @@ const Companies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const hasRestored = useRef(false);
+  const stateSaved = useRef(false);
   const stateRef = useRef({ searchTerm: "", selectedCategory: "all", scrollY: 0 });
   
   const stanceDialog = useDialogState<CompanyInfo>();
