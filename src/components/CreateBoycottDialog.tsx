@@ -320,7 +320,17 @@ Join this boycott to make your voice heard! #Boycott #EthicalConsumerism`;
             <Button
               type="button"
               variant="outline"
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setFormData({
+                  title: "",
+                  description: "",
+                  company: preselectedCompany || "",
+                  category_id: "",
+                  condition: "",
+                });
+                setCreatePost(true);
+                setOpen(false);
+              }}
               className="flex-1"
             >
               Cancel
