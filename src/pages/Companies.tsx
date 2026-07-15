@@ -44,12 +44,16 @@ const Companies = () => {
   }, [searchTerm, selectedCategory]);
 
   const saveListState = () => {
+    if (stateSaved.current) return;
     stateRef.current.scrollY = window.scrollY;
     sessionStorage.setItem(COMPANIES_LIST_STATE_KEY, JSON.stringify(stateRef.current));
+    stateSaved.current = true;
   };
 
   // Save filter + scroll state when leaving the page, and update scroll position on scroll.
   useEffect(() => {
+    stateSaved.current = false;
+
     const handleScroll = () => {
       stateRef.current.scrollY = window.scrollY;
     };
@@ -60,7 +64,9 @@ const Companies = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("beforeunload", saveListState);
-      saveListState();
+      if (!stateSaved.current) {
+        saveListState();
+      }
     };
   }, []);
 
