@@ -37,10 +37,15 @@ const Companies = () => {
   const { data: companies = [], isLoading } = useCompanies();
   useDocumentTitle("Companies");
 
-  // Keep ref in sync with current filter state so the unmount cleanup can save the latest values.
+  // Keep ref in sync with current filter state so the unmount cleanup/onBeforeNavigate can save the latest values.
   useEffect(() => {
     stateRef.current = { ...stateRef.current, searchTerm, selectedCategory };
   }, [searchTerm, selectedCategory]);
+
+  const saveListState = () => {
+    stateRef.current.scrollY = window.scrollY;
+    sessionStorage.setItem(COMPANIES_LIST_STATE_KEY, JSON.stringify(stateRef.current));
+  };
 
   // Save filter + scroll state when leaving the page, and update scroll position on scroll.
   useEffect(() => {
@@ -48,18 +53,13 @@ const Companies = () => {
       stateRef.current.scrollY = window.scrollY;
     };
 
-    const saveState = () => {
-      sessionStorage.setItem(COMPANIES_LIST_STATE_KEY, JSON.stringify(stateRef.current));
-    };
-
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("beforeunload", saveState);
+    window.addEventListener("beforeunload", saveListState);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("beforeunload", saveState);
-      stateRef.current.scrollY = window.scrollY;
-      saveState();
+      window.removeEventListener("beforeunload", saveListState);
+      saveListState();
     };
   }, []);
 
