@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -19,6 +19,8 @@ import {
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useDialogState } from "@/hooks/useDialogState";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+
+const COMPANIES_LIST_STATE_KEY = "companiesListState";
 
 type CompanyInfo = { name: string; category: string };
 
