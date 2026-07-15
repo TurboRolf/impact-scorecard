@@ -56,7 +56,8 @@ const CompanyCard = ({
   discourageCount = 0,
   onRate,
   onReview,
-  onStartBoycott
+  onStartBoycott,
+  onBeforeNavigate
 }: CompanyCardProps) => {
   const navigate = useNavigate();
   const flag = countryCodeToFlag(country);
