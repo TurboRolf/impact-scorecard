@@ -30,6 +30,7 @@ interface CompanyCardProps {
   onRate?: () => void;
   onReview?: (category?: string) => void;
   onStartBoycott?: () => void;
+  onBeforeNavigate?: () => void;
 }
 
 const CompanyCard = ({
