@@ -17,11 +17,28 @@ import { useFollowerCount, useFollowingCount, usePostsCount } from "@/hooks/useF
 import { useFollowStatus, useFollowUser, useUnfollowUser, useIsAcceptedFollower } from "@/hooks/useFollows";
 import { useAuth } from "@/hooks/useAuth";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { useUserRoles } from "@/hooks/useUserRole";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Trash2, Shield } from "lucide-react";
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
+  const { isAdmin } = useUserRoles();
+  const [isDeleting, setIsDeleting] = React.useState(false);
   
   const [followersOpen, setFollowersOpen] = useState(false);
   const [followingOpen, setFollowingOpen] = useState(false);
@@ -44,6 +61,24 @@ const UserProfile = () => {
   const isCreator = profile?.profile_type === 'creator';
   const isPrivateProfile = !isCreator; // Regular users are private
   const canViewContent = isOwnProfile || isCreator || isAcceptedFollower;
+
+  const handleAdminDelete = async () => {
+    if (!userId) return;
+    setIsDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-delete-user", {
+        body: { userId },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      toast({ title: "User deleted", description: "The account and its data were removed." });
+      navigate("/");
+    } catch (e: any) {
+      toast({ title: "Delete failed", description: e?.message ?? "Unknown error", variant: "destructive" });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handleFollowToggle = async () => {
     if (!currentUser) {
@@ -229,6 +264,50 @@ const UserProfile = () => {
                 )}
                 
                 {renderFollowButton()}
+
+                {isAdmin && !isOwnProfile && (
+                  <div className="mt-3 pt-3 border-t border-destructive/20">
+                    <div className="flex items-center gap-1.5 mb-2 text-[10px] md:text-xs text-muted-foreground">
+                      <Shield className="h-3 w-3" />
+                      <span>Admin</span>
+                      <code className="ml-1 px-1 py-0.5 bg-muted rounded text-[9px] md:text-[10px] break-all">
+                        {userId}
+                      </code>
+                    </div>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          className="gap-1.5 text-xs h-7 md:h-8"
+                          disabled={isDeleting}
+                        >
+                          <Trash2 className="h-3 w-3 md:h-3.5 md:w-3.5" />
+                          {isDeleting ? "Deleting…" : "Delete user"}
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete this user account?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This permanently deletes @{profile.username} and all their posts,
+                            comments, likes, reviews, stances, boycotts, and follow relationships.
+                            This action cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleAdminDelete}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                          >
+                            Delete permanently
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
