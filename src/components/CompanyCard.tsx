@@ -83,7 +83,7 @@ const CompanyCard = ({
   const pct = (n: number) => (totalStances > 0 ? (n / totalStances) * 100 : 0);
 
   return (
-    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col group" onClick={() => navigate(`/company/${id}`)}>
+    <Card className="hover:shadow-card transition-all duration-300 cursor-pointer flex flex-col group" onClick={() => { onBeforeNavigate?.(); navigate(`/company/${id}`); }}>
       <CardHeader className="pb-3 p-4 sm:p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-start gap-3 min-w-0">
