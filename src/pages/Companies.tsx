@@ -27,6 +27,8 @@ type CompanyInfo = { name: string; category: string };
 const Companies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const hasRestored = useRef(false);
+  const stateRef = useRef({ searchTerm: "", selectedCategory: "all", scrollY: 0 });
   
   const stanceDialog = useDialogState<CompanyInfo>();
   const reviewDialog = useDialogState<CompanyInfo>();
@@ -34,6 +36,60 @@ const Companies = () => {
   
   const { data: companies = [], isLoading } = useCompanies();
   useDocumentTitle("Companies");
+
+  // Keep ref in sync with current filter state so the unmount cleanup can save the latest values.
+  useEffect(() => {
+    stateRef.current = { ...stateRef.current, searchTerm, selectedCategory };
+  }, [searchTerm, selectedCategory]);
+
+  // Save filter + scroll state when leaving the page, and update scroll position on scroll.
+  useEffect(() => {
+    const handleScroll = () => {
+      stateRef.current.scrollY = window.scrollY;
+    };
+
+    const saveState = () => {
+      sessionStorage.setItem(COMPANIES_LIST_STATE_KEY, JSON.stringify(stateRef.current));
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("beforeunload", saveState);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("beforeunload", saveState);
+      stateRef.current.scrollY = window.scrollY;
+      saveState();
+    };
+  }, []);
+
+  // Restore previous filter + scroll state when returning to the list (e.g. via back button).
+  useEffect(() => {
+    if (isLoading || hasRestored.current) return;
+
+    const saved = sessionStorage.getItem(COMPANIES_LIST_STATE_KEY);
+    if (!saved) {
+      hasRestored.current = true;
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed.searchTerm !== undefined) setSearchTerm(parsed.searchTerm);
+      if (parsed.selectedCategory !== undefined) setSelectedCategory(parsed.selectedCategory);
+
+      requestAnimationFrame(() => {
+        if (parsed.scrollY && parsed.scrollY > 0) {
+          window.scrollTo({ top: parsed.scrollY, behavior: "auto" });
+        }
+        sessionStorage.removeItem(COMPANIES_LIST_STATE_KEY);
+      });
+    } catch {
+      sessionStorage.removeItem(COMPANIES_LIST_STATE_KEY);
+    }
+
+    hasRestored.current = true;
+  }, [isLoading]);
   
   const categories = [
     "all", "Technology", "Media & Entertainment", "Food & Retail",
