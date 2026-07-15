@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import Navigation from "@/components/Navigation";
 import LoadingScreen from "@/components/LoadingScreen";
@@ -20,11 +20,16 @@ import { useCompanies } from "@/hooks/useCompanyStances";
 import { useDialogState } from "@/hooks/useDialogState";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
+const COMPANIES_LIST_STATE_KEY = "companiesListState";
+
 type CompanyInfo = { name: string; category: string };
 
 const Companies = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
+  const hasRestored = useRef(false);
+  const stateSaved = useRef(false);
+  const stateRef = useRef({ searchTerm: "", selectedCategory: "all", scrollY: 0 });
   
   const stanceDialog = useDialogState<CompanyInfo>();
   const reviewDialog = useDialogState<CompanyInfo>();
@@ -32,6 +37,66 @@ const Companies = () => {
   
   const { data: companies = [], isLoading } = useCompanies();
   useDocumentTitle("Companies");
+
+  // Keep ref in sync with current filter state so the unmount cleanup/onBeforeNavigate can save the latest values.
+  useEffect(() => {
+    stateRef.current = { ...stateRef.current, searchTerm, selectedCategory };
+  }, [searchTerm, selectedCategory]);
+
+  const saveListState = () => {
+    if (stateSaved.current) return;
+    stateRef.current.scrollY = window.scrollY;
+    sessionStorage.setItem(COMPANIES_LIST_STATE_KEY, JSON.stringify(stateRef.current));
+    stateSaved.current = true;
+  };
+
+  // Save filter + scroll state when leaving the page, and update scroll position on scroll.
+  useEffect(() => {
+    stateSaved.current = false;
+
+    const handleScroll = () => {
+      stateRef.current.scrollY = window.scrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("beforeunload", saveListState);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("beforeunload", saveListState);
+      if (!stateSaved.current) {
+        saveListState();
+      }
+    };
+  }, []);
+
+  // Restore previous filter + scroll state when returning to the list (e.g. via back button).
+  useEffect(() => {
+    if (isLoading || hasRestored.current) return;
+
+    const saved = sessionStorage.getItem(COMPANIES_LIST_STATE_KEY);
+    if (!saved) {
+      hasRestored.current = true;
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(saved);
+      if (parsed.searchTerm !== undefined) setSearchTerm(parsed.searchTerm);
+      if (parsed.selectedCategory !== undefined) setSelectedCategory(parsed.selectedCategory);
+
+      requestAnimationFrame(() => {
+        if (parsed.scrollY && parsed.scrollY > 0) {
+          window.scrollTo({ top: parsed.scrollY, behavior: "auto" });
+        }
+        sessionStorage.removeItem(COMPANIES_LIST_STATE_KEY);
+      });
+    } catch {
+      sessionStorage.removeItem(COMPANIES_LIST_STATE_KEY);
+    }
+
+    hasRestored.current = true;
+  }, [isLoading]);
   
   const categories = [
     "all", "Technology", "Media & Entertainment", "Food & Retail",
@@ -183,6 +248,7 @@ const Companies = () => {
               onRate={() => stanceDialog.openDialog({ name: company.name, category: company.category })}
               onReview={(category) => reviewDialog.openDialog({ name: company.name, category: category || company.category })}
               onStartBoycott={() => boycottDialog.openDialog({ name: company.name, category: company.category })}
+              onBeforeNavigate={saveListState}
             />
           ))}
         </div>
