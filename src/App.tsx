@@ -6,6 +6,7 @@ import Company from "./pages/Company";
 import Boycotts from "./pages/Boycotts";
 import Creators from "./pages/Creators";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Contact from "./pages/Contact";
