@@ -20,11 +20,25 @@ const ResetPassword = () => {
   useDocumentTitle("Reset Password");
 
   useEffect(() => {
-    // Check if this is a recovery link from an email
-    const hash = window.location.hash;
-    if (hash.includes("type=recovery")) {
+    // Recovery links land here with a hash like #access_token=...&type=recovery.
+    // supabase-js auto-consumes the hash to establish a session, so checking
+    // window.location.hash once is unreliable — by the time our effect runs
+    // it may already be cleared, and the user would see the "request reset"
+    // form again (looking like a loop). Detect the PASSWORD_RECOVERY event
+    // from supabase instead, plus fall back to the hash for safety.
+    if (window.location.hash.includes("type=recovery")) {
       setMode("update");
     }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setMode("update");
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleRequestReset = async (e: React.FormEvent) => {
