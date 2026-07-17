@@ -6,6 +6,7 @@ import Company from "./pages/Company";
 import Boycotts from "./pages/Boycotts";
 import Creators from "./pages/Creators";
 import Auth from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
 import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Contact from "./pages/Contact";
@@ -41,6 +42,7 @@ const App = () => (
             <Route path="/boycotts" element={<Boycotts />} />
             <Route path="/creators" element={<Creators />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/contact" element={<Contact />} />
