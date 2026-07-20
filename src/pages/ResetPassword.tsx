@@ -8,6 +8,7 @@ import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
+import { useAuth } from "@/hooks/useAuth";
 
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
@@ -17,6 +18,7 @@ const ResetPassword = () => {
   const [mode, setMode] = useState<"request" | "update">("request");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { session, isLoading: authLoading } = useAuth();
   useDocumentTitle("Reset Password");
 
   useEffect(() => {
@@ -26,12 +28,31 @@ const ResetPassword = () => {
     // it may already be cleared, and the user would see the "request reset"
     // form again (looking like a loop). Detect the PASSWORD_RECOVERY event
     // from supabase instead, plus fall back to the hash for safety.
-    if (window.location.hash.includes("type=recovery")) {
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const searchParams = new URLSearchParams(window.location.search);
+    const isRecoveryLink = hashParams.get("type") === "recovery" || searchParams.get("type") === "recovery";
+    const linkError = hashParams.get("error_description") || searchParams.get("error_description");
+
+    if (isRecoveryLink) {
       setMode("update");
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === "PASSWORD_RECOVERY") {
+    if (linkError) {
+      toast({
+        title: "Reset link problem",
+        description: linkError.replace(/\+/g, " "),
+        variant: "destructive"
+      });
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY" || (event === "SIGNED_IN" && session)) {
+        setMode("update");
+      }
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
         setMode("update");
       }
     });
@@ -39,7 +60,13 @@ const ResetPassword = () => {
     return () => {
       subscription.unsubscribe();
     };
-  }, []);
+  }, [toast]);
+
+  useEffect(() => {
+    if (!authLoading && session) {
+      setMode("update");
+    }
+  }, [authLoading, session]);
 
   const handleRequestReset = async (e: React.FormEvent) => {
     e.preventDefault();
