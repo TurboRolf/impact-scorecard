@@ -1,23 +1,26 @@
-## Problem
+Plan:
 
-Nuvarande `src/assets/ethisay-logo-v4-dark.png` har två fel:
-1. "Ethisay"-texten är endast en tunn vit **kontur** runt bokstäverna istället för solid vit fyllning — bokstäverna ser ihåliga/ofyllda ut
-2. **Pricken över "i" saknas helt**
-3. Synliga artefakter/halo runt bokstäverna från background removal
+1. Verify the reset route is correctly wired in the app
+   - Check that `/reset-password` exists in the React router and remains a public route.
+   - Keep the existing reset form behavior: request link first, then set new password when the Supabase recovery session is present.
 
-## Åtgärd
+2. Fix the URL problem behind the email link
+   - The 404 indicates the email link is redirecting to a Lovable URL that is not serving the app publicly.
+   - Use a published app URL instead of the preview-only URL for password reset links.
+   - After publishing, update the Supabase redirect configuration so recovery emails allow:
+     - the published app root
+     - the published `/reset-password` route
 
-Regenerera dark mode-varianten från originalloggan (`src/assets/ethisay-logo-v4.png`) med `imagegen--edit_image`, med tydliga krav:
+3. Update the app’s reset-link generation if needed
+   - Ensure `resetPasswordForEmail()` sends users to `${window.location.origin}/reset-password` so production emails use the published domain automatically.
+   - Avoid hardcoding preview URLs in code.
 
-- Behåll E-ikonen och bocken i exakt samma blå färg och position
-- Byt **endast** wordmark "Ethisay" från mörk till **solid, helt fylld ren vit** (#FFFFFF) — inte outline, inte kontur
-- Säkerställ att **pricken över "i"** finns och är centrerad horisontellt över i-stapeln
-- Behåll exakt samma typsnitt, kerning, proportioner, storlek och spacing
-- Transparent bakgrund, rena kanter, inget glow/halo/skugga
-- Aspect ratio 4:1 för att matcha originalet
+4. Test the complete flow
+   - Request a fresh password reset email.
+   - Open the link on desktop and mobile.
+   - Confirm it lands on “Set New Password”, not Lovable login, not 404, and not the “send reset link” screen again.
 
-Filsökväg: skriver över `src/assets/ethisay-logo-v4-dark.png`. Ingen kodändring behövs i `Navigation.tsx` (importen är redan på plats).
-
-## Verifiering
-
-Efter generering: zooma in på filen för att bekräfta att texten är solid vit och att i-pricken finns innan jag rapporterar klart.
+Technical details:
+- No database changes are needed.
+- The core issue is URL/hosting configuration, not user accounts or passwords.
+- Old reset emails should be ignored because recovery links are one-time-use; testing must use a newly requested email.
