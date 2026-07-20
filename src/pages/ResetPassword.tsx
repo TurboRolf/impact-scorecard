@@ -26,11 +26,14 @@ const ResetPassword = () => {
     // supabase-js auto-consumes the hash to establish a session, so checking
     // window.location.hash once is unreliable — by the time our effect runs
     // it may already be cleared, and the user would see the "request reset"
-    // form again (looking like a loop). Detect the PASSWORD_RECOVERY event
-    // from supabase instead, plus fall back to the hash for safety.
+    // form again (looking like a loop). Some deployments/providers may also
+    // return a PKCE code in the query string, so exchange that code explicitly.
+    // Detect the PASSWORD_RECOVERY event from supabase too, plus fall back to
+    // the URL params for safety.
     const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
     const searchParams = new URLSearchParams(window.location.search);
     const isRecoveryLink = hashParams.get("type") === "recovery" || searchParams.get("type") === "recovery";
+    const recoveryCode = searchParams.get("code");
     const linkError = hashParams.get("error_description") || searchParams.get("error_description");
 
     if (isRecoveryLink) {
@@ -42,6 +45,19 @@ const ResetPassword = () => {
         title: "Reset link problem",
         description: linkError.replace(/\+/g, " "),
         variant: "destructive"
+      });
+    }
+
+    if (recoveryCode) {
+      setMode("update");
+      supabase.auth.exchangeCodeForSession(recoveryCode).then(({ error }) => {
+        if (error) {
+          toast({
+            title: "Reset link problem",
+            description: error.message,
+            variant: "destructive"
+          });
+        }
       });
     }
 
