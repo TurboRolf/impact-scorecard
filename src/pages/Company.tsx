@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, ArrowLeft, ExternalLink, Leaf, Users, Scale, Landmark, Eye, Megaphone, Lock, Truck } from "lucide-react";
 import CompanyStanceDialog from "@/components/CompanyStanceDialog";
