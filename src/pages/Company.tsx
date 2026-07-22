@@ -304,6 +304,30 @@ const Company = () => {
                         <span className="ml-1 font-semibold">{review.rating}/5</span>
                       </div>
                     </div>
+                    <div
+                      className="flex items-center gap-2 mt-3 cursor-pointer hover:opacity-80"
+                      onClick={() => review.user_id && navigate(`/user/${review.user_id}`)}
+                    >
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage
+                          src={
+                            review.author_avatar_url ||
+                            (review.author_username
+                              ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${review.author_username}`
+                              : `https://api.dicebear.com/7.x/avataaars/svg?seed=${review.user_id}`)
+                          }
+                        />
+                        <AvatarFallback className="text-xs">
+                          {(review.author_display_name || review.author_username || "U").charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm font-medium">
+                        {review.author_display_name || review.author_username || "Anonymous"}
+                      </span>
+                      {review.author_username && (
+                        <span className="text-sm text-muted-foreground">@{review.author_username}</span>
+                      )}
+                    </div>
                   </CardHeader>
                   {review.review_text && (
                     <CardContent>
