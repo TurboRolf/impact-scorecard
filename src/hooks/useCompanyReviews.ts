@@ -38,6 +38,10 @@ export interface CompanyReviewData {
   review_text: string | null;
   created_at: string;
   updated_at: string;
+  author_display_name?: string | null;
+  author_username?: string | null;
+  author_avatar_url?: string | null;
+  author_profile_type?: string | null;
 }
 
 export const useUserReviews = (userId?: string) => {
@@ -64,7 +68,7 @@ export const useCompanyReviews = (companyName: string) => {
     queryKey: ["company-reviews", companyName],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("company_reviews")
+        .from("company_reviews_with_author")
         .select("*")
         .eq("company_name", companyName)
         .order("created_at", { ascending: false });

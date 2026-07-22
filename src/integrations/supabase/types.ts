@@ -596,6 +596,24 @@ export type Database = {
         }
         Relationships: []
       }
+      company_reviews_with_author: {
+        Row: {
+          author_avatar_url: string | null
+          author_display_name: string | null
+          author_profile_type: string | null
+          author_username: string | null
+          category: string | null
+          company_id: string | null
+          company_name: string | null
+          created_at: string | null
+          id: string | null
+          rating: number | null
+          review_text: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       following_feed: {
         Row: {
           comments_count: number | null

@@ -6,6 +6,7 @@ import Navigation from "@/components/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Star, TrendingDown, TrendingUp, AlertTriangle, ThumbsUp, Minus, ThumbsDown, ArrowLeft, ExternalLink, Leaf, Users, Scale, Landmark, Eye, Megaphone, Lock, Truck } from "lucide-react";
 import CompanyStanceDialog from "@/components/CompanyStanceDialog";
@@ -302,6 +303,31 @@ const Company = () => {
                         ))}
                         <span className="ml-1 font-semibold">{review.rating}/5</span>
                       </div>
+                    </div>
+                    <div
+                      className="flex items-center gap-2 mt-3 cursor-pointer hover:opacity-80"
+                      onClick={() => review.user_id && (review.author_username || review.author_display_name) && navigate(`/user/${review.user_id}`)}
+                      title={review.author_username || review.author_display_name ? "View profile" : "This review was left by a user account that is no longer available"}
+                    >
+                      <Avatar className="h-6 w-6">
+                        <AvatarImage
+                          src={
+                            review.author_avatar_url ||
+                            (review.author_username
+                              ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${review.author_username}`
+                              : `https://api.dicebear.com/7.x/avataaars/svg?seed=${review.user_id}`)
+                          }
+                        />
+                        <AvatarFallback className="text-xs">
+                          {(review.author_display_name || review.author_username || "U").charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-sm font-medium">
+                        {review.author_display_name || review.author_username || "Unknown user"}
+                      </span>
+                      {review.author_username && (
+                        <span className="text-sm text-muted-foreground">@{review.author_username}</span>
+                      )}
                     </div>
                   </CardHeader>
                   {review.review_text && (
