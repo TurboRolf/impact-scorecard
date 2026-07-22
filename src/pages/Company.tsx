@@ -306,7 +306,8 @@ const Company = () => {
                     </div>
                     <div
                       className="flex items-center gap-2 mt-3 cursor-pointer hover:opacity-80"
-                      onClick={() => review.user_id && navigate(`/user/${review.user_id}`)}
+                      onClick={() => review.user_id && (review.author_username || review.author_display_name) && navigate(`/user/${review.user_id}`)}
+                      title={review.author_username || review.author_display_name ? "View profile" : "This review was left by a user account that is no longer available"}
                     >
                       <Avatar className="h-6 w-6">
                         <AvatarImage
@@ -322,7 +323,7 @@ const Company = () => {
                         </AvatarFallback>
                       </Avatar>
                       <span className="text-sm font-medium">
-                        {review.author_display_name || review.author_username || "Anonymous"}
+                        {review.author_display_name || review.author_username || "Unknown user"}
                       </span>
                       {review.author_username && (
                         <span className="text-sm text-muted-foreground">@{review.author_username}</span>
