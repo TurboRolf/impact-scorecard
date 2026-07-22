@@ -12,7 +12,7 @@ import CompanyStanceDialog from "@/components/CompanyStanceDialog";
 import CompanyReviewDialog from "@/components/CompanyReviewDialog";
 import { CreateBoycottDialog } from "@/components/CreateBoycottDialog";
 import { useState } from "react";
-import { useCompanyReviews } from "@/hooks/useCompanyReviews";
+import { useCompanyReviews, REVIEW_CATEGORY_LABELS } from "@/hooks/useCompanyReviews";
 import { useBoycotts } from "@/hooks/useBoycotts";
 import { useDocumentTitle } from "@/hooks/useDocumentTitle";
 
@@ -290,7 +290,7 @@ const Company = () => {
                 <Card key={review.id}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg capitalize">{review.category} Review</CardTitle>
+                  <CardTitle className="text-lg capitalize">{REVIEW_CATEGORY_LABELS[review.category] || review.category} Review</CardTitle>
                       <div className="flex items-center gap-1">
                         {[...Array(5)].map((_, i) => (
                           <Star

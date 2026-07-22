@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Star } from "lucide-react";
-import { useCreateOrUpdateReview, ReviewCategory, REVIEW_CATEGORIES } from "@/hooks/useCompanyReviews";
+import { useCreateOrUpdateReview, ReviewCategory, REVIEW_CATEGORIES, REVIEW_CATEGORY_LABELS } from "@/hooks/useCompanyReviews";
 import { useCompanies } from "@/hooks/useCompanyStances";
 import { useCreatePost } from "@/hooks/usePosts";
 
@@ -164,7 +164,7 @@ const CompanyReviewDialog = ({
               id="review_text"
               value={formData.review_text}
               onChange={(e) => setFormData({ ...formData, review_text: e.target.value })}
-              placeholder={`Share your thoughts about ${formData.company_name}'s ${formData.category} practices...`}
+              placeholder={`Share your thoughts about ${formData.company_name}'s ${REVIEW_CATEGORY_LABELS[formData.category].toLowerCase()} practices...`}
               rows={4}
             />
           </div>
