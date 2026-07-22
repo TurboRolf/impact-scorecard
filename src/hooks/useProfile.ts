@@ -12,6 +12,8 @@ export interface Profile {
   profile_type: 'user' | 'creator';
   created_at: string;
   updated_at: string;
+  username_changed_at?: string | null;
+  display_name_changed_at?: string | null;
 }
 
 export const useProfile = (userId?: string) => {
