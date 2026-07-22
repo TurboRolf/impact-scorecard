@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProfile, useUpdateProfile } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { User, Lock, Eye, EyeOff, Trash2 } from "lucide-react";
+import { User, Lock, Eye, EyeOff, Trash2, Info } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,6 +37,22 @@ const ProfileSettingsDialog = ({
   const { data: profile } = useProfile(userId);
   const updateProfile = useUpdateProfile();
   const { toast } = useToast();
+
+  const USERNAME_COOLDOWN_DAYS = 30;
+  const DISPLAY_NAME_COOLDOWN_DAYS = 7;
+
+  const getCooldown = (changedAt?: string | null, days = 0) => {
+    if (!changedAt) return null;
+    const next = new Date(new Date(changedAt).getTime() + days * 24 * 60 * 60 * 1000);
+    if (next.getTime() <= Date.now()) return null;
+    return next;
+  };
+
+  const usernameCooldownUntil = getCooldown(profile?.username_changed_at, USERNAME_COOLDOWN_DAYS);
+  const displayNameCooldownUntil = getCooldown(profile?.display_name_changed_at, DISPLAY_NAME_COOLDOWN_DAYS);
+
+  const formatDate = (d: Date) =>
+    d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 
   const [formData, setFormData] = useState({
     display_name: profile?.display_name || "",
@@ -67,12 +83,38 @@ const ProfileSettingsDialog = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateProfile.mutateAsync(formData);
-    toast({
-      title: "Profile updated",
-      description: "Your changes have been saved."
-    });
-    onOpenChange(false);
+    const payload: typeof formData = { ...formData };
+
+    if (
+      displayNameCooldownUntil &&
+      payload.display_name !== (profile?.display_name || "")
+    ) {
+      toast({
+        title: "Display name change on cooldown",
+        description: `You can change your display name again on ${formatDate(displayNameCooldownUntil)}.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (
+      usernameCooldownUntil &&
+      payload.username !== (profile?.username || "")
+    ) {
+      toast({
+        title: "Username change on cooldown",
+        description: `You can change your username again on ${formatDate(usernameCooldownUntil)}.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      await updateProfile.mutateAsync(payload);
+      onOpenChange(false);
+    } catch {
+      // useUpdateProfile already surfaces a toast
+    }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
@@ -174,7 +216,14 @@ const ProfileSettingsDialog = ({
                     value={formData.display_name}
                     onChange={(e) => setFormData({ ...formData, display_name: e.target.value })}
                     placeholder="Your display name"
+                    disabled={!!displayNameCooldownUntil}
                   />
+                  <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                    <Info className="h-3 w-3" />
+                    {displayNameCooldownUntil
+                      ? `Available again on ${formatDate(displayNameCooldownUntil)}`
+                      : `Can be changed once every ${DISPLAY_NAME_COOLDOWN_DAYS} days`}
+                  </p>
                 </div>
                 <div>
                   <Label htmlFor="username">Username</Label>
@@ -183,7 +232,14 @@ const ProfileSettingsDialog = ({
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     placeholder="@username"
+                    disabled={!!usernameCooldownUntil}
                   />
+                  <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                    <Info className="h-3 w-3" />
+                    {usernameCooldownUntil
+                      ? `Available again on ${formatDate(usernameCooldownUntil)}`
+                      : `Can be changed once every ${USERNAME_COOLDOWN_DAYS} days`}
+                  </p>
                 </div>
               </div>
 
