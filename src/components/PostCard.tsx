@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send, MoreHorizontal, Flag, Trash2 } from "lucide-react";
+import { Heart, MessageCircle, Share, Star, AlertTriangle, UserPlus, UserCheck, Users, Check, CheckCircle, Send, MoreHorizontal, Flag, Trash2, ThumbsUp, ThumbsDown, Minus } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -254,7 +254,67 @@ const PostCard = ({ postId, user, content, company, boycott, isBoycott, timestam
       </CardHeader>
       
       <CardContent className="pt-0">
-        {!company && !boycott && <p className="text-foreground mb-3 md:mb-4 text-sm md:text-base">{content}</p>}
+        {!company && !boycott && (() => {
+          const stanceMatch = content.match(/^I (recommend|discourage|am neutral on) (.+?)\.\s*([\s\S]*)$/);
+          if (stanceMatch) {
+            const verb = stanceMatch[1];
+            const target = stanceMatch[2];
+            const note = stanceMatch[3]?.trim();
+            const stance: 'recommend' | 'neutral' | 'discourage' =
+              verb === 'recommend' ? 'recommend' : verb === 'discourage' ? 'discourage' : 'neutral';
+            const config = {
+              recommend: {
+                Icon: ThumbsUp,
+                label: 'Recommends',
+                accent: 'text-recommend',
+                bg: 'bg-recommend/10',
+                border: 'border-recommend/30',
+                iconBg: 'bg-recommend/15',
+              },
+              discourage: {
+                Icon: ThumbsDown,
+                label: 'Discourages',
+                accent: 'text-discourage',
+                bg: 'bg-discourage/10',
+                border: 'border-discourage/30',
+                iconBg: 'bg-discourage/15',
+              },
+              neutral: {
+                Icon: Minus,
+                label: 'Neutral on',
+                accent: 'text-neutral',
+                bg: 'bg-neutral/10',
+                border: 'border-neutral/30',
+                iconBg: 'bg-neutral/15',
+              },
+            }[stance];
+            const { Icon } = config;
+            return (
+              <Card className={`border ${config.border} ${config.bg} mb-3 md:mb-4`}>
+                <CardContent className="p-2.5 md:p-4">
+                  <div className="flex items-center gap-2 md:gap-3">
+                    <div className={`h-8 w-8 md:h-10 md:w-10 rounded-full flex items-center justify-center flex-shrink-0 ${config.iconBg}`}>
+                      <Icon className={`h-4 w-4 md:h-5 md:w-5 ${config.accent}`} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[11px] md:text-xs uppercase tracking-wide font-semibold text-muted-foreground">Stance</p>
+                      <p className="text-sm md:text-base font-semibold truncate">
+                        <span className={config.accent}>{config.label}</span>{' '}
+                        <span className="text-foreground">{target}</span>
+                      </p>
+                    </div>
+                  </div>
+                  {note && (
+                    <p className="text-foreground mt-2 pt-2 md:mt-3 md:pt-3 border-t border-border/50 text-sm md:text-base">
+                      {note}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          }
+          return <p className="text-foreground mb-3 md:mb-4 text-sm md:text-base">{content}</p>;
+        })()}
 
         {(() => {
           const imgs = (imageUrls && imageUrls.length > 0)
