@@ -106,11 +106,11 @@ const Navigation = () => {
             <div className="flex items-center gap-1 sm:gap-2">
               <Link to="/help" aria-label="Help" onClick={dismissHelpHighlight}>
                 <Button
-                  variant={highlightHelp ? "default" : "ghost"}
+                  variant={highlightHelp ? "destructive" : "ghost"}
                   size="sm"
                   className={
                     highlightHelp
-                      ? "p-2 animate-pulse ring-2 ring-primary ring-offset-2 ring-offset-background"
+                      ? "p-2 animate-pulse ring-2 ring-destructive ring-offset-2 ring-offset-background"
                       : "p-2"
                   }
                 >
