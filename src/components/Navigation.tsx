@@ -188,10 +188,10 @@ const Navigation = () => {
                 <Button 
                   variant={isActive ? "default" : "ghost"} 
                   size="sm"
-                  className="h-10 w-full flex-col gap-0.5 px-1 text-xs"
+                  className="h-10 w-full px-1"
+                  aria-label={item.label}
                 >
-                  <item.icon className="h-3.5 w-3.5" />
-                  <span className="text-xs leading-tight">{item.label}</span>
+                  <item.icon className="h-5 w-5" />
                 </Button>
               </Link>
             );
@@ -201,11 +201,11 @@ const Navigation = () => {
           <Button 
             variant="ghost" 
             size="sm"
-            className="h-10 w-full flex-col gap-0.5 px-1 text-xs"
+            className="h-10 w-full px-1"
             onClick={() => setSearchOpen(true)}
+            aria-label="Search"
           >
-            <Search className="h-3.5 w-3.5" />
-            <span className="text-xs leading-tight">Search</span>
+            <Search className="h-5 w-5" />
           </Button>
         </div>
       </nav>
