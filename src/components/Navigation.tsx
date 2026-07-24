@@ -15,6 +15,34 @@ const Navigation = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const [highlightHelp, setHighlightHelp] = useState(false);
+  const [hideTopBar, setHideTopBar] = useState(false);
+
+  // Hide the top bar on mobile when scrolling down, reveal when scrolling up (X.com-style).
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let lastY = window.scrollY;
+    let ticking = false;
+    const THRESHOLD = 8;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const delta = y - lastY;
+        if (Math.abs(delta) > THRESHOLD) {
+          if (delta > 0 && y > 64) {
+            setHideTopBar(true);
+          } else if (delta < 0) {
+            setHideTopBar(false);
+          }
+          lastY = y;
+        }
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Highlight the Help button for a short window after a user creates an account,
   // until they click it or the timeout elapses.
@@ -76,8 +104,12 @@ const Navigation = () => {
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      {/* Top Navigation */}
+      <nav
+        className={`fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border transition-transform duration-300 will-change-transform ${
+          hideTopBar ? "-translate-y-full md:translate-y-0" : "translate-y-0"
+        }`}
+      >
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <Link to="/" className="flex items-center" aria-label="Ethisay home">
