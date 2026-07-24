@@ -2446,6 +2446,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.ethisay.com/user/20976bc0-e946-436d-ae1d-2f32ad52244b</loc>
+    <lastmod>2026-07-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>https://www.ethisay.com/user/a2e41dcc-d8e3-44e1-a774-c381de2901fb</loc>
     <lastmod>2026-07-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -2459,12 +2465,6 @@
   </url>
   <url>
     <loc>https://www.ethisay.com/user/a47b8e0e-f1b5-42e3-8fe6-1046a0e941ce</loc>
-    <lastmod>2026-06-09</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://www.ethisay.com/user/20976bc0-e946-436d-ae1d-2f32ad52244b</loc>
     <lastmod>2026-06-09</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
