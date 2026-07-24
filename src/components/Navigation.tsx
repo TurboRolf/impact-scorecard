@@ -21,6 +21,12 @@ const Navigation = () => {
   useEffect(() => {
     const HIGHLIGHT_KEY = "ethisay_highlight_help";
     const MAX_AGE_MS = 10 * 60 * 1000; // 10 minutes
+    const VISITED_KEY = "ethisay_visited";
+    // First-time visitors: start the highlight window automatically.
+    if (!localStorage.getItem(VISITED_KEY) && !localStorage.getItem(HIGHLIGHT_KEY)) {
+      localStorage.setItem(VISITED_KEY, "1");
+      localStorage.setItem(HIGHLIGHT_KEY, String(Date.now()));
+    }
     const raw = localStorage.getItem(HIGHLIGHT_KEY);
     if (!raw) return;
     const ts = Number(raw);
