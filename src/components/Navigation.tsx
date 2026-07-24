@@ -179,8 +179,8 @@ const Navigation = () => {
       </nav>
 
       {/* Mobile Bottom Navigation - Compact */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border">
-        <div className="grid grid-cols-6 gap-0 px-1 py-1">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t border-border pb-[env(safe-area-inset-bottom)]">
+        <div className="grid grid-cols-6 gap-0 px-1 py-1.5">
           {navItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -188,10 +188,10 @@ const Navigation = () => {
                 <Button 
                   variant={isActive ? "default" : "ghost"} 
                   size="sm"
-                  className="h-10 w-full px-1"
+                  className="h-12 w-full px-1"
                   aria-label={item.label}
                 >
-                  <item.icon className="h-5 w-5" />
+                  <item.icon className="h-7 w-7" strokeWidth={2.25} />
                 </Button>
               </Link>
             );
@@ -201,11 +201,11 @@ const Navigation = () => {
           <Button 
             variant="ghost" 
             size="sm"
-            className="h-10 w-full px-1"
+            className="h-12 w-full px-1"
             onClick={() => setSearchOpen(true)}
             aria-label="Search"
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-7 w-7" strokeWidth={2.25} />
           </Button>
         </div>
       </nav>
