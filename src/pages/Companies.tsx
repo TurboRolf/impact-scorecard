@@ -135,21 +135,21 @@ const Companies = () => {
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
         <div className="mb-6">
-          <div className="flex items-start justify-between mb-3 sm:mb-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-3 sm:mb-4">
             <div className="flex-1">
               <h1 className="text-2xl sm:text-3xl font-bold mb-1 sm:mb-2">Company Directory</h1>
               <p className="text-sm sm:text-base text-muted-foreground">
                 Rate companies and share your stance on ethical business practices.
               </p>
             </div>
-            
-            <div className="flex gap-1 sm:gap-2 ml-3">
-              <Button onClick={() => stanceDialog.openDialog()} variant="outline" className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" size="sm">
+
+            <div className="flex gap-2 sm:ml-3 sm:flex-shrink-0">
+              <Button onClick={() => stanceDialog.openDialog()} variant="outline" className="flex-1 sm:flex-none gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" size="sm">
                 <Plus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Add Stance</span>
                 <span className="sm:hidden">Stance</span>
               </Button>
-              <Button onClick={() => reviewDialog.openDialog()} className="gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" variant="outline" size="sm">
+              <Button onClick={() => reviewDialog.openDialog()} className="flex-1 sm:flex-none gap-1 sm:gap-2 text-xs sm:text-sm px-2 sm:px-4" variant="outline" size="sm">
                 <Star className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 <span className="hidden sm:inline">Add Review</span>
                 <span className="sm:hidden">Review</span>
