@@ -151,7 +151,7 @@ const Navigation = () => {
                       : "p-2"
                   }
                 >
-                  <Info className="h-4 w-4" />
+                  <Info className="h-5 w-5 sm:h-4 sm:w-4" />
                 </Button>
               </Link>
               <Link to="/help" aria-label="Help" onClick={dismissHelpHighlight}>
@@ -164,18 +164,18 @@ const Navigation = () => {
                       : "p-2"
                   }
                 >
-                  <HelpCircle className="h-4 w-4" />
+                  <HelpCircle className="h-5 w-5 sm:h-4 sm:w-4" />
                 </Button>
               </Link>
               <Button variant="ghost" size="sm" className="p-2" onClick={toggleTheme} aria-label="Toggle dark mode">
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+                {theme === "dark" ? <Sun className="h-5 w-5 sm:h-4 sm:w-4" /> : <Moon className="h-5 w-5 sm:h-4 sm:w-4" />}
               </Button>
               <Button variant="outline" size="sm" className="hidden sm:flex gap-1" onClick={() => setSearchOpen(true)}>
                 <Search className="h-4 w-4" />
                 <span className="hidden md:inline">Search</span>
               </Button>
               <Button variant="ghost" size="sm" className="sm:hidden p-2" onClick={() => setSearchOpen(true)}>
-                <Search className="h-4 w-4" />
+                <Search className="h-5 w-5" />
               </Button>
               {user && <NotificationBell />}
               {user ? (
