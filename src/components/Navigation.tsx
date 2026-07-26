@@ -136,6 +136,19 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
+              <Link to="/about" aria-label="About" onClick={dismissHelpHighlight}>
+                <Button
+                  variant={highlightHelp ? "destructive" : "ghost"}
+                  size="sm"
+                  className={
+                    highlightHelp
+                      ? "p-2 animate-pulse ring-2 ring-destructive ring-offset-2 ring-offset-background"
+                      : "p-2"
+                  }
+                >
+                  <Info className="h-4 w-4" />
+                </Button>
+              </Link>
               <Link to="/help" aria-label="Help" onClick={dismissHelpHighlight}>
                 <Button
                   variant={highlightHelp ? "destructive" : "ghost"}
