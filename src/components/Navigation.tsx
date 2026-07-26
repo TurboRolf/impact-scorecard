@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Home, User, Building2, AlertTriangle, Users, Search, LogOut, Sun, Moon, HelpCircle } from "lucide-react";
+import { Home, User, Building2, AlertTriangle, Users, Search, LogOut, Sun, Moon, HelpCircle, Info } from "lucide-react";
 import { useEffect, useState } from "react";
 import SearchDialog from "./SearchDialog";
 import { useAuth } from "@/hooks/useAuth";
@@ -136,6 +136,24 @@ const Navigation = () => {
             </div>
 
             <div className="flex items-center gap-1 sm:gap-2">
+              <Link
+                to="/about"
+                aria-label="About"
+                onClick={dismissHelpHighlight}
+                className="lg:hidden"
+              >
+                <Button
+                  variant={highlightHelp ? "destructive" : "ghost"}
+                  size="sm"
+                  className={
+                    highlightHelp
+                      ? "p-2 animate-pulse ring-2 ring-destructive ring-offset-2 ring-offset-background"
+                      : "p-2"
+                  }
+                >
+                  <Info className="h-4 w-4" />
+                </Button>
+              </Link>
               <Link to="/help" aria-label="Help" onClick={dismissHelpHighlight}>
                 <Button
                   variant={highlightHelp ? "destructive" : "ghost"}
