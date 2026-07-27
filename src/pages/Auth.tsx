@@ -81,6 +81,14 @@ const Auth = () => {
           variant: "destructive"
         });
       }
+    } else if (data.user && data.user.identities && data.user.identities.length === 0) {
+      // Supabase returns a user with no identities when the email is already registered
+      // (to prevent email enumeration). Detect this case and show a clear warning.
+      toast({
+        title: "Account exists",
+        description: "This email is already registered. Please use the Sign In tab or reset your password.",
+        variant: "destructive"
+      });
     } else {
       toast({
         title: "Check your email",
