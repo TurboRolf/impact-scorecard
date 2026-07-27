@@ -97,7 +97,7 @@ const Creators = () => {
                 <CardHeader className="p-3 sm:p-6 pb-2 sm:pb-4">
                   <div className="flex items-start gap-2.5 sm:gap-3">
                     <Avatar className="h-10 w-10 sm:h-16 sm:w-16">
-                      <AvatarImage src={creator.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${creator.username}` : undefined} />
+                      <AvatarImage src={creator.avatar_url || (creator.username ? `https://api.dicebear.com/7.x/avataaars/svg?seed=${creator.username}` : undefined)} />
                       <AvatarFallback className="text-sm sm:text-lg">
                         {creator.display_name?.charAt(0) || creator.username?.charAt(0) || 'C'}
                       </AvatarFallback>
