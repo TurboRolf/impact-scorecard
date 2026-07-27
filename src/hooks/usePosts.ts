@@ -73,7 +73,8 @@ export const usePosts = (feedType: "trending" | "following" = "trending") => {
         if (error) throw error;
         return data as PostData[];
       } else {
-        // Trending feed - all posts
+        // Trending feed - posts from the last 7 days sorted by engagement
+        const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
         const { data, error } = await supabase
           .from("posts")
           .select(`
@@ -85,10 +86,19 @@ export const usePosts = (feedType: "trending" | "following" = "trending") => {
               avatar_url
             )
           `)
+          .gte("created_at", oneWeekAgo)
           .order("created_at", { ascending: false });
         
         if (error) throw error;
-        return data as PostData[];
+
+        const sorted = (data as PostData[]).sort((a, b) => {
+          const scoreA = (a.likes_count || 0) + (a.comments_count || 0);
+          const scoreB = (b.likes_count || 0) + (b.comments_count || 0);
+          if (scoreB !== scoreA) return scoreB - scoreA;
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        });
+
+        return sorted;
       }
     }
   });
